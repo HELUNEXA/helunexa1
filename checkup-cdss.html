@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="tr" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HELUNEXA - Check-up Akıllı Değerlendirme</title>
+    <link rel="icon" href="favicon.ico">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { --ink: #213e39; --muted: #76877e; --teal: #10b981; --teal-dark: #059669; --line: #e2e9e3; --bg: #f6f8f4; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font: 14px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--ink); background: var(--bg); }
+        
+        .header { background: white; padding: 15px; text-align: center; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+        .header img { height: 80px; width: auto; }
+
+        main { max-width: 700px; padding: 0 20px 40px; margin: auto; }
+        
+        .card { border: 1px solid var(--line); background: #fff; border-radius: 16px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .card-heading { margin-bottom: 25px; text-align: center; }
+        .card-heading h2 { font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+        .card-heading p { font-size: 13px; color: var(--muted); }
+
+        nav { display: flex; margin-bottom: 25px; gap: 10px; justify-content: center; }
+        .step { flex: 1; border-bottom: 2px solid var(--line); padding-bottom: 12px; display: flex; align-items: center; gap: 8px; color: #829087; font-size: 11px; font-weight: bold; }
+        .step span { width: 24px; height: 24px; border: 1px solid #dce5dd; border-radius: 50%; display: grid; place-items: center; font-size: 10px; }
+        .step.current { border-color: var(--teal); color: var(--teal); }
+        .step.current span, .step.done span { background: #e7f2ea; color: var(--teal); border-color: #d7e9dc; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        label { display: block; font-size: 13px; margin-bottom: 15px; color: #486359; font-weight: bold; }
+        input, select, textarea { width: 100%; font: inherit; padding: 12px; margin-top: 6px; border: 1px solid #d9e3da; border-radius: 8px; color: var(--ink); outline: none; }
+        input:focus, textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
+
+        .route-card { display: flex; align-items: flex-start; text-align: left; gap: 13px; width: 100%; padding: 19px 15px; background: #fff; border: 1px solid var(--line); border-radius: 10px; margin: 13px 0; color: var(--ink); cursor: pointer; transition: 0.2s; }
+        .route-card:hover { background: #f4f8f2; border-color: #a8cbbb; }
+        .route-card b { display: block; font-size: 14px; font-weight: 600; line-height: 1.5; }
+        .route-card small { display: block; margin: 7px 0 0; font-size: 11px; color: var(--muted); line-height: 1.6; }
+        .number { font-size: 11px; color: var(--teal); background: #edf5ef; border-radius: 6px; min-width: 29px; height: 29px; display: grid; place-items: center; }
+
+        .panel { padding: 20px 0; border-bottom: 1px solid var(--line); }
+        .panel:last-of-type { border: 0; }
+        .panel-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .panel-title h3 { font-size: 15px; color: var(--ink); }
+        .panel-tag { font-size: 10px; background: #eaf3ed; color: var(--teal); border-radius: 5px; padding: 4px 8px; font-weight: bold; }
+        .test-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .test-list span { border: 1px solid var(--line); background: #f7f9f6; border-radius: 6px; padding: 6px 10px; font-size: 12px; color: #486151; }
+        
+        .btn { padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; }
+        .btn-primary { background: var(--teal); color: white; }
+        .btn-primary:hover { background: var(--teal-dark); }
+        .btn-secondary { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+        .actions { display: flex; justify-content: space-between; gap: 10px; margin-top: 30px; }
+
+        .application { background: #f5f8f4; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+        .application p { font-size: 13px; color: #4d6758; margin: 5px 0; }
+        .subnote { padding: 15px; background: #f2f7f2; border-radius: 8px; color: #65816d; font-size: 12px; margin-top: 20px; border-left: 4px solid var(--teal); }
+        .check { display: flex; align-items: center; gap: 10px; font-size: 12px; margin: 15px 0; }
+        .check input { width: auto; margin: 0; accent-color: var(--teal); }
+        
+        .catalog-group { border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+        .catalog-group summary { background: #f8fafc; padding: 12px 15px; font-weight: bold; font-size: 14px; cursor: pointer; }
+        .catalog-item { padding: 10px 15px; border-top: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 10px; }
+        .catalog-item input[type="checkbox"] { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--teal); cursor: pointer; }
+        .catalog-item label { cursor: pointer; font-size: 13px; margin: 0; }
+        .catalog-item .test-name { font-weight: 600; color: #0f172a; display: block; }
+        .selected-count { font-size: 12px; color: var(--teal); font-weight: bold; margin-top: 10px; }
+
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #254a3a; color: #fff; border-radius: 8px; padding: 12px 20px; font-size: 13px; z-index: 5; display: none; }
+        
+        @media(max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .step { flex-direction: column; align-items: flex-start; gap: 4px; font-size: 10px; } .card { padding: 20px; } .actions { flex-direction: column; } .btn { width: 100%; } }
+    </style>
+</head>
+<body class="notranslate">
+    <div class="header"><img src="logo.png" alt="HELUNEXA"></div>
+    <main>
+        <div class="card">
+            <nav id="steps">
+                <div class="step current"><span>1</span>Başvuru</div>
+                <div class="step"><span>2</span>Tetkik Seçimi</div>
+                <div class="step"><span>3</span>Hekim Onayı</div>
+                <div class="step"><span>4</span>Ödeme</div>
+            </nav>
+            <div id="screen"></div>
+        </div>
+    </main>
+    <div id="toast"></div>
+
+    <script>
+        const SUPABASE_URL = 'https://grbjmhknmlheoyknmyhd.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p';
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'helunexa-hasta-auth' } });
+
+        let step = 0;
+        let state = { profile: {}, requestedTests: [] };
+
+        const CATALOG_GROUPS = {
+            "Hepatit taraması": ["Hepatit B · HBsAg / anti-HBs / total anti-HBc", "Anti-HCV"],
+            "Kan ve demir": ["Hemogram", "Ferritin", "Transferrin satürasyonu / demir bağlama kapasitesi"],
+            "Metabolik sağlık": ["Açlık plazma glukozu ve HbA1c", "Ürik asit", "75 g OGTT", "Açlık insülini / HOMA-IR"],
+            "Kalp ve damar": ["Lipid profili", "ApoB", "Lipoprotein(a)", "hs-CRP", "Homosistein"],
+            "Böbrek ve karaciğer": ["Kreatinin / eGFR", "İdrar albümin/kreatinin oranı", "ALT", "AST", "ALP", "GGT", "Total / direkt bilirubin", "Albümin", "Total protein", "Üre"],
+            "Tiroid": ["TSH", "Serbest T4", "Serbest T3 (FT3)", "Anti-TPO", "Anti-Tg", "TRAb"],
+            "Vitaminler": ["D vitamini · 25-OH D", "Vitamin B12", "Folat"],
+            "Mineraller": ["Magnezyum", "Çinko", "Sodyum", "Potasyum", "Total kalsiyum", "Fosfor", "Selenyum", "İyot değerlendirmesi"],
+            "Kemik ve hormonlar": ["Parathormon (PTH)", "Total testosteron", "FSH / LH", "Estradiol", "Prolaktin"],
+            "Diğer seçilmiş değerlendirmeler": ["CRP", "Sedimentasyon (ESR)", "Tam idrar tahlili", "Çölyak serolojisi · tTG-IgA + total IgA"]
+        };
+
+        function toast(text) { const el = document.getElementById('toast'); el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 3000); }
+
+        function render() {
+            const screens = [entry, intakeForm, testSelection, doctorApproval, payment];
+            if(step >= 0 && step <= 4) {
+                screens[step]();
+                document.querySelectorAll('.step').forEach((s, i) => { 
+                    s.className = 'step'; 
+                    if (i < step) s.classList.add('done'); 
+                    if (i === step) s.classList.add('current'); 
+                });
+            }
+        }
+
+        function entry() {
+            document.getElementById('screen').innerHTML = `
+                <div class="card-heading">
+                    <h2>Size nasıl yardımcı olalım?</h2>
+                    <p>Temel bilgiler, örnek kontrol paneli ve hekim onayı.</p>
+                </div>
+                <button class="route-card" onclick="step=1; render();">
+                    <span class="number">01</span>
+                    <span><b>Şikayetim yok, genel kontrol istiyorum.</b><small>Vücudum ve sağlığımla ilgili bir şikayetim yok. Genel kontrol tahlilleri yaptırmak istiyorum.</small></span>
+                </button>
+                <button class="route-card" onclick="alert('Bu check-up modülü, şikayeti olmayan kişiler içindir. Lütfen doktor randevusu alın.'); window.location.href='basvuru.html';">
+                    <span class="number">02</span>
+                    <span><b>Şikayetlerim var, doktor muayenesi istiyorum.</b><small>Şikayetlerim var, muayene için yönlendirme istiyorum.</small></span>
+                </button>
+            `;
+        }
+
+        function intakeForm() {
+            document.getElementById('screen').innerHTML = `
+                <div class="card-heading"><h2>Kısaca sizi tanıyalım.</h2><p>Check-up planınızı oluşturmak için temel bilgiler.</p></div>
+                <div class="form-grid">
+                    <div><label>Yaş *<input type="number" id="age" min="18" max="120"></label></div>
+                    <div><label>Cinsiyet *<select id="sex"><option value="">Seçiniz</option><option value="Kadın">Kadın</option><option value="Erkek">Erkek</option></select></label></div>
+                    <div><label>Kilo (kg) *<input type="number" id="weight" min="20" max="300"></label></div>
+                    <div><label>Boy (cm) *<input type="number" id="height" min="100" max="250"></label></div>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="step=0; render();">Geri</button>
+                    <button class="btn btn-primary" id="nextBtn">Tetkik Seçimine Geç →</button>
+                </div>
+            `;
+            document.getElementById('nextBtn').onclick = () => {
+                const age = Number(document.getElementById('age').value), weight = Number(document.getElementById('weight').value), height = Number(document.getElementById('height').value), sex = document.getElementById('sex').value;
+                if (!age || !weight || !height || !sex) return toast('Tüm alanları doldurun.');
+                state.profile = { age, weight, height, sex };
+                step = 2; render();
+            };
+        }
+
+        function testSelection() {
+            document.getElementById('screen').innerHTML = `
+                <div class="card-heading">
+                    <h2>Hekimle görüşmek istediğiniz tetkikler</h2>
+                    <p>Merak ettiğiniz veya yaptırmak istediğiniz tetkikleri seçin. Nihai planı hekiminiz onaylayacaktır.</p>
+                </div>
+                <div id="catalogContainer">
+                    ${Object.entries(CATALOG_GROUPS).map(([groupName, tests], gIndex) => `
+                        <details class="catalog-group">
+                            <summary>${groupName} <small>(${tests.length} seçenek)</small></summary>
+                            ${tests.map((test, tIndex) => `
+                                <div class="catalog-item">
+                                    <input type="checkbox" id="test_${gIndex}_${tIndex}" value="${test}" class="test-checkbox" onchange="updateCount()">
+                                    <label for="test_${gIndex}_${tIndex}">
+                                        <span class="test-name">${test}</span>
+                                    </label>
+                                </div>
+                            `).join('')}
+                        </details>
+                    `).join('')}
+                </div>
+                <div class="selected-count" id="selectedCount">Seçilen tetkik sayısı: 0 / 50</div>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="step=1; render();">Geri</button>
+                    <button class="btn btn-primary" id="nextBtn">Hekim Onayına Gönder →</button>
+                </div>
+            `;
+            document.getElementById('nextBtn').onclick = () => {
+                const selected = Array.from(document.querySelectorAll('.test-checkbox:checked')).map(cb => cb.value);
+                state.requestedTests = selected;
+                step = 3; render();
+            };
+        }
+
+        window.updateCount = function() {
+            const count = document.querySelectorAll('.test-checkbox:checked').length;
+            document.getElementById('selectedCount').textContent = `Seçilen tetkik sayısı: ${count} / 50`;
+        };
+
+        function doctorApproval() {
+            document.getElementById('screen').innerHTML = `
+                <div class="card-heading">
+                    <h2>Başvurunuz Hekim Onayına Gönderildi</h2>
+                    <p>Seçtiğiniz tetkikler ve bilgileriniz hekiminiz tarafından değerlendirilecektir.</p>
+                </div>
+                <div class="application">
+                    <span style="font-size:10px; color:var(--teal); letter-spacing:1px;">SEÇİLEN TETKİKLER (${state.requestedTests.length})</span>
+                    <ul style="margin-left: 20px; margin-top: 10px; font-size: 13px; color: var(--muted);">
+                        ${state.requestedTests.length ? state.requestedTests.map(t => `<li>${t}</li>`).join('') : '<li>Henüz tetkik seçilmedi.</li>'}
+                    </ul>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="step=2; render();">Geri Dön</button>
+                    <button class="btn btn-primary" id="nextBtn">Ödemeye Geç →</button>
+                </div>
+            `;
+            document.getElementById('nextBtn').onclick = () => { step = 4; render(); };
+        }
+
+        function payment() {
+            document.getElementById('screen').innerHTML = `
+                <div class="card-heading"><h2>Ödemeye Geç</h2><p>Başvuru formuna yönlendiriliyorsunuz.</p></div>
+                <label class="check"><input type="checkbox" id="confirmCheck"> Seçtiğim tetkikleri ve bilgileri onaylıyorum.</label>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="step=3; render();">Geri</button>
+                    <button class="btn btn-primary" id="finishBtn">💳 Ödemeye Geç</button>
+                </div>
+            `;
+
+            document.getElementById('finishBtn').onclick = () => {
+                if (!document.getElementById('confirmCheck').checked) return toast('Lütfen devam etmek için onaylayın.');
+                
+                sessionStorage.setItem('cdss_profile', JSON.stringify(state.profile));
+                sessionStorage.setItem('cdss_requested_tests', JSON.stringify(state.requestedTests));
+                
+                window.location.href = 'basvuru.html?checkup=approved';
+            };
+        }
+
+        async function checkSession() {
+            // BEKLEME SÜRESİ EKLENDİ (Sizi ana sayfaya atmasını engeller)
+            await new Promise(resolve => setTimeout(resolve, 300)); 
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) { 
+                render(); 
+            } else { 
+                window.location.href = 'giris.html'; 
+            }
+        }
+        
+        checkSession();
+    </script>
+</body>
+</html>
