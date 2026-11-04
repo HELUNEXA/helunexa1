@@ -1,130 +1,332 @@
-        // Hekimin kendi önerilerini ekleyebilmesi için basit katalog
-        const DOCTOR_CATALOG = [
-            "Hemogram", "Ferritin", "Açlık glukozu ve HbA1c", "Lipid profili", 
-            "TSH", "Serbest T4", "D vitamini · 25-OH D", "Vitamin B12", 
-            "Kreatinin / eGFR", "ALT", "AST", "Tam idrar tahlili", 
-            "C-Reaktif Protein (CRP)", "Magnezyum", "Çinko", "Demir Bağlama Kapasitesi"
-        ];
+<!doctype html>
+<html lang="tr" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HELUNEXA - Check-up Akıllı Değerlendirme</title>
+    <link rel="icon" href="favicon.ico">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { --ink: #213e39; --muted: #76877e; --teal: #10b981; --teal-dark: #059669; --line: #e2e9e3; --bg: #f6f8f4; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font: 14px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--ink); background: var(--bg); }
+        
+        .header { background: white; padding: 15px; text-align: center; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+        .header img { height: 80px; width: auto; }
 
-        window.openDetail = function(id) {
-            currentApp = allApps.find(a => a.id === id);
-            if (!currentApp) return;
-            
-            document.getElementById('modalTitle').textContent = currentApp.fullname;
-            
-            // Hastanın seçtiklerini ayıkla
-            let patientSelectedHtml = '';
-            let patientTests = [];
-            if (currentApp.test_notes && currentApp.test_notes.includes('Hastanın Hekimle Görüşmek İstediği Tetkikler:')) {
-                let selectedTestsString = currentApp.test_notes.replace('Hastanın Hekimle Görüşmek İstediği Tetkikler: ', '');
-                patientTests = selectedTestsString.split(' | ');
-                
-                patientSelectedHtml = `
-                    <div class="patient-selected-tests">
-                        <strong style="color:#92400e; font-size:14px;">🧪 Hastanın Seçtiği Tetkikler (Talep):</strong>
-                        <ul>
-                            ${patientTests.map(t => `<li>${t}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
+        main { max-width: 700px; padding: 0 20px 40px; margin: auto; }
+        
+        .card { border: 1px solid var(--line); background: #fff; border-radius: 16px; padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .card-heading { margin-bottom: 25px; text-align: center; }
+        .card-heading h2 { font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+        .card-heading p { font-size: 13px; color: var(--muted); }
+
+        nav { display: flex; margin-bottom: 25px; gap: 10px; justify-content: center; }
+        .step { flex: 1; border-bottom: 2px solid var(--line); padding-bottom: 12px; display: flex; align-items: center; gap: 8px; color: #829087; font-size: 11px; font-weight: bold; }
+        .step span { width: 24px; height: 24px; border: 1px solid #dce5dd; border-radius: 50%; display: grid; place-items: center; font-size: 10px; }
+        .step.current { border-color: var(--teal); color: var(--teal); }
+        .step.current span, .step.done span { background: #e7f2ea; color: var(--teal); border-color: #d7e9dc; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        label { display: block; font-size: 13px; margin-bottom: 15px; color: #486359; font-weight: bold; }
+        input, select, textarea { width: 100%; font: inherit; padding: 12px; margin-top: 6px; border: 1px solid #d9e3da; border-radius: 8px; color: var(--ink); outline: none; }
+        input:focus, textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
+
+        .route-card { display: flex; align-items: flex-start; text-align: left; gap: 13px; width: 100%; padding: 19px 15px; background: #fff; border: 1px solid var(--line); border-radius: 10px; margin: 13px 0; color: var(--ink); cursor: pointer; transition: 0.2s; }
+        .route-card:hover { background: #f4f8f2; border-color: #a8cbbb; }
+        .route-card b { display: block; font-size: 14px; font-weight: 600; line-height: 1.5; }
+        .route-card small { display: block; margin: 7px 0 0; font-size: 11px; color: var(--muted); line-height: 1.6; }
+        .number { font-size: 11px; color: var(--teal); background: #edf5ef; border-radius: 6px; min-width: 29px; height: 29px; display: grid; place-items: center; }
+
+        .panel { padding: 20px 0; border-bottom: 1px solid var(--line); }
+        .panel:last-of-type { border: 0; }
+        .panel-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .panel-title h3 { font-size: 15px; color: var(--ink); }
+        .panel-tag { font-size: 10px; background: #eaf3ed; color: var(--teal); border-radius: 5px; padding: 4px 8px; font-weight: bold; }
+        .test-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .test-list span { border: 1px solid var(--line); background: #f7f9f6; border-radius: 6px; padding: 6px 10px; font-size: 12px; color: #486151; }
+        
+        .btn { padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: bold; cursor: pointer; border: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; }
+        .btn-primary { background: var(--teal); color: white; }
+        .btn-primary:hover { background: var(--teal-dark); }
+        .btn-secondary { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+        .actions { display: flex; justify-content: space-between; gap: 10px; margin-top: 30px; }
+
+        .application { background: #f5f8f4; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+        .application p { font-size: 13px; color: #4d6758; margin: 5px 0; }
+        .subnote { padding: 15px; background: #f2f7f2; border-radius: 8px; color: #65816d; font-size: 12px; margin-top: 20px; border-left: 4px solid var(--teal); }
+        .check { display: flex; align-items: center; gap: 10px; font-size: 12px; margin: 15px 0; }
+        .check input { width: auto; margin: 0; accent-color: var(--teal); }
+        
+        .catalog-group { border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+        .catalog-group summary { background: #f8fafc; padding: 12px 15px; font-weight: bold; font-size: 14px; cursor: pointer; }
+        .catalog-item { padding: 10px 15px; border-top: 1px solid #f1f5f9; display: flex; align-items: flex-start; gap: 10px; }
+        .catalog-item input[type="checkbox"] { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--teal); cursor: pointer; }
+        .catalog-item label { cursor: pointer; font-size: 13px; margin: 0; flex: 1; }
+        .catalog-item .test-name { font-weight: 600; color: #0f172a; display: block; }
+        
+        /* AÇIKLAMA KUTUSU STİLİ */
+        .edu-box { margin-top: 8px; }
+        .edu-box summary { font-size: 11px; color: var(--teal); cursor: pointer; display: inline-block; font-weight: 600; }
+        .edu-box p { font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 6px; padding: 10px; background: #f8fafc; border-left: 3px solid var(--teal); border-radius: 4px; }
+        .edu-box a { font-size: 10px; text-decoration: underline; text-underline-offset: 3px; color: var(--teal); font-weight: bold; display: inline-block; margin-top: 5px; }
+
+        .selected-count { font-size: 12px; color: var(--teal); font-weight: bold; margin-top: 10px; }
+
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #254a3a; color: #fff; border-radius: 8px; padding: 12px 20px; font-size: 13px; z-index: 5; display: none; }
+        
+        @media(max-width: 600px) { .form-grid { grid-template-columns: 1fr; } .step { flex-direction: column; align-items: flex-start; gap: 4px; font-size: 10px; } .card { padding: 20px; } .actions { flex-direction: column; } .btn { width: 100%; } }
+    </style>
+</head>
+<body class="notranslate">
+    <div class="header"><img src="logo.png" alt="HELUNEXA"></div>
+    <main>
+        <div class="card">
+            <nav id="steps">
+                <div class="step current"><span>1</span>Başvuru</div>
+                <div class="step"><span>2</span>Tetkik Seçimi</div>
+                <div class="step"><span>3</span>Hekim Onayı</div>
+                <div class="step"><span>4</span>Ödeme</div>
+            </nav>
+            <div id="screen"></div>
+        </div>
+    </main>
+    <div id="toast"></div>
+
+    <script>
+        const SUPABASE_URL = 'https://grbjmhknmlheoyknmyhd.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p';
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'helunexa-hasta-auth' } });
+
+        let step = 0;
+        let state = { profile: {}, requestedTests: [] };
+
+        // DR. ARKADAŞININ KATALOĞU VE TIBBİ AÇIKLAMALARI
+        const CATALOG = {
+            "Hepatit taraması": {
+                "Hepatit B · HBsAg / anti-HBs / total anti-HBc": { desc: "Hepatit B virüsüyle mevcut veya geçmiş karşılaşmayı ve bağışıklık durumunu değerlendirir. HBsAg mevcut enfeksiyon, anti-HBs bağışıklık, total anti-HBc ise geçirilmiş karşılaşma hakkında bilgi verir.", url: "https://www.cdc.gov/hepatitis-b/hcp/diagnosis-testing/index.html" },
+                "Anti-HCV": { desc: "Hepatit C virüsüne karşı oluşan antikorları araştırarak virüsle karşılaşma hakkında bilgi verir. Aktif enfeksiyonun belirlenmesinde HCV RNA testi kullanılır.", url: "https://www.cdc.gov/hepatitis-c/hcp/diagnosis-testing/index.html" }
+            },
+            "Kan ve demir": {
+                "Hemogram": { desc: "Alyuvarları, akyuvarları ve trombositleri inceler. Kansızlık, bağışıklık hücrelerindeki değişiklikler ve pıhtılaşmada görev alan hücrelerin sayısı hakkında bilgi sağlar.", url: "https://medlineplus.gov/lab-tests/complete-blood-count-cbc/" },
+                "Ferritin": { desc: "Vücudun demir depoları hakkında bilgi verir. Demir eksikliğinin değerlendirilmesinde kullanılır; iltihabi durumlarda da yükselebilir.", url: "https://medlineplus.gov/lab-tests/ferritin-blood-test/" },
+                "Transferrin satürasyonu / demir bağlama kapasitesi": { desc: "Demirin kanda taşınmasını ve taşıyıcı proteinlerin demirle doluluk oranını değerlendirir. Demir eksikliği veya fazlalığının araştırılmasına yardımcı olur.", url: "https://medlineplus.gov/lab-tests/iron-tests/" }
+            },
+            "Metabolik sağlık": {
+                "Açlık plazma glukozu ve HbA1c": { desc: "Açlık glukozu ölçüm anındaki kan şekerini, HbA1c ise yaklaşık son 2–3 aylık ortalama kan şekeri düzeyini yansıtır. Diyabet ve prediyabet değerlendirmesinde kullanılır.", url: "https://medlineplus.gov/lab-tests/diabetes-tests/" },
+                "Ürik asit": { desc: "Pürin adı verilen maddelerin yıkımıyla oluşan ürik asidin kandaki düzeyini ölçer. Gut ve bazı böbrek taşı türlerinin değerlendirilmesine yardımcı olur.", url: "https://medlineplus.gov/lab-tests/uric-acid-test/" },
+                "75 g OGTT": { desc: "75 gram glukoz alındıktan sonra kan şekerinin nasıl değiştiğini değerlendirir. Vücudun glukozu işleme kapasitesi hakkında bilgi sağlar.", url: "https://medlineplus.gov/lab-tests/diabetes-tests/" },
+                "Açlık insülini / HOMA-IR": { desc: "Açlık insülini, kan şekerinin düzenlenmesinde görevli insülin hormonunu ölçer. HOMA-IR, insülin direnci hakkında dolaylı bilgi veren bir göstergedir.", url: "https://medlineplus.gov/lab-tests/insulin-in-blood-test/" }
+            },
+            "Kalp ve damar": {
+                "Lipid profili": { desc: "Total kolesterol, LDL, HDL ve trigliserid düzeylerini değerlendirir. Kalp ve damar hastalığı riskinin değerlendirilmesinde kullanılan bilgilerden biridir.", url: "https://medlineplus.gov/lab-tests/cholesterol-levels/" },
+                "ApoB": { desc: "Damar duvarında birikebilen lipoprotein parçacıklarında bulunan ApoB proteinini ölçer. Bu parçacıkların sayısı hakkında bilgi sağlayarak lipid değerlendirmesini tamamlar.", url: "https://professional.heart.org/" },
+                "Lipoprotein(a)": { desc: "Büyük ölçüde kalıtsal özelliklerle belirlenen lipoprotein(a) düzeyini ölçer. Kalp ve damar hastalığı riskinin değerlendirilmesine ek bilgi sağlar.", url: "https://medlineplus.gov/lab-tests/lipoprotein-a-blood-test/" },
+                "hs-CRP": { desc: "CRP proteinini düşük düzeylerde hassas biçimde ölçer. Kalp ve damar riski değerlendirmesinde iltihabi etkinlik hakkında ek bilgi sağlayabilir.", url: "https://medlineplus.gov/lab-tests/c-reactive-protein-crp-test/" },
+                "Homosistein": { desc: "Metiyonin metabolizmasında oluşan homosisteinin kandaki düzeyini ölçer. B vitaminleriyle ilişkili metabolik süreçler hakkında bilgi verir.", url: "https://medlineplus.gov/lab-tests/homocysteine-test/" }
+            },
+            "Böbrek ve karaciğer": {
+                "Kreatinin / eGFR": { desc: "Kreatinin, kas metabolizmasında oluşan bir atık üründür. Kreatinin üzerinden hesaplanan eGFR, böbreklerin kanı süzme kapasitesini tahmin etmeye yardımcı olur.", url: "https://medlineplus.gov/lab-tests/creatinine-test/" },
+                "İdrar albümin/kreatinin oranı": { desc: "İdrardaki albümin miktarını kreatinine oranlayarak değerlendirir. Böbreklerden protein kaçağını ve erken böbrek hasarı bulgularını araştırmaya yardımcı olur.", url: "https://medlineplus.gov/lab-tests/microalbumin-creatinine-ratio/" },
+                "ALT": { desc: "Başlıca karaciğer hücrelerinde bulunan ALT enziminin kandaki düzeyini ölçer. Karaciğer hücrelerindeki hasarın değerlendirilmesine yardımcı olur.", url: "https://medlineplus.gov/lab-tests/alt-blood-test/" },
+                "AST": { desc: "Karaciğer, kas ve başka dokularda bulunan AST enziminin kandaki düzeyini ölçer. Diğer bulgularla birlikte hücre hasarının değerlendirilmesine yardımcı olur.", url: "https://medlineplus.gov/lab-tests/ast-test/" },
+                "ALP": { desc: "Safra yolları ve kemik dokusuyla ilişkili ALP enziminin kandaki düzeyini ölçer. Safra akımı ve kemik metabolizması hakkında bilgi sağlar.", url: "https://medlineplus.gov/lab-tests/alkaline-phosphatase/" },
+                "GGT": { desc: "Karaciğer ve safra yollarıyla ilişkili GGT enziminin kandaki düzeyini ölçer. Diğer karaciğer testlerinin yorumlanmasına yardımcı olur.", url: "https://medlineplus.gov/lab-tests/gamma-glutamyl-transferase-ggt-test/" },
+                "Total / direkt bilirubin": { desc: "Alyuvarların yıkımıyla oluşan bilirubinin toplam ve doğrudan ölçülen bölümünü değerlendirir. Sarılık, karaciğerde işlenme ve safra yoluyla atılım hakkında bilgi sağlar.", url: "https://medlineplus.gov/lab-tests/bilirubin-blood-test/" },
+                "Albümin": { desc: "Karaciğerde üretilen başlıca kan proteinlerinden albüminin düzeyini ölçer. Karaciğerin protein üretimi, protein kaybı ve iltihabi durumların değerlendirilmesine katkı sağlar.", url: "https://medlineplus.gov/lab-tests/albumin-blood-test/" },
+                "Total protein": { desc: "Kandaki albümin ve globülinlerin toplam miktarını ölçer. Protein üretimi, kaybı ve bağışıklık proteinlerindeki değişikliklerin değerlendirilmesine yardımcı olur.", url: "https://medlineplus.gov/lab-tests/total-protein-and-albumin-globulin-a-g-ratio/" },
+                "Üre": { desc: "Proteinlerin parçalanmasıyla oluşan ve böbreklerden atılan üreyi ölçer. Böbreklerin atık uzaklaştırması, sıvı durumu ve protein metabolizması hakkında bilgi verir.", url: "https://medlineplus.gov/lab-tests/bun-blood-urea-nitrogen/" }
+            },
+            "Tiroid": {
+                "TSH": { desc: "Hipofiz bezinden salgılanan ve tiroid bezini uyaran TSH hormonunu ölçer. Tiroidin çalışma düzeninin değerlendirilmesinde kullanılır.", url: "https://medlineplus.gov/lab-tests/tsh-thyroid-stimulating-hormone-test/" },
+                "Serbest T4": { desc: "Tiroidin ürettiği tiroksin hormonunun kanda proteinlere bağlı olmayan bölümünü ölçer. TSH ile birlikte tiroid hormon durumunu değerlendirir.", url: "https://medlineplus.gov/lab-tests/thyroxine-t4-test/" },
+                "Serbest T3 (FT3)": { desc: "Tiroid hormonlarından T3’ün kanda proteinlere bağlı olmayan bölümünü ölçer. Özellikle tiroidin fazla çalışmasının değerlendirilmesinde ek bilgi sağlar.", url: "https://medlineplus.gov/lab-tests/triiodothyronine-t3-tests/" },
+                "Anti-TPO": { desc: "Tiroid hormon üretiminde görevli TPO enzimine karşı gelişen antikorları araştırır. Hashimoto tiroiditi gibi otoimmün tiroid hastalıklarının değerlendirilmesine yardımcı olur.", url: "https://medlineplus.gov/lab-tests/thyroid-antibody-tests/" },
+                "Anti-Tg": { desc: "Tiroidde bulunan tiroglobulin proteinine karşı gelişen antikorları araştırır. Tiroid otoimmünitesinin değerlendirilmesine katkı sağlar.", url: "https://medlineplus.gov/lab-tests/thyroid-antibody-tests/" },
+                "TRAb": { desc: "Tiroid hücrelerindeki TSH reseptörüne karşı gelişen antikorları araştırır. Graves hastalığının değerlendirilmesinde kullanılır.", url: "https://medlineplus.gov/lab-tests/thyroid-antibody-tests/" }
+            },
+            "Vitaminler": {
+                "D vitamini · 25-OH D": { desc: "Kandaki 25-OH D düzeyini ölçerek D vitamini durumu hakkında bilgi verir. D vitamini, kalsiyum emilimi ve kemik sağlığında görev alır.", url: "https://medlineplus.gov/lab-tests/vitamin-d-test/" },
+                "Vitamin B12": { desc: "Kan hücresi yapımı ve sinir sistemi işlevlerinde görevli B12 vitamininin düzeyini değerlendirir. B12 eksikliğinin araştırılmasına yardımcı olur.", url: "https://medlineplus.gov/lab-tests/vitamin-b-test/" },
+                "Folat": { desc: "Hücre bölünmesi ve kan hücresi yapımında görevli folatın durumunu değerlendirir. Bazı kansızlık türleri ve beslenmeyle ilişkili eksikliklerin araştırılmasına yardımcı olur.", url: "https://medlineplus.gov/lab-tests/vitamin-b-test/" }
+            },
+            "Mineraller": {
+                "Magnezyum": { desc: "Kas, sinir ve birçok enzim sisteminde görevli magnezyumun kandaki düzeyini ölçer. Mineral dengesinin değerlendirilmesine yardımcı olur.", url: "https://medlineplus.gov/lab-tests/magnesium-blood-test/" },
+                "Çinko": { desc: "Bağışıklık işlevleri, yara iyileşmesi ve hücresel süreçlerde görevli çinkonun durumunu değerlendirmeye yardımcı olur.", url: "https://ods.od.nih.gov/factsheets/Zinc-HealthProfessional/" },
+                "Sodyum": { desc: "Vücudun su dengesinde önemli rol oynayan sodyumun kandaki düzeyini ölçer. Sıvı ve elektrolit dengesinin değerlendirilmesinde kullanılır.", url: "https://medlineplus.gov/lab-tests/sodium-blood-test/" },
+                "Potasyum": { desc: "Kalp, kas ve sinir hücrelerinin çalışmasında görevli potasyumun kandaki düzeyini ölçer. Elektrolit dengesinin değerlendirilmesinde kullanılır.", url: "https://medlineplus.gov/lab-tests/potassium-blood-test/" },
+                "Total kalsiyum": { desc: "Kemik yapısı, kas kasılması ve sinir iletiminde görevli kalsiyumun kandaki toplam düzeyini ölçer. Proteinlere bağlı ve serbest kalsiyumu birlikte içerir.", url: "https://medlineplus.gov/lab-tests/calcium-blood-test/" },
+                "Fosfor": { desc: "Kemik yapısı ve hücresel enerji süreçlerinde görevli fosfatın kandaki düzeyini ölçer. Kemik ve mineral metabolizmasının değerlendirilmesine yardımcı olur.", url: "https://medlineplus.gov/lab-tests/phosphate-in-blood/" },
+                "Selenyum": { desc: "Antioksidan enzimler ve tiroid hormon metabolizmasında görevli selenyumun durumunu değerlendirmeye yardımcı olur.", url: "https://ods.od.nih.gov/factsheets/Selenium-HealthProfessional/" },
+                "İyot değerlendirmesi": { desc: "Tiroid hormonlarının yapımı için gerekli iyotla ilgili bilgi sağlar. İdrar iyot ölçümü yakın dönem alımı yansıtır; bireysel durumun yorumlanması örnekleme biçimine bağlıdır.", url: "https://ods.od.nih.gov/factsheets/Iodine-HealthProfessional/" }
+            },
+            "Kemik ve hormonlar": {
+                "Parathormon (PTH)": { desc: "Paratiroid bezlerinden salgılanan ve kalsiyum dengesini düzenleyen hormonu ölçer. Kemik ve mineral metabolizmasını değerlendirir.", url: "https://medlineplus.gov/lab-tests/parathyroid-hormone-pth-test/" },
+                "Total testosteron": { desc: "Üreme işlevleri, kas ve kemik sağlığıyla ilişkili testosteronun kandaki toplam düzeyini ölçer. Hormon durumunun değerlendirilmesine yardımcı olur.", url: "https://medlineplus.gov/lab-tests/testosterone-levels-test/" },
+                "FSH / LH": { desc: "Hipofizden salgılanan FSH ve LH hormonlarını ölçer. Yumurtalık ve testis işlevleri, yumurtlama ve üreme hormonlarının düzenlenmesi hakkında bilgi sağlar.", url: "https://medlineplus.gov/lab-tests/follicle-stimulating-hormone-fsh-levels-test/" },
+                "Estradiol": { desc: "Östrojen hormonlarından estradiolün kandaki düzeyini ölçer. Yumurtalık işlevleri, adet döngüsü ve menopozla ilişkili hormon durumunun değerlendirilmesine yardımcı olur.", url: "https://medlineplus.gov/lab-tests/estrogen-levels-test/" },
+                "Prolaktin": { desc: "Hipofizden salgılanan ve süt üretiminde görevli prolaktin hormonunu ölçer. Üreme ve hipofiz işlevleriyle ilişkili hormonal değerlendirmelerde kullanılır.", url: "https://medlineplus.gov/lab-tests/prolactin-levels/" }
+            },
+            "Diğer seçilmiş değerlendirmeler": {
+                "CRP": { desc: "İltihabi süreçlerde karaciğerin ürettiği CRP proteinini ölçer. Vücuttaki iltihabi etkinlik hakkında bilgi verir; kaynağını tek başına belirlemez.", url: "https://medlineplus.gov/lab-tests/c-reactive-protein-crp-test/" },
+                "Sedimentasyon (ESR)": { desc: "Alyuvarların bir tüpte belirli sürede çökme hızını ölçer. İltihabi süreçlerin değerlendirilmesine yardımcı olan dolaylı bir göstergedir.", url: "https://medlineplus.gov/lab-tests/erythrocyte-sedimentation-rate-esr/" },
+                "Tam idrar tahlili": { desc: "İdrarın fiziksel ve kimyasal özelliklerini ve hücresel içeriğini inceler. Kan, protein, glukoz ve idrar yollarıyla ilişkili bulgular hakkında bilgi sağlar.", url: "https://medlineplus.gov/ency/article/003579.htm" },
+                "Çölyak serolojisi · tTG-IgA + total IgA": { desc: "Glutene karşı gelişen otoimmün yanıtla ilişkili tTG-IgA antikorlarını araştırır. Total IgA ölçümü, antikor sonucunun doğru yorumlanmasına yardımcı olur.", url: "https://medlineplus.gov/lab-tests/celiac-disease-screening/" }
             }
+        };
 
-            // Hekimin mevcut reçetesi (varsa)
-            let currentPrescription = currentApp.prescription || '';
+        function toast(text) { const el = document.getElementById('toast'); el.textContent = text; el.style.display = 'block'; setTimeout(() => el.style.display = 'none', 3000); }
 
-            let appointmentDetail = '';
-            if (currentApp.appointment_date) {
-                appointmentDetail = `<div class="detail-row" style="background:#ecfdf5; padding:10px; border-radius:6px; border-left:4px solid #10b981;">
-                    <label style="color:#065f46;">📅 Randevu Tarihi ve Saati</label>
-                    <div class="value" style="font-weight:bold; color:#047857;">${new Date(currentApp.appointment_date).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })} ${currentApp.appointment_time ? ' - Saat: ' + currentApp.appointment_time : ''}</div>
-                </div>`;
+        function render() {
+            const screens = [entry, intakeForm, testSelection, doctorApproval, payment];
+            if(step >= 0 && step <= 4) {
+                screens[step]();
+                document.querySelectorAll('.step').forEach((s, i) => { 
+                    s.className = 'step'; 
+                    if (i < step) s.classList.add('done'); 
+                    if (i === step) s.classList.add('current'); 
+                });
             }
+        }
 
-            document.getElementById('modalBody').innerHTML = `
-                ${appointmentDetail}
-                ${patientSelectedHtml}
-                
-                <div class="detail-row"><label>Hizmet Türü</label><div class="value">${currentApp.service_type}</div></div>
-                <div class="detail-row"><label>Hasta Notları</label><div class="value" style="white-space:pre-wrap;">${currentApp.test_notes || '-'}</div></div>
-                
-                <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-                
-                <div class="eval-box">
-                    <h3 style="font-size:16px; color:#1e40af; margin-bottom:10px;">🩺 Hekim Değerlendirmesi</h3>
-                    <div class="detail-row">
-                        <label>Genel Durum</label>
-                        <select id="editStatus">
-                            <option value="pending" ${currentApp.status === 'pending' ? 'selected' : ''}>Bekliyor (Onay Bekliyor)</option>
-                            <option value="in_progress" ${currentApp.status === 'in_progress' ? 'selected' : ''}>İşlemde</option>
-                            <option value="completed" ${currentApp.status === 'completed' ? 'selected' : ''}>Tamamlandı (Onaylandı)</option>
-                            <option value="cancelled" ${currentApp.status === 'cancelled' ? 'selected' : ''}>İptal</option>
-                        </select>
-                    </div>
-                    <div class="detail-row"><label>Hekim Notu (Kısa)</label><textarea id="editNote">${currentApp.doctor_note || ''}</textarea></div>
-                    <div class="detail-row"><label>Hekim Değerlendirmesi</label><textarea id="editEvaluation">${currentApp.evaluation || ''}</textarea></div>
-                    
-                    <!-- YENİ ÖNERİ ALANI -->
-                    <div class="detail-row" style="background:#eff6ff; padding:15px; border-radius:8px; border:1px solid #bfdbfe;">
-                        <label style="color:#1e40af;">➕ Hekimin Önerdiği Tetkikler (Öneri)</label>
-                        <div style="display:flex; gap:10px; margin-bottom:10px;">
-                            <select id="doctorTestSelect" style="flex:1;">
-                                <option value="">Tetkik seçin...</option>
-                                ${DOCTOR_CATALOG.map(t => `<option value="${t}">${t}</option>`).join('')}
-                            </select>
-                            <button type="button" class="btn btn-primary" onclick="addDoctorTest()" style="padding: 8px 15px; font-size:13px;">Ekle</button>
-                        </div>
-                        <div id="doctorSelectedList" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px;">
-                            <!-- Eklenen tetkikler buraya gelecek -->
-                        </div>
-                        
-                        <label>Nihai Reçete / Panel (Düzenlenebilir)</label>
-                        <textarea id="editPrescription" style="min-height:100px; background:white; border-color:#93c5fd;">${currentPrescription}</textarea>
-                    </div>
+        function entry() {
+            document.getElementById('screen').innerHTML = `
+                <div class="card-heading">
+                    <h2>Size nasıl yardımcı olalım?</h2>
+                    <p>Temel bilgiler, örnek kontrol paneli ve hekim onayı.</p>
+                </div>
+                <button class="route-card" onclick="step=1; render();">
+                    <span class="number">01</span>
+                    <span><b>Şikayetim yok, genel kontrol istiyorum.</b><small>Vücudum ve sağlığımla ilgili bir şikayetim yok. Genel kontrol tahlilleri yaptırmak istiyorum.</small></span>
+                </button>
+                <button class="route-card" onclick="alert('Bu check-up modülü, şikayeti olmayan kişiler içindir. Lütfen doktor randevusu alın.'); window.location.href='basvuru.html';">
+                    <span class="number">02</span>
+                    <span><b>Şikayetlerim var, doktor muayenesi istiyorum.</b><small>Şikayetlerim var, muayene için yönlendirme istiyorum.</small></span>
+                </button>
+            `;
+        }
+
+        function intakeForm() {
+            document.getElementById('screen').innerHTML = `
+                <div class="card-heading"><h2>Kısaca sizi tanıyalım.</h2><p>Check-up planınızı oluşturmak için temel bilgiler.</p></div>
+                <div class="form-grid">
+                    <div><label>Yaş *<input type="number" id="age" min="18" max="120"></label></div>
+                    <div><label>Cinsiyet *<select id="sex"><option value="">Seçiniz</option><option value="Kadın">Kadın</option><option value="Erkek">Erkek</option></select></label></div>
+                    <div><label>Kilo (kg) *<input type="number" id="weight" min="20" max="300"></label></div>
+                    <div><label>Boy (cm) *<input type="number" id="height" min="100" max="250"></label></div>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="step=0; render();">Geri</button>
+                    <button class="btn btn-primary" id="nextBtn">Tetkik Seçimine Geç →</button>
                 </div>
             `;
-            
-            // Hekimin eklediği testleri tutacağımız dizi
-            window.tempDoctorTests = currentPrescription ? currentPrescription.split('\n').filter(t => t.trim() !== '') : [];
-            renderDoctorSelectedList();
+            document.getElementById('nextBtn').onclick = () => {
+                const age = Number(document.getElementById('age').value), weight = Number(document.getElementById('weight').value), height = Number(document.getElementById('height').value), sex = document.getElementById('sex').value;
+                if (!age || !weight || !height || !sex) return toast('Tüm alanları doldurun.');
+                state.profile = { age, weight, height, sex };
+                step = 2; render();
+            };
+        }
 
-            document.getElementById('modalOverlay').classList.add('active');
+        function testSelection() {
+            document.getElementById('screen').innerHTML = `
+                <div class="card-heading">
+                    <h2>Hekimle görüşmek istediğiniz tetkikler</h2>
+                    <p>Merak ettiğiniz veya yaptırmak istediğiniz tetkikleri seçin. Nihai planı hekiminiz onaylayacaktır.</p>
+                </div>
+                <div id="catalogContainer">
+                    ${Object.entries(CATALOG).map(([groupName, tests], gIndex) => `
+                        <details class="catalog-group">
+                            <summary>${groupName} <small>(${Object.keys(tests).length} seçenek)</small></summary>
+                            ${Object.entries(tests).map(([testName, testData], tIndex) => `
+                                <div class="catalog-item">
+                                    <input type="checkbox" id="test_${gIndex}_${tIndex}" value="${testName}" class="test-checkbox" onchange="updateCount()">
+                                    <label for="test_${gIndex}_${tIndex}">
+                                        <span class="test-name">${testName}</span>
+                                        <div class="edu-box">
+                                            <details>
+                                                <summary>Neyi değerlendirir?</summary>
+                                                <p>${testData.desc}</p>
+                                                ${testData.url ? `<a href="${testData.url}" target="_blank" rel="noopener noreferrer">Kaynak ↗</a>` : ''}
+                                            </details>
+                                        </div>
+                                    </label>
+                                </div>
+                            `).join('')}
+                        </details>
+                    `).join('')}
+                </div>
+                <div class="selected-count" id="selectedCount">Seçilen tetkik sayısı: 0 / 50</div>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="step=1; render();">Geri</button>
+                    <button class="btn btn-primary" id="nextBtn">Hekim Onayına Gönder →</button>
+                </div>
+            `;
+            document.getElementById('nextBtn').onclick = () => {
+                const selected = Array.from(document.querySelectorAll('.test-checkbox:checked')).map(cb => cb.value);
+                state.requestedTests = selected;
+                step = 3; render();
+            };
+        }
+
+        window.updateCount = function() {
+            const count = document.querySelectorAll('.test-checkbox:checked').length;
+            document.getElementById('selectedCount').textContent = `Seçilen tetkik sayısı: ${count} / 50`;
         };
 
-        // Hekim test eklediğinde çalışacak fonksiyon
-        window.addDoctorTest = function() {
-            const select = document.getElementById('doctorTestSelect');
-            const test = select.value;
-            if (!test) return;
-            
-            if (!window.tempDoctorTests.includes(test)) {
-                window.tempDoctorTests.push(test);
-                renderDoctorSelectedList();
+        function doctorApproval() {
+            document.getElementById('screen').innerHTML = `
+                <div class="card-heading">
+                    <h2>Başvurunuz Hekim Onayına Gönderildi</h2>
+                    <p>Seçtiğiniz tetkikler ve bilgileriniz hekiminiz tarafından değerlendirilecektir.</p>
+                </div>
+                <div class="application">
+                    <span style="font-size:10px; color:var(--teal); letter-spacing:1px;">SEÇİLEN TETKİKLER (${state.requestedTests.length})</span>
+                    <ul style="margin-left: 20px; margin-top: 10px; font-size: 13px; color: var(--muted);">
+                        ${state.requestedTests.length ? state.requestedTests.map(t => `<li>${t}</li>`).join('') : '<li>Henüz tetkik seçilmedi.</li>'}
+                    </ul>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="step=2; render();">Geri Dön</button>
+                    <button class="btn btn-primary" id="nextBtn">Ödemeye Geç →</button>
+                </div>
+            `;
+            document.getElementById('nextBtn').onclick = () => { step = 4; render(); };
+        }
+
+        function payment() {
+            document.getElementById('screen').innerHTML = `
+                <div class="card-heading"><h2>Ödemeye Geç</h2><p>Başvuru formuna yönlendiriliyorsunuz.</p></div>
+                <label class="check"><input type="checkbox" id="confirmCheck"> Seçtiğim tetkikleri ve bilgileri onaylıyorum.</label>
+                <div class="actions">
+                    <button class="btn btn-secondary" onclick="step=3; render();">Geri</button>
+                    <button class="btn btn-primary" id="finishBtn">💳 Ödemeye Geç</button>
+                </div>
+            `;
+
+            document.getElementById('finishBtn').onclick = () => {
+                if (!document.getElementById('confirmCheck').checked) return toast('Lütfen devam etmek için onaylayın.');
+                
+                sessionStorage.setItem('cdss_profile', JSON.stringify(state.profile));
+                sessionStorage.setItem('cdss_requested_tests', JSON.stringify(state.requestedTests));
+                
+                window.location.href = 'basvuru.html?checkup=approved';
+            };
+        }
+
+        async function checkSession() {
+            await new Promise(resolve => setTimeout(resolve, 300)); 
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) { 
+                render(); 
+            } else { 
+                window.location.href = 'giris.html'; 
             }
-            select.value = ''; // Seçimi sıfırla
-        };
-
-        // Hekim test sildiğinde çalışacak fonksiyon
-        window.removeDoctorTest = function(test) {
-            window.tempDoctorTests = window.tempDoctorTests.filter(t => t !== test);
-            renderDoctorSelectedList();
-        };
-
-        // Eklenen testleri ekrana çizen fonksiyon
-        window.renderDoctorSelectedList = function() {
-            const listContainer = document.getElementById('doctorSelectedList');
-            const presTextarea = document.getElementById('editPrescription');
-            
-            if (window.tempDoctorTests.length === 0) {
-                listContainer.innerHTML = '<span style="font-size:12px; color:#94a3b8;">Henüz tetkik eklenmedi.</span>';
-            } else {
-                listContainer.innerHTML = window.tempDoctorTests.map(t => `
-                    <span style="background:#dbeafe; color:#1e40af; padding:4px 8px; border-radius:4px; font-size:12px; display:flex; align-items:center; gap:5px; border:1px solid #bfdbfe;">
-                        ${t}
-                        <button type="button" onclick="removeDoctorTest('${t}')" style="background:none; border:none; color:#1e40af; cursor:pointer; font-size:14px; font-weight:bold; padding:0;">×</button>
-                    </span>
-                `).join('');
-            }
-            
-            // Textarea'yı bu liste ile senkronize et (Her satıra bir test)
-            presTextarea.value = window.tempDoctorTests.join('\n');
-        };
+        }
+        
+        checkSession();
+    </script>
+</body>
+</html>
