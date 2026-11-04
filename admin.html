@@ -20,21 +20,23 @@
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .stat-card .num { font-size: 28px; font-weight: bold; color: #10b981; }
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; }
-        .tab-btn { padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: bold; color: #64748b; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; overflow-x: auto; }
+        .tab-btn { padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: bold; color: #64748b; white-space: nowrap; }
         .tab-btn.active { color: #10b981; border-bottom-color: #10b981; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .filters { background: white; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 10px; }
+        .filters { background: white; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
         .filters button { padding: 8px 16px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; }
-        .filters button.active { background: #10b981; color: white; }
+        .filters button.active { background: #10b981; color: white; border-color: #10b981; }
         .table-container { background: white; border-radius: 10px; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; }
         th { background: #f8fafc; padding: 14px 15px; text-align: left; font-size: 12px; color: #64748b; border-bottom: 1px solid #e2e8f0; }
         td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; }
         .badge.pending { background: #fef3c7; color: #92400e; }
         .badge.completed { background: #d1fae5; color: #065f46; }
+        .badge.in_progress { background: #dbeafe; color: #1e40af; }
+        .badge.appointment { background: #ecfdf5; color: #047857; border: 1px solid #10b981; margin-top: 5px; }
         .action-btn { padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; }
         
         /* MODAL STİLLERİ */
@@ -73,22 +75,31 @@
 
     <div class="container">
         <div class="stats">
-            <div class="stat-card"><div class="num" id="statTotal">-</div><div class="label">Toplam</div></div>
+            <div class="stat-card"><div class="num" id="statTotal">-</div><div class="label">Toplam Başvuru</div></div>
             <div class="stat-card"><div class="num" id="statPending">-</div><div class="label">Bekleyen</div></div>
             <div class="stat-card"><div class="num" id="statProgress">-</div><div class="label">İşlemde</div></div>
             <div class="stat-card"><div class="num" id="statCompleted">-</div><div class="label">Tamamlanan</div></div>
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" data-tab="applications">📋 Başvurular</button>
+            <button class="tab-btn active" data-tab="applications">📋 Başvurular ve Randevular</button>
             <button class="tab-btn" data-tab="addDoctor" id="tabAddDoctorBtn" style="display:none;">👨‍⚕️ Yeni Doktor Ekle</button>
         </div>
 
         <div class="tab-content active" id="tab-applications">
+            <!-- YENİ EKLENEN RANDEVU FİLTRELERİ -->
             <div class="filters">
+                <span style="font-weight:bold; color:#64748b; margin-right:10px; font-size:14px;">Durum:</span>
                 <button class="filter-btn active" data-filter="all">Tümü</button>
                 <button class="filter-btn" data-filter="pending">Bekleyen</button>
                 <button class="filter-btn" data-filter="completed">Tamamlanan</button>
+                
+                <span style="border-left: 1px solid #cbd5e1; height: 20px; margin: 0 10px;"></span>
+                
+                <span style="font-weight:bold; color:#64748b; margin-right:10px; font-size:14px;">Tarih:</span>
+                <button class="date-filter-btn active" data-date="all">Tüm Zamanlar</button>
+                <button class="date-filter-btn" data-date="today">Bugün</button>
+                <button class="date-filter-btn" data-date="upcoming">Gelecek Randevular</button>
             </div>
             <div class="table-container"><div id="tableContent">Yükleniyor...</div></div>
         </div>
@@ -131,7 +142,9 @@
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'helunexa-hasta-auth' } });
 
-        let currentRole = 'doctor', currentSpecialty = null, allApps = [], currentApp = null, currentFilter = 'all';
+        let currentRole = 'doctor', currentSpecialty = null, allApps = [], currentApp = null;
+        let currentStatusFilter = 'all';
+        let currentDateFilter = 'all';
 
         async function checkSession() {
             const { data: { session } } = await _supabase.auth.getSession();
@@ -139,7 +152,6 @@
             
             const { data: roleData } = await _supabase.from('user_roles').select('*').eq('user_id', session.user.id).single();
             
-            // Sadece admin ve doctor rollerine izin ver
             if (!roleData || (roleData.role !== 'admin' && roleData.role !== 'doctor')) { 
                 await _supabase.auth.signOut();
                 window.location.href = 'giris.html'; 
@@ -165,7 +177,6 @@
 
         async function loadApps() {
             let query = _supabase.from('applications').select('*');
-            // Hekim ise sadece kendi branşındaki hastaları getir
             if (currentRole !== 'admin' && currentSpecialty) {
                 query = query.eq('specialty', currentSpecialty);
             }
@@ -183,26 +194,80 @@
         }
 
         function renderTable() {
-            const filtered = currentFilter === 'all' ? allApps : allApps.filter(a => a.status === currentFilter);
-            let html = `<table><thead><tr><th>Tarih</th><th>Hasta</th><th>Hizmet</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>`;
-            filtered.forEach(app => {
-                const statusCls = app.status === 'completed' ? 'completed' : 'pending';
-                html += `<tr>
-                    <td>${new Date(app.created_at).toLocaleDateString('tr-TR')}</td>
-                    <td><strong>${app.fullname}</strong></td>
-                    <td>${app.service_type}</td>
-                    <td><span class="badge ${statusCls}">${app.status === 'completed' ? 'Tamamlandı' : 'Bekliyor'}</span></td>
-                    <td><button class="action-btn" onclick="openDetail(${app.id})">Detay</button></td>
-                </tr>`;
-            });
+            let filtered = allApps;
+
+            // 1. Durum Filtresi
+            if (currentStatusFilter !== 'all') {
+                filtered = filtered.filter(a => a.status === currentStatusFilter);
+            }
+
+            // 2. Tarih Filtresi
+            if (currentDateFilter !== 'all') {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Bugünün başlangıcı
+
+                filtered = filtered.filter(app => {
+                    if (!app.appointment_date) return false; // Randevu tarihi yoksa listeleme
+                    const appDate = new Date(app.appointment_date);
+                    appDate.setHours(0, 0, 0, 0);
+
+                    if (currentDateFilter === 'today') {
+                        return appDate.getTime() === today.getTime();
+                    } else if (currentDateFilter === 'upcoming') {
+                        return appDate.getTime() > today.getTime();
+                    }
+                    return true;
+                });
+            }
+
+            let html = `<table><thead><tr><th>Başvuru Tarihi</th><th>Hasta</th><th>Hizmet</th><th>Randevu Tarihi</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>`;
+            
+            if (filtered.length === 0) {
+                html += `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:30px;">Bu kriterlere uygun başvuru bulunamadı.</td></tr>`;
+            } else {
+                filtered.forEach(app => {
+                    const statusCls = app.status === 'completed' ? 'completed' : (app.status === 'in_progress' ? 'in_progress' : 'pending');
+                    const statusText = app.status === 'completed' ? 'Tamamlandı' : (app.status === 'in_progress' ? 'İşlemde' : 'Bekliyor');
+                    
+                    // Randevu tarihini formatla ve vurgula
+                    let appointmentHtml = '<span style="color:#94a3b8;">-</span>';
+                    if (app.appointment_date) {
+                        const apptDate = new Date(app.appointment_date);
+                        const formattedDate = apptDate.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', year: 'numeric' });
+                        appointmentHtml = `<span class="badge appointment">📅 ${formattedDate} ${app.appointment_time ? '· ' + app.appointment_time : ''}</span>`;
+                    }
+
+                    html += `<tr>
+                        <td>${new Date(app.created_at).toLocaleDateString('tr-TR')}</td>
+                        <td><strong>${app.fullname}</strong></td>
+                        <td>${app.service_type}</td>
+                        <td>${appointmentHtml}</td>
+                        <td><span class="badge ${statusCls}">${statusText}</span></td>
+                        <td><button class="action-btn" onclick="openDetail(${app.id})">Detay</button></td>
+                    </tr>`;
+                });
+            }
             html += '</tbody></table>';
             document.getElementById('tableContent').innerHTML = html;
         }
 
+        // Durum Filtresi Tıklamaları
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.onclick = () => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active'); currentFilter = btn.dataset.filter; renderTable();
+                btn.classList.add('active'); 
+                currentStatusFilter = btn.dataset.filter; 
+                renderTable();
+            }
+        });
+
+        // Tarih Filtresi Tıklamaları
+        document.querySelectorAll('.date-filter-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.date-filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active'); 
+                currentDateFilter = btn.dataset.date; 
+                renderTable();
             }
         });
 
@@ -212,7 +277,6 @@
             
             document.getElementById('modalTitle').textContent = currentApp.fullname;
             
-            // Hastanın CDSS'te seçtiği tetkikleri ayıkla ve göster
             let patientSelectedHtml = '';
             if (currentApp.test_notes && currentApp.test_notes.includes('Hastanın Hekimle Görüşmek İstediği Tetkikler:')) {
                 let selectedTestsString = currentApp.test_notes.replace('Hastanın Hekimle Görüşmek İstediği Tetkikler: ', '');
@@ -229,10 +293,19 @@
                 `;
             }
 
+            let appointmentDetail = '';
+            if (currentApp.appointment_date) {
+                appointmentDetail = `<div class="detail-row" style="background:#ecfdf5; padding:10px; border-radius:6px; border-left:4px solid #10b981;">
+                    <label style="color:#065f46;">📅 Randevu Tarihi ve Saati</label>
+                    <div class="value" style="font-weight:bold; color:#047857;">${new Date(currentApp.appointment_date).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })} ${currentApp.appointment_time ? ' - Saat: ' + currentApp.appointment_time : ''}</div>
+                </div>`;
+            }
+
             document.getElementById('modalBody').innerHTML = `
+                ${appointmentDetail}
                 ${patientSelectedHtml}
                 <div class="detail-row"><label>Hizmet Türü</label><div class="value">${currentApp.service_type}</div></div>
-                <div class="detail-row"><label>Hasta Notları</label><div class="value">${currentApp.test_notes || '-'}</div></div>
+                <div class="detail-row"><label>Hasta Notları</label><div class="value" style="white-space:pre-wrap;">${currentApp.test_notes || '-'}</div></div>
                 <div class="detail-row"><label>Boy / Kilo (VKİ)</label><div class="value">${currentApp.test_notes && currentApp.test_notes.includes('Boy:') ? currentApp.test_notes.match(/Boy:.*?kg.*?VKİ: [\d.]+/)?.[0] || '-' : '-'}</div></div>
                 <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
                 
@@ -274,7 +347,6 @@
             btn.disabled = false; btn.textContent = 'Kaydet';
         };
 
-        // Yeni Doktor Ekleme (Sadece Admin Görebilir)
         document.getElementById('saveDoctorBtn').onclick = async () => {
             const name = document.getElementById('newDocName').value.trim();
             const email = document.getElementById('newDocEmail').value.trim();
