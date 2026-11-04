@@ -12,6 +12,13 @@ Bu proje; hasta başvuru süreçlerini, akıllı tetkik seçimlerini (CDSS), anl
 *   **Ödeme ve Yönlendirme Simülasyonu:** Demo amaçlı kredi kartı ödeme ekranı ve anlaşmalı hastane seçim modülü.
 *   **Rol Tabanlı Giriş (Auth):** Hasta, Hekim ve Admin rolleri için ayrı giriş ve yetkilendirme süreçleri.
 *   **Kurumsal Giriş:** Şirket kodu ve sicil numarası ile kurumsal hasta başvuruları.
+    ## 🚀 Canlı Demo (Prototip)
+
+Platformun hasta ve hekim panelleri arasındaki akışını (başvuru, hekim onayı, sonuç takibi) test edebileceğiniz kurgusal bir demo bulunmaktadır.
+
+*   **Demo Dosyası:** `HELUNEXA_Platform.html`
+*   **Nasıl Çalıştırılır?** Projeyi bilgisayarınıza indirip `HELUNEXA_Platform.html` dosyasına çift tıklayarak tarayıcınızda açabilirsiniz. Veya ana sayfadaki **"🚀 Canlı Demoyu İncele"** butonunu kullanabilirsiniz.
+*   *(Not: Bu demo tamamen tarayıcı hafızasında çalışır, gerçek veritabanına veya sağlık verisine bağlanmaz.)*
 
 ## 🛠️ Kullanılan Teknolojiler
 
