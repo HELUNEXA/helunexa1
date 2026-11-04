@@ -305,7 +305,7 @@
                 ${patientSelectedHtml}
                 
                 <div class="detail-row"><label>Hizmet Türü</label><div class="value">${currentApp.service_type}</div></div>
-                <div class="detail-row"><label>Hasta Notları</label><div class="value" style="white-space:pre-wrap; background:#f8fafc; padding:10px; border-radius:6px;">${currentApp.test_notes || '-'}</div></div>
+                <div class="detail-row"><label>Hasta Notları</label><div class="value" style="white-space:pre-wrap;">${currentApp.test_notes || '-'}</div></div>
                 
                 <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
                 
@@ -323,17 +323,18 @@
                     <div class="detail-row"><label>Hekim Notu (Kısa)</label><textarea id="editNote">${currentApp.doctor_note || ''}</textarea></div>
                     <div class="detail-row"><label>Hekim Değerlendirmesi</label><textarea id="editEvaluation">${currentApp.evaluation || ''}</textarea></div>
                     
-                    <!-- HEKİMİN ÖNERİ ALANI -->
+                    <!-- İŞTE O DEĞİŞİKLİK ÖNERİSİ KUTUSU -->
                     <div class="detail-row" style="background:#eff6ff; padding:15px; border-radius:8px; border:1px solid #bfdbfe; margin-top:20px;">
-                        <label style="color:#1e40af; font-size:13px; font-weight:bold;">➕ Hekimin Önerdiği Tetkikler (Öneri)</label>
-                        <div style="display:flex; gap:10px; margin-top:10px; margin-bottom:10px;">
+                        <label style="color:#1e40af; font-size:13px; font-weight:bold;">➕ Hekimin Önerdiği Tetkikler (Kendi Önerisi)</label>
+                        <p style="font-size:11px; color:#3b82f6; margin-bottom:8px;">Hastanın talebinden bağımsız olarak, uygun gördüğünüz tetkikleri buraya ekleyin.</p>
+                        <div style="display:flex; gap:10px; margin-bottom:10px;">
                             <select id="doctorTestSelect" style="flex:1; padding:8px; border:1px solid #93c5fd; border-radius:6px;">
                                 <option value="">Tetkik seçin...</option>
                                 ${DOCTOR_CATALOG.map(t => `<option value="${t}">${t}</option>`).join('')}
                             </select>
                             <button type="button" class="btn btn-primary" onclick="addDoctorTest()" style="padding: 8px 15px; font-size:13px;">Ekle</button>
                         </div>
-                        <div id="doctorSelectedList" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; min-height:30px;">
+                        <div id="doctorSelectedList" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px;">
                         </div>
                         
                         <label style="margin-top:10px; display:block; font-size:13px; font-weight:bold;">Nihai Reçete / Panel (Düzenlenebilir)</label>
@@ -342,7 +343,7 @@
                 </div>
             `;
             
-            window.tempDoctorTests = currentPrescription ? currentPrescription.split('\n').map(t => t.trim()).filter(t => t !== '') : [];
+            window.tempDoctorTests = currentPrescription ? currentPrescription.split('\n').filter(t => t.trim() !== '') : [];
             renderDoctorSelectedList();
 
             document.getElementById('modalOverlay').classList.add('active');
@@ -380,9 +381,7 @@
                 `).join('');
             }
             
-            if (presTextarea) {
-                presTextarea.value = window.tempDoctorTests.join('\n');
-            }
+            presTextarea.value = window.tempDoctorTests.join('\n');
         };
 
         window.closeModal = () => document.getElementById('modalOverlay').classList.remove('active');
