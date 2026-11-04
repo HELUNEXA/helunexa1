@@ -1,0 +1,727 @@
+<!doctype html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#163f37"><meta name="description" content="HELUNEXA: sağlık başvurusu, hekim tarafından oluşturulan kontrol planı ve sonuç takibi. Etkileşimli prototip."><title>HELUNEXA · Sağlık Takip Platformu</title><style>@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap');
+:root{--ink:#173e36;--muted:#75847e;--line:#dfe7e1;--paper:#f5f7f2;--white:#fff;--teal:#246b58;--light:#e9f1e9;--lime:#dcedac;--warm:#faf7ed;--radius:20px}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 'DM Sans',system-ui,sans-serif}h1,h2,h3,h4{font-family:Manrope,system-ui,sans-serif;line-height:1.25;letter-spacing:-.035em;margin:0}h1{font-size:46px;font-weight:750}h2{font-size:28px}h3{font-size:18px;letter-spacing:-.025em}p{margin:10px 0 0}button,a,input,select,textarea{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}a{color:inherit;text-decoration:none}button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #77a38b;outline-offset:4px}button{color:inherit;border:0}button svg,a svg{flex-shrink:0}.icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}#sidebar{position:fixed;left:0;top:0;bottom:0;width:240px;padding:33px 22px;background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:30}.brand{display:flex;align-items:center;gap:10px;font:800 24px Manrope,sans-serif;letter-spacing:.04em}.brandmark{width:35px;height:35px;background:var(--ink);color:var(--lime);border-radius:12px;display:grid;place-items:center;font-size:27px;font-weight:400}.brand-sub{font-size:10px;letter-spacing:.15em;margin:8px 0 38px 46px;color:var(--muted)}.nav-label{font-size:10px;letter-spacing:.14em;font-weight:700;color:#92a099;margin:22px 12px 10px}.nav-item{width:100%;display:flex;gap:12px;align-items:center;padding:13px 14px;border-radius:11px;background:transparent;font-size:13px;text-align:left;color:#677b71;margin:3px 0}.nav-item.active{background:#eaf1e8;color:var(--ink);font-weight:700}.nav-item:hover{background:#f1f5ef}.nav-spacer{flex:1}.side-note{padding:17px;background:var(--paper);border-radius:14px;font-size:12px;color:var(--muted)}.side-note b{color:var(--ink);display:block;margin-bottom:4px}.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#5f9571;margin-right:6px}.workspace{margin-left:240px}#topbar{height:88px;padding:0 44px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;background:rgba(245,247,242,.95)}.breadcrumb{font-size:12px;color:var(--muted)}.breadcrumb b{color:var(--ink);font-weight:500}.top-actions{display:flex;align-items:center;gap:16px}.demo-pill{font-size:10px;letter-spacing:.07em;border:1px solid #d8e1d4;border-radius:7px;padding:5px 9px;color:#6c7e68;white-space:nowrap}.role-select{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 12px;font-size:12px;color:var(--ink);max-width:190px}.avatar{width:34px;height:34px;border-radius:50%;background:var(--lime);display:grid;place-items:center;font-size:11px;font-weight:700}main{max-width:1320px;margin:auto;padding:38px 44px 65px}.eyebrow{font-size:10px;letter-spacing:.16em;font-weight:700;color:#7d8f7e;display:flex;align-items:center;gap:7px;margin-bottom:18px}.welcome{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.welcome h2{font-size:23px}.welcome p{font-size:13px;color:var(--muted);margin-top:5px}.small-date{font-size:12px;color:var(--muted)}.hero{display:grid;grid-template-columns:1.12fr 1fr;min-height:360px;overflow:hidden;background:#eaf0e5;border-radius:var(--radius);border:1px solid #e0e8da}.hero-copy{padding:42px}.hero-copy p{font-size:14px;max-width:380px;color:#6a8071;margin:20px 0 26px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;border-radius:10px;padding:13px 20px;background:var(--ink);color:#fff;font-weight:600;font-size:13px;min-height:46px}.btn:hover{background:#2e5d4d}.btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}.btn.ghost{background:transparent;color:var(--ink);border:1px solid #cad9c5}.btn.small{padding:9px 14px;min-height:38px}.hero-visual{position:relative;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#dfebc9 0,transparent 68%);padding:28px}.orbit{width:270px;height:270px;border:1px solid #cfddbd;border-radius:50%;position:absolute}.orbit:after{content:'';position:absolute;inset:29px;border:1px dashed #c5d3b5;border-radius:50%}.journey-card{position:relative;z-index:1;width:270px;padding:24px;background:rgba(255,255,255,.95);border:1px solid #fff;border-radius:17px;box-shadow:0 18px 40px #25472b0b;transform:rotate(-3deg)}.journey-top{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:15px}.journey-top .square{background:#edf3e3}.journey-top small{display:block;font-size:10px;color:var(--muted)}.journey-top b{font-size:13px}.journey-row{display:flex;gap:12px;align-items:center;margin:16px 0;font-size:12px}.journey-row i{font-style:normal;display:grid;place-items:center;width:23px;height:23px;border-radius:50%;font-size:10px;border:1px solid var(--line);background:#f6f8f2}.journey-row:first-of-type i{background:var(--lime)}.journey-row span{display:block;color:#7b8b7d;font-size:10px}.float-note{position:absolute;bottom:35px;right:18px;background:var(--ink);color:#e3edcd;padding:13px 18px;border-radius:12px;z-index:2;font-size:11px;box-shadow:0 9px 30px #21433110;transform:rotate(3deg)}.hero-caption{margin:12px 2px 28px;color:#8a968b;font-size:11px}.questions{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:28px 0 36px}.question{display:flex;gap:12px}.question .number{font-size:10px;color:#93a189;padding-top:4px}.question h3{font-size:13px;letter-spacing:0}.question p{font-size:12px;color:var(--muted);margin-top:5px}.section-head{display:flex;align-items:center;justify-content:space-between;margin:30px 0 20px;gap:15px}.section-head h2{font-size:21px}.section-head p{font-size:12px;color:var(--muted);margin-top:4px}.text-button{background:none;padding:0;color:var(--teal);font-size:12px;display:inline-flex;align-items:center;gap:7px}.module-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.module{padding:22px 20px;background:#fff;border:1px solid var(--line);border-radius:16px;min-height:208px;display:flex;flex-direction:column;transition:transform .15s,border .15s}.module.ready{border-color:#b5c9aa;background:#fafff3}.module:hover{border-color:#adc2a5;transform:translateY(-2px)}.module-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:23px}.square{width:39px;height:39px;border-radius:11px;display:grid;place-items:center;background:#f1f5ee;color:var(--teal)}.square .icon{width:21px;height:21px}.module-no{font-size:10px;color:#9aa697}.module h3{font-size:14px;letter-spacing:-.01em;line-height:1.45}.module p{font-size:11px;color:var(--muted);margin:8px 0 18px}.module-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:auto;font-size:10px}.tag{padding:4px 8px;background:#edf4e4;border-radius:6px;color:#527348;font-size:10px;white-space:nowrap}.tag.neutral{background:#f0f3ef;color:#8c988b}.module-bottom button{background:none;padding:0;color:var(--ink);font-size:11px;display:flex;align-items:center;gap:4px}.module-bottom .icon{width:14px}.bottom-strip{display:flex;justify-content:space-between;align-items:center;gap:20px;background:#edf2e8;border:1px solid #e1e9db;border-radius:15px;padding:23px 27px;margin-top:30px}.bottom-strip h3{font-size:15px}.bottom-strip p{font-size:12px;color:var(--muted);margin-top:4px}footer{max-width:1320px;margin:auto;padding:22px 44px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;font-size:10px;color:#7d8b7f}footer .muted{padding:0 7px}.page-head{display:flex;justify-content:space-between;align-items:start;gap:20px;margin-bottom:28px}.page-head h1{font-size:34px}.page-head p{color:var(--muted);max-width:600px;font-size:13px}.page-head .eyebrow{margin-bottom:10px}.content-grid{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:24px;align-items:start}.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px}.panel h2{font-size:22px}.panel>p{color:var(--muted);font-size:13px}.steps{display:flex;gap:20px;border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:28px}.step{display:flex;align-items:center;gap:8px;font-size:11px;color:#93a08f}.step span{display:grid;place-items:center;border:1px solid var(--line);width:25px;height:25px;border-radius:50%;font-size:10px}.step.active{color:var(--ink);font-weight:600}.step.active span{background:var(--lime);border-color:var(--lime)}.form-fields{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px}label{display:block;font-size:12px;font-weight:600;letter-spacing:.005em}.full{grid-column:1/-1}label small{font-weight:400;color:var(--muted)}input:not([type=checkbox]),select,textarea{display:block;width:100%;border:1px solid #dce4d8;border-radius:10px;color:var(--ink);background:#fff;padding:12px 14px;margin-top:7px;outline:none;font-size:14px;min-height:46px}input:focus,select:focus,textarea:focus{border-color:#789a6b;box-shadow:0 0 0 3px #e8f0e2}textarea{resize:vertical;min-height:90px;line-height:1.6}.check{display:flex;align-items:flex-start;gap:11px;cursor:pointer;font-weight:450;line-height:1.6}.check input{margin:3px 0 0;width:18px;height:18px;accent-color:var(--teal);flex-shrink:0}.check small{display:block;font-size:11px;margin-top:3px}.form-actions{display:flex;justify-content:space-between;gap:15px;margin-top:30px;border-top:1px solid var(--line);padding-top:22px}.summary-card{padding:22px;background:#edf2e7;border:1px solid #dfe7d7;border-radius:16px}.summary-card h3{font-size:14px;margin-bottom:15px}.summary-card p{font-size:12px;color:var(--muted);margin:8px 0}.summary-card .mini-label{font-size:9px;letter-spacing:.12em;margin-top:18px;margin-bottom:6px;color:#8d9d85}.summary-card ul{font-size:12px;padding-left:18px}.aside-note{font-size:11px;color:#8e9a8b;margin:17px 5px}.catalog-toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:22px}.search{max-width:320px}.search input{font-size:12px;background:#f8faf5}.counter{font-size:11px;color:var(--teal);white-space:nowrap}.catalog{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;align-items:start}.catalog-group{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff}.catalog-group>summary{padding:17px;font-size:12px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;list-style:none}.catalog-group>summary:after{content:'+';font-size:17px;font-weight:400;color:#83967c}.catalog-group[open]>summary:after{content:'−'}.catalog-group>summary small{font-size:10px;color:#99a28f;font-weight:400;margin-left:auto;margin-right:10px}.catalog-test{margin:0 17px;padding:15px 0;border-top:1px solid #eef1eb}.catalog-test label b{font-weight:600;font-size:12px}.education{margin:9px 0 0 28px}.education summary{font-size:11px;color:var(--teal);cursor:pointer}.education p{font-size:12px;color:var(--muted);line-height:1.7}.education a{font-size:10px;text-decoration:underline;text-underline-offset:3px}.selected-row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #edf0ea;padding:12px 0;gap:12px;font-size:12px}.selected-row button{background:none;color:#8f9a89;font-size:18px;line-height:1;padding:6px}.review-block{padding:20px 0;border-bottom:1px solid var(--line)}.review-block h3{font-size:14px;margin-bottom:10px}.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px}.review-grid span{display:block;color:var(--muted);font-size:10px}.preserve{white-space:pre-wrap;overflow-wrap:anywhere}.review-block p{font-size:12px;color:#647b69}.empty{padding:44px 25px;text-align:center}.empty .square{margin:0 auto 20px;width:50px;height:50px}.empty h2{font-size:23px}.empty p{color:var(--muted);font-size:13px;max-width:420px;margin:12px auto 24px}.status-line{display:flex;gap:18px;align-items:center;padding:20px;background:#f0f5e9;border-radius:14px;margin:20px 0}.status-line h3{font-size:14px}.status-line p{font-size:12px;color:var(--muted);margin-top:4px}.timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:28px 0}.timeline-item{border-top:2px solid var(--line);padding-top:14px;color:#93a08e;font-size:12px}.timeline-item.current{border-color:var(--teal);color:var(--ink)}.timeline-item b{display:block}.timeline-item small{font-size:10px}.result-list{margin-top:20px}.result-item{padding:18px 0;border-bottom:1px solid var(--line)}.result-item input[type=text]{font-size:12px}.result-item .check{font-size:12px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}.metric{padding:22px 24px;border:1px solid var(--line);border-radius:15px;background:#fff}.metric b{font:700 30px Manrope,sans-serif;display:block}.metric span{font-size:11px;color:var(--muted)}.case-row{padding:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid var(--line);border-radius:15px;background:#fff}.case-row h3{font-size:16px}.case-row p{font-size:12px;color:var(--muted);margin-top:5px}.case-row .tag{display:inline-block;margin-top:10px}.tabs{display:flex;gap:7px;margin:18px 0}.tabs button{background:#fff;padding:9px 15px;font-size:12px;border:1px solid var(--line);border-radius:9px}.tabs button.active{background:var(--ink);color:#fff;border-color:var(--ink)}.callout{padding:17px 20px;border-radius:12px;background:var(--warm);color:#8c805e;font-size:12px;margin:22px 0}.mobile-menu{display:none;background:none;padding:7px}.skip{position:absolute;left:-999px}.skip:focus{left:250px;top:10px;background:white;padding:10px;z-index:100}dialog{max-width:520px;width:calc(100% - 36px);border:1px solid var(--line);border-radius:22px;padding:32px;color:var(--ink);box-shadow:0 30px 100px #12342120}dialog::backdrop{background:#14372b66;backdrop-filter:blur(4px)}dialog h2{font-size:25px}dialog p{font-size:13px;color:var(--muted)}dialog ul{font-size:13px;color:var(--muted);padding-left:20px}dialog .form-actions{margin-top:25px}#toast{position:fixed;bottom:28px;left:calc(50% + 100px);transform:translateX(-50%);background:var(--ink);color:#fff;padding:15px 22px;border-radius:12px;max-width:calc(100% - 36px);font-size:13px;z-index:100;box-shadow:0 10px 30px #12342120}.module-status{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted)}.page-note{font-size:11px;color:var(--muted);margin-top:20px}.empty-list{font-size:12px;color:var(--muted);padding:15px 0}.link-row{display:flex;gap:20px;margin-top:20px}.notice{font-size:11px;color:var(--muted);padding:12px 0 0}.row-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:25px 0 10px}.row-heading h3{font-size:15px}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(min-width:1600px){main{padding-top:45px}.hero-copy{padding:46px 50px}}@media(max-width:1180px){#sidebar{width:210px;padding:30px 16px}.workspace{margin-left:210px}main{padding:30px}#topbar{padding:0 30px}footer{padding:22px 30px}.module-grid{grid-template-columns:repeat(2,1fr)}h1{font-size:39px}.hero-copy{padding:32px}.content-grid{grid-template-columns:minmax(0,1fr) 230px;gap:18px}.panel{padding:24px}.catalog{grid-template-columns:1fr}.hero-visual{padding:18px}.journey-card{width:235px}.float-note{right:10px;font-size:10px}.questions{gap:15px}.top-actions{gap:10px}}@media(max-width:850px){#sidebar{transform:translateX(-100%);transition:transform .2s;width:240px}.menu-open #sidebar{transform:translateX(0)}.workspace{margin-left:0}.mobile-menu{display:inline-flex}.top-actions .avatar{display:none}#topbar{height:74px;padding:0 24px}.breadcrumb{margin-right:auto}.content-grid{grid-template-columns:1fr}.content-grid>aside{display:none}.hero{grid-template-columns:1.1fr 1fr}.hero-copy{padding:32px}.hero-visual{overflow:hidden}.float-note{bottom:28px;right:8px}.menu-open #backdrop{display:block!important;position:fixed;inset:0;background:#12342155;z-index:25}#toast{left:50%}}@media(max-width:600px){body{font-size:14px}main{padding:25px 20px 40px}#topbar{padding:0 15px;height:66px}.breadcrumb{font-size:11px}.top-actions{gap:8px}.demo-pill{font-size:8px;padding:4px 6px}.role-select{padding:8px;font-size:10px;max-width:138px;min-height:36px}.welcome{margin-bottom:20px}.welcome h2{font-size:21px}.welcome p{font-size:12px}.small-date{display:none}.hero{grid-template-columns:1fr;min-height:0}.hero-copy{padding:28px}.hero-copy h1{font-size:35px}.hero-copy p{font-size:13px;margin:17px 0 22px}.hero-visual{height:255px;padding:15px;background:radial-gradient(ellipse at center,#dfeaca 0,transparent 65%)}.orbit{width:230px;height:230px}.journey-card{width:235px;padding:20px;transform:rotate(-3deg)}.journey-row{margin:11px 0}.float-note{bottom:22px;right:18px}.hero-caption{font-size:10px;margin-bottom:25px}.questions{grid-template-columns:1fr;gap:18px;margin:26px 0}.question h3{font-size:13px}.question p{font-size:12px}.section-head{margin-top:30px}.section-head h2{font-size:20px}.section-head p{font-size:11px}.section-head .text-button{font-size:10px}.module-grid{gap:10px}.module{padding:18px 15px;min-height:213px}.module-top{margin-bottom:18px}.module h3{font-size:13px}.module p{font-size:11px;line-height:1.65}.module-bottom{flex-wrap:wrap;gap:10px}.bottom-strip{align-items:start;padding:20px;flex-direction:column}.bottom-strip p{font-size:11px}footer{padding:22px 20px;font-size:9px;align-items:start}footer>span{max-width:210px}footer button{font-size:10px!important}.page-head{margin-bottom:24px}.page-head h1{font-size:28px}.page-head p{font-size:12px}.page-head>.btn{font-size:10px;min-height:35px;padding:8px 10px}.panel{padding:22px 19px;border-radius:17px}.panel h2{font-size:21px}.form-fields{gap:18px 13px}.form-fields .full{grid-column:1/-1}.form-fields label{font-size:11px}.form-fields input,.form-fields select{padding:10px;font-size:13px}.steps{gap:12px;margin-bottom:24px;padding-bottom:20px}.step{gap:6px;font-size:10px}.step span{width:22px;height:22px}.catalog{gap:10px}.catalog-toolbar{gap:10px}.search{max-width:220px}.search input{padding:10px;font-size:11px}.counter{font-size:10px}.form-actions .btn{font-size:11px;padding:12px 15px}.review-grid{font-size:12px}.metrics{gap:9px}.metric{padding:17px 13px}.metric b{font-size:25px}.metric span{font-size:10px}.case-row{padding:20px;align-items:start;flex-direction:column}.case-row h3{font-size:15px}.timeline{gap:12px}.timeline-item{font-size:11px}.timeline-item small{font-size:9px}.status-line{gap:12px;padding:17px}.catalog-group>summary{font-size:12px}.link-row{gap:14px;flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+/* v1.1: website with separate patient and clinician entry points */
+#sidebar{display:none}.workspace{margin-left:0}#topbar{max-width:none;height:91px;padding:0 max(28px,calc((100vw - 1180px)/2));background:#fff}.website-nav{display:flex;gap:15px;align-items:center}.web-login{padding:11px 19px;border:1px solid var(--line);border-radius:9px;background:white;font-size:12px;font-weight:600}.web-login.filled{background:var(--ink);color:white;border-color:var(--ink)}.web-nav-link{background:none;padding:10px;font-size:12px;color:var(--muted)}.web-nav-link.current{color:var(--ink);font-weight:700}.web-nav-link.exit{border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:8px 13px}.portal-badge{font-size:11px;padding:8px 12px;background:#f0f5eb;border-radius:8px;white-space:nowrap}.portal-badge small{font-size:8px;color:#8b9b7c;margin-left:8px}main{max-width:1236px;padding:40px 28px 65px}footer{max-width:1236px;padding:25px 28px}.public-page main{padding-top:0}.web-hero{padding:67px 20px 50px;text-align:center;position:relative}.web-hero .eyebrow{justify-content:center;font-size:10px;color:#61836b;margin-bottom:21px}.web-hero h1{font-size:52px;font-weight:750;line-height:1.23;letter-spacing:-.045em}.web-hero>p{font-size:15px;line-height:1.8;color:#748778;margin-top:21px}.entry-actions{display:flex;gap:16px;justify-content:center;margin:31px auto 18px;max-width:666px}.entry-button{display:flex;align-items:center;text-align:left;gap:15px;flex:1;background:var(--ink);color:#fff;padding:20px 21px;border-radius:14px;box-shadow:0 5px 20px #173e360a}.entry-icon{width:38px;height:38px;display:grid;place-items:center;background:#ffffff13;border-radius:11px}.entry-button>span:nth-child(2){flex:1}.entry-button b{display:block;font-size:15px;font-weight:600}.entry-button small{display:block;font-size:10px;color:#bdcfc2;margin-top:3px}.entry-button>.icon{width:17px}.doctor-entry{background:#fff;border:1px solid #cfdac8;color:var(--ink);box-shadow:none}.doctor-entry .entry-icon{background:#eff4e8}.doctor-entry small{color:#8b9986}.web-demo-note{font-size:10px;color:#91a088}.web-modules{padding-top:4px}.web-modules .section-head{margin:26px 0 24px}.web-modules .eyebrow{margin-bottom:10px;font-size:9px}.web-modules h2{font-size:23px}.module-count{font:700 23px Manrope,sans-serif;letter-spacing:-.04em;white-space:nowrap}.module-count small{display:block;text-align:right;font:400 10px 'DM Sans',system-ui,sans-serif;letter-spacing:0;color:var(--muted);margin-top:5px}.module-grid{gap:16px}.module{min-height:218px;padding:24px 21px}.module h3{font-size:14px}.module p{font-size:12px}.module-bottom .tag{font-size:10px}.web-process{display:grid;grid-template-columns:repeat(3,1fr);gap:38px;border-top:1px solid var(--line);padding-top:28px;margin:40px 0 0}.web-process>div{position:relative;padding-left:32px}.web-process>div>span{position:absolute;left:0;top:1px;font-size:10px;color:#8ca27d}.web-process h3{font-size:13px;letter-spacing:0}.web-process p{font-size:12px;color:var(--muted)}.skip:focus{left:15px}.content-grid{grid-template-columns:minmax(0,1fr) 285px}.form-fields label{font-size:13px}.catalog-test label b{font-size:13px}.check{font-size:13px}.education p{font-size:13px}.public-page #toast{left:50%}#toast{left:50%}
+@media(max-width:950px){#topbar{padding:0 24px}.module-grid{grid-template-columns:repeat(2,1fr)}.content-grid{grid-template-columns:minmax(0,1fr) 240px}.website-nav{gap:8px}.portal-badge{padding:7px 9px}.module{min-height:210px}.web-hero{padding:52px 15px 35px}.web-hero h1{font-size:46px}.web-modules h2{font-size:22px}}
+@media(max-width:700px){.content-grid{grid-template-columns:1fr}.content-grid>aside{display:none}#topbar{height:auto;min-height:80px;flex-wrap:wrap;gap:12px;padding:18px 20px}.brand{font-size:22px}.brandmark{width:32px;height:32px;font-size:25px}.website-nav{gap:8px}.website-nav .portal-badge{display:none}.web-nav-link{font-size:11px;padding:8px}.web-login{font-size:11px;padding:9px 11px}.web-hero{padding:43px 0 28px}.web-hero h1{font-size:37px}.web-hero .eyebrow{font-size:8px;letter-spacing:.11em;margin-bottom:19px}.web-hero>p{font-size:13px;margin-top:17px}.entry-actions{gap:12px;margin-top:26px}.entry-button{padding:17px 15px;gap:10px}.entry-icon{width:32px;height:32px}.entry-icon .icon{width:18px}.entry-button b{font-size:14px}.entry-button small{font-size:9px}.entry-button>.icon{width:14px}.web-modules h2{font-size:21px}.web-modules .section-head{align-items:start}.web-modules .section-head p{font-size:11px}.module-count{font-size:19px}.module-count small{font-size:9px}.web-process{gap:23px;grid-template-columns:1fr;padding-top:25px;margin-top:30px}.module-grid{gap:11px}.module{padding:20px 16px;min-height:217px}.module h3{font-size:13px}.module p{font-size:11px}.web-demo-note{font-size:9px}main{padding:28px 20px 40px}footer{padding:22px 20px}.public-page main{padding-top:0}.public-page #topbar{flex-wrap:nowrap;gap:8px}.public-page .brand{font-size:20px}.public-page .brandmark{width:29px;height:29px;font-size:22px}}
+@media(max-width:440px){.entry-actions{flex-direction:column;max-width:330px}.entry-button{padding:16px 19px}.entry-button b{font-size:15px}.entry-button small{font-size:10px}.entry-button>.icon{width:17px}.web-hero h1{font-size:33px}.web-hero .desktop-break{display:none}.public-page .brand{font-size:17px;gap:7px}.public-page .brandmark{width:26px;height:26px;font-size:21px}.public-page .web-login{padding:8px 9px;font-size:10px}.website-nav{gap:7px}.module-count{display:none}.web-modules .section-head{margin-top:21px}.web-modules h2{font-size:20px}.portal-badge{display:none}}
+.presentation-start{margin:21px auto 0;display:flex;justify-content:center}.presentation-start button{font-size:12px;font-weight:600;border-bottom:1px solid #b3c4a7;padding-bottom:4px}.presentation-guide{padding:21px 24px;border:1px solid #cbdbb5;background:#edf4e3;border-radius:15px;margin:0 0 28px}.presentation-heading{display:flex;justify-content:space-between;align-items:center;gap:15px}.presentation-heading b{font-size:10px;letter-spacing:.1em}.presentation-heading small{font-size:9px;letter-spacing:0;font-weight:400;margin-left:9px;color:#839575}.presentation-heading button{font-size:10px}.presentation-guide ol{list-style:none;display:flex;padding:0;margin:19px 0;gap:23px}.presentation-guide li{display:flex;align-items:center;gap:7px;font-size:11px;color:#87967c}.presentation-guide li span{width:22px;height:22px;border:1px solid #cddbbd;border-radius:50%;display:grid;place-items:center;font-size:9px}.presentation-guide li.active{color:var(--ink);font-weight:700}.presentation-guide li.active span{background:var(--ink);border-color:var(--ink);color:#fff}.presentation-guide li.done span{background:#d6e7be;color:var(--teal)}.presentation-next{display:flex;align-items:center;justify-content:space-between;gap:18px;border-top:1px solid #d8e4cb;padding-top:14px}.presentation-next p{font-size:12px;margin:0;color:#5e7851}.presentation-next button{flex-shrink:0;font-size:11px}.presentation-tool{display:flex;align-items:center;justify-content:space-between;gap:15px;background:#f1f6e9;border-radius:11px;padding:14px 17px;margin:21px 0;font-size:12px;color:#748a64}.presentation-tool button{font-size:11px;flex-shrink:0}.public-page .presentation-guide{margin-top:25px}@media(max-width:700px){.presentation-guide{padding:18px 16px}.presentation-guide ol{gap:13px;flex-wrap:wrap}.presentation-guide li{font-size:10px}.presentation-next{align-items:start;flex-direction:column;gap:11px}.presentation-next p{font-size:11px}.presentation-tool{align-items:start;flex-direction:column;font-size:11px}.presentation-heading b{font-size:9px}.presentation-heading small{display:block;margin:5px 0 0}.presentation-start button{font-size:11px}}
+</style></head><body><a class="skip" href="#main">İçeriğe geç</a><aside id="sidebar"></aside><div class="workspace"><header id="topbar"></header><main id="main" tabindex="-1"></main><footer><span>HELUNEXA <span class="muted">/</span> Daha düzenli bir sağlık yolculuğu.</span><button data-action="about" class="text-button">Prototip hakkında ↗</button></footer></div><div class="backdrop" id="backdrop" hidden></div><dialog id="dialog"></dialog><div id="toast" role="status" hidden></div><script>/* HELUNEXA: clinical discussion prototype, never a medical order. */
+const VERSION='1.0.0-workflow';
+
+const SOURCES={iodine:{name:'NIH ODS · İyot ölçümünün sınırları',url:'https://ods.od.nih.gov/factsheets/Iodine-HealthProfessional/'},insulin:{name:'ADA/AACC 2023 · İnsülin ölçümü',url:'https://diabetesjournals.org/care/article/46/10/e151/153425/'},thyroidTests:{name:'NICE NG145 · Tiroid test seçimi',url:'https://www.nice.org.uk/guidance/ng145/chapter/recommendations'},advancedLipids:{name:'AHA/ACC 2026 · ApoB ve Lp(a)',url:'https://professional.heart.org/en/science-news/2026-guideline-on-the-management-of-dyslipidemia'},coeliac:{name:'NICE NG20 · Çölyak serolojisi',url:'https://www.nice.org.uk/guidance/ng20/chapter/Recommendations'},testosterone:{name:'Endocrine Society · Testosteron',url:'https://www.endocrine.org/clinical-practice-guidelines/testosterone-therapy'},hbv:{name:'CDC 2026 · Hepatit B taraması',url:'https://www.cdc.gov/hepatitis-b/hcp/diagnosis-testing/index.html'},hcv:{name:'CDC · Hepatit C taraması',url:'https://www.cdc.gov/hepatitis-c/hcp/diagnosis-testing/index.html'},ada:{name:'ADA 2026 · Diyabet taraması',url:'https://diabetesjournals.org/care/article/49/Supplement_1/S27/160901/2-Diagnosis-and-Classification-of-Diabetes'},lipid:{name:'NICE NG238 · Lipid değerlendirmesi',url:'https://www.nice.org.uk/guidance/ng238/chapter/recommendations'},b12:{name:'NICE NG239 · B12',url:'https://www.nice.org.uk/guidance/ng239/chapter/recommendations'},vitd:{name:'Endocrine Society 2024 · D vitamini',url:'https://www.endocrine.org/clinical-practice-guidelines/vitamin-d-for-prevention-of-disease'},thyroid:{name:'USPSTF · Tiroid taraması (2015)',url:'https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/thyroid-dysfunction-screening'},general:{name:'Choosing Wisely Canada · Aile hekimliği',url:'https://choosingwiselycanada.org/recommendation/family-medicine/'}};
+const CATALOG=[
+ {
+  "id": "hbv",
+  "group": "Hepatit taraması",
+  "name": "Hepatit B · HBsAg / anti-HBs / total anti-HBc",
+  "purpose": "Enfeksiyon, bağışıklık ve duyarlılığı değerlendirme",
+  "context": "CDC: daha önce taranmamış erişkinde bir kez üçlü panel. e-Nabız’da görünmeme, testin hiç yapılmadığını kanıtlamaz. Önceki tarama, aşı ve yeni maruziyet doğrulanır; otomatik yıllık tekrar yapılmaz. Pozitiflikte hekim doğrulama ve ilgili değerlendirmeyi planlar.",
+  "source": "hbv",
+  "education": "Hepatit B virüsüyle mevcut veya geçmiş karşılaşmayı ve bağışıklık durumunu değerlendirmeye yardımcı olur. HBsAg mevcut enfeksiyon, anti-HBs bağışıklık, total anti-HBc ise virüsle geçirilmiş veya süren karşılaşma hakkında bilgi verir. Sonuçlar birlikte yorumlanır."
+ },
+ {
+  "id": "hcv",
+  "group": "Hepatit taraması",
+  "name": "Anti-HCV",
+  "purpose": "Hepatit C açısından tarama",
+  "context": "CDC: erişkinlerde en az bir kez tarama yaklaşımı. Önceki test ve yeni / süren risk gözden geçirilir. Reaktif antikor aktif enfeksiyon tanısı değildir; HCV RNA ile değerlendirme gerekir. Önceden reaktif / tedavi edilmiş kişide yeniden antikor istemek yerine RNA gerekliliği değerlendirilir.",
+  "source": "hcv",
+  "education": "Hepatit C virüsüne karşı oluşan antikorları araştırarak virüsle karşılaşma hakkında bilgi verir. Aktif enfeksiyonun belirlenmesinde HCV RNA testi kullanılır."
+ },
+ {
+  "id": "cbc",
+  "group": "Kan ve demir",
+  "name": "Hemogram",
+  "purpose": "Kan hücrelerini değerlendirme",
+  "context": "Kan kaybı, beslenme riski veya önceki anormallik hekimce değerlendirilebilir. Herkese yıllık tarama kuralı yok.",
+  "source": "general",
+  "education": "Alyuvarları, akyuvarları ve trombositleri inceler. Kansızlık, bağışıklık hücrelerindeki değişiklikler ve pıhtılaşmada görev alan hücrelerin sayısı hakkında bilgi sağlar.",
+  "educationSource": {
+   "name": "MedlinePlus · Hemogram",
+   "url": "https://medlineplus.gov/lab-tests/complete-blood-count-cbc/"
+  }
+ },
+ {
+  "id": "ferritin",
+  "group": "Kan ve demir",
+  "name": "Ferritin",
+  "purpose": "Demir depolarını değerlendirme",
+  "context": "Kan kaybı, diyet ve önceki hemogramla birlikte yorumlanır; inflamasyon sonucu etkileyebilir.",
+  "source": null,
+  "education": "Vücudun demir depoları hakkında bilgi verir. Demir eksikliğinin değerlendirilmesinde kullanılır; iltihabi durumlarda da yükselebilir.",
+  "educationSource": {
+   "name": "MedlinePlus · Ferritin",
+   "url": "https://medlineplus.gov/lab-tests/ferritin-blood-test/"
+  }
+ },
+ {
+  "id": "iron",
+  "group": "Kan ve demir",
+  "name": "Transferrin satürasyonu / demir bağlama kapasitesi",
+  "purpose": "Demir metabolizmasını ayrıntılandırma",
+  "context": "Ferritin veya klinik değerlendirme gerektirirse eklenir.",
+  "source": null,
+  "education": "Demirin kanda taşınmasını ve taşıyıcı proteinlerin demirle doluluk oranını değerlendirir. Ferritin ve kan sayımıyla birlikte demir eksikliği veya fazlalığının araştırılmasına yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Transferrin satürasyonu / demir bağlama kapasitesi",
+   "url": "https://medlineplus.gov/lab-tests/iron-tests/"
+  }
+ },
+ {
+  "id": "glycemia",
+  "group": "Metabolik sağlık",
+  "name": "Açlık plazma glukozu ve HbA1c",
+  "purpose": "Diyabet / prediyabet taraması",
+  "context": "Bu prototipte glisemik değerlendirme açlık plazma glukozu ve HbA1c’yi birlikte içerir. Hekim önceki sonuçları, HbA1c ölçümünü etkileyen durumları ve kişisel uygunluğu değerlendirerek bu kalem için karar verir.",
+  "source": "ada",
+  "education": "Açlık glukozu ölçüm anındaki kan şekerini, HbA1c ise yaklaşık son 2–3 aylık ortalama kan şekeri düzeyini yansıtır. Diyabet ve prediyabet değerlendirmesinde kullanılır.",
+  "educationSource": {
+   "name": "MedlinePlus · Glukoz ve HbA1c",
+   "url": "https://medlineplus.gov/lab-tests/diabetes-tests/"
+  }
+ },
+ {
+  "id": "uric",
+  "group": "Metabolik sağlık",
+  "name": "Ürik asit",
+  "purpose": "Ürat metabolizması değerlendirmesi",
+  "context": "Gut / taş öyküsü ve ilaçlara göre değerlendirilebilir. Asemptomatik yüksek değer tek başına tedavi kararı değildir.",
+  "source": null,
+  "education": "Pürin adı verilen maddelerin yıkımıyla oluşan ürik asidin kandaki düzeyini ölçer. Gut ve bazı böbrek taşı türlerinin değerlendirilmesine yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Ürik asit",
+   "url": "https://medlineplus.gov/lab-tests/uric-acid-test/"
+  }
+ },
+ {
+  "id": "ogtt",
+  "group": "Metabolik sağlık",
+  "name": "75 g OGTT",
+  "purpose": "Seçilmiş glukoz toleransı değerlendirmesi",
+  "context": "Glukoz/HbA1c ile klinik durumun uyumsuzluğunda veya özel riskte hekim seçer; rutin ilk panele otomatik eklenmez.",
+  "source": "ada",
+  "education": "75 gram glukoz alındıktan sonra kan şekerinin nasıl değiştiğini değerlendirir. Vücudun glukozu işleme kapasitesi hakkında bilgi sağlar.",
+  "educationSource": {
+   "name": "MedlinePlus · 75 g OGTT",
+   "url": "https://medlineplus.gov/lab-tests/diabetes-tests/"
+  }
+ },
+ {
+  "id": "insulin",
+  "group": "Metabolik sağlık",
+  "name": "Açlık insülini / HOMA-IR",
+  "purpose": "Seçilmiş metabolik değerlendirme",
+  "context": "HOMA-IR insülin ve glukozdan hesaplanır; standart bir diyabet tarama testi veya tek başına tanı değildir. Yalnızca BKİ yüksek diye otomatik önerilmez.",
+  "source": "insulin",
+  "education": "Açlık insülini, kan şekerinin düzenlenmesinde görevli insülin hormonunu ölçer. HOMA-IR, açlık glukozu ve insülininden hesaplanan, insülin direnci hakkında dolaylı bilgi veren bir göstergedir.",
+  "educationSource": {
+   "name": "MedlinePlus · Açlık insülini / HOMA-IR",
+   "url": "https://medlineplus.gov/lab-tests/insulin-in-blood-test/"
+  }
+ },
+ {
+  "id": "lipid",
+  "group": "Kalp ve damar",
+  "name": "Lipid profili",
+  "purpose": "Kardiyovasküler risk değerlendirmesi",
+  "context": "Total kolesterol, HDL, trigliserid, hesaplanan LDL ve non-HDL. Sigara, tansiyon ve aile öyküsüyle birlikte değerlendirilir. Açlık her zaman zorunlu değildir.",
+  "source": "lipid",
+  "education": "Total kolesterol, LDL, HDL ve trigliserid düzeylerini değerlendirir. Kalp ve damar hastalığı riskinin değerlendirilmesinde kullanılan bilgilerden biridir.",
+  "educationSource": {
+   "name": "MedlinePlus · Lipid profili",
+   "url": "https://medlineplus.gov/lab-tests/cholesterol-levels/"
+  }
+ },
+ {
+  "id": "apob",
+  "group": "Kalp ve damar",
+  "name": "ApoB",
+  "purpose": "Lipoprotein riskini ayrıntılandırma",
+  "context": "AHA/ACC 2026: seçilmiş kişilerde, özellikle yüksek trigliserid / diyabet veya LDL ile riskin uyumsuz olduğu durumlarda toplam risk değerlendirmesine katkı sağlayabilir. Hekim kararı gerekir.",
+  "source": "advancedLipids",
+  "education": "Damar duvarında birikebilen lipoprotein parçacıklarında bulunan ApoB proteinini ölçer. Bu parçacıkların sayısı hakkında bilgi sağlayarak lipid değerlendirmesini tamamlar."
+ },
+ {
+  "id": "lpa",
+  "group": "Kalp ve damar",
+  "name": "Lipoprotein(a)",
+  "purpose": "Kalıtsal kardiyovasküler riskin değerlendirilmesi",
+  "context": "AHA/ACC 2026: erişkinlikte en az bir kez ölçüm yaklaşımı. Önceki ölçüm kontrol edilir; otomatik yıllık tekrar yapılmaz. Tek başına kalp hastalığı tanısı koymaz.",
+  "source": "advancedLipids",
+  "education": "Büyük ölçüde kalıtsal özelliklerle belirlenen lipoprotein(a) düzeyini ölçer. Kalp ve damar hastalığı riskinin değerlendirilmesine ek bilgi sağlar.",
+  "educationSource": {
+   "name": "MedlinePlus · Lipoprotein(a)",
+   "url": "https://medlineplus.gov/lab-tests/lipoprotein-a-blood-test/"
+  }
+ },
+ {
+  "id": "hscrp",
+  "group": "Kalp ve damar",
+  "name": "hs-CRP",
+  "purpose": "Seçilmiş kardiyovasküler risk değerlendirmesi",
+  "context": "Akut hastalık / inflamasyon sonucu etkileyebilir. Genel organ sağlığı veya hastalık yokluğu göstergesi değildir.",
+  "source": null,
+  "education": "CRP proteinini düşük düzeylerde hassas biçimde ölçer. Kalp ve damar riski değerlendirmesinde iltihabi etkinlik hakkında ek bilgi sağlayabilir.",
+  "educationSource": {
+   "name": "MedlinePlus · hs-CRP",
+   "url": "https://medlineplus.gov/lab-tests/c-reactive-protein-crp-test/"
+  }
+ },
+ {
+  "id": "homocysteine",
+  "group": "Kalp ve damar",
+  "name": "Homosistein",
+  "purpose": "Seçilmiş metabolik değerlendirme",
+  "context": "Genel kardiyovasküler check-up için otomatik öneri kuralı yoktur. Hekim klinik soruyu ve testin kararı değiştirip değiştirmeyeceğini değerlendirir.",
+  "source": null,
+  "education": "Metiyonin metabolizmasında oluşan homosisteinin kandaki düzeyini ölçer. B vitaminleriyle ilişkili metabolik süreçler hakkında bilgi verir.",
+  "educationSource": {
+   "name": "MedlinePlus · Homosistein",
+   "url": "https://medlineplus.gov/lab-tests/homocysteine-test/"
+  }
+ },
+ {
+  "id": "renal",
+  "group": "Böbrek ve karaciğer",
+  "name": "Kreatinin / eGFR",
+  "purpose": "Böbrek fonksiyonunu değerlendirme",
+  "context": "Öykü, ilaçlar ve önceki sonuçlarla uygunluk belirlenir. Herkese zorunlu yıllık test değildir.",
+  "source": null,
+  "education": "Kreatinin, kas metabolizmasında oluşan bir atık üründür. Kreatinin üzerinden hesaplanan eGFR, böbreklerin kanı süzme kapasitesini tahmin etmeye yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Kreatinin / eGFR",
+   "url": "https://medlineplus.gov/lab-tests/creatinine-test/"
+  }
+ },
+ {
+  "id": "acr",
+  "group": "Böbrek ve karaciğer",
+  "name": "İdrar albümin/kreatinin oranı",
+  "purpose": "Böbrek hasarı açısından değerlendirme",
+  "context": "Böbrek riski varsa hekim seçer; bilinen hastalık izlemi ilgili modüle taşınır.",
+  "source": null,
+  "education": "İdrardaki albümin miktarını kreatinine oranlayarak değerlendirir. Böbreklerden protein kaçağını ve erken böbrek hasarı bulgularını araştırmaya yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · İdrar albümin/kreatinin oranı",
+   "url": "https://medlineplus.gov/lab-tests/microalbumin-creatinine-ratio/"
+  }
+ },
+ {
+  "id": "alt",
+  "group": "Böbrek ve karaciğer",
+  "name": "ALT",
+  "purpose": "Karaciğer değerlendirmesi",
+  "context": "Metabolik risk, ilaç, alkol ve önceki sonuçlar hekimce değerlendirilir.",
+  "source": null,
+  "education": "Başlıca karaciğer hücrelerinde bulunan ALT enziminin kandaki düzeyini ölçer. Karaciğer hücrelerindeki hasarın değerlendirilmesine yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · ALT",
+   "url": "https://medlineplus.gov/lab-tests/alt-blood-test/"
+  }
+ },
+ {
+  "id": "ast",
+  "group": "Böbrek ve karaciğer",
+  "name": "AST",
+  "purpose": "Karaciğer / kas kaynaklı enzim değerlendirmesi",
+  "context": "ALT ve klinik bağlamla yorumlanır; tek başına organa özgü değildir.",
+  "source": null,
+  "education": "Karaciğer, kas ve başka dokularda bulunan AST enziminin kandaki düzeyini ölçer. Diğer bulgularla birlikte hücre hasarının değerlendirilmesine yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · AST",
+   "url": "https://medlineplus.gov/lab-tests/ast-test/"
+  }
+ },
+ {
+  "id": "alp",
+  "group": "Böbrek ve karaciğer",
+  "name": "ALP",
+  "purpose": "Safra yolları / kemik metabolizması değerlendirmesi",
+  "context": "Yaş, diğer karaciğer testleri ve klinik bağlamla yorumlanır.",
+  "source": null,
+  "education": "Safra yolları ve kemik dokusuyla ilişkili ALP enziminin kandaki düzeyini ölçer. Safra akımı ve kemik metabolizması hakkında bilgi sağlar.",
+  "educationSource": {
+   "name": "MedlinePlus · ALP",
+   "url": "https://medlineplus.gov/lab-tests/alkaline-phosphatase/"
+  }
+ },
+ {
+  "id": "ggt",
+  "group": "Böbrek ve karaciğer",
+  "name": "GGT",
+  "purpose": "Seçilmiş karaciğer / safra yolu değerlendirmesi",
+  "context": "İlaçlar, alkol ve diğer enzimlerle birlikte değerlendirilir; tek başına tarama kararı oluşturmaz.",
+  "source": null,
+  "education": "Karaciğer ve safra yollarıyla ilişkili GGT enziminin kandaki düzeyini ölçer. Diğer karaciğer testlerinin yorumlanmasına yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · GGT",
+   "url": "https://medlineplus.gov/lab-tests/gamma-glutamyl-transferase-ggt-test/"
+  }
+ },
+ {
+  "id": "bilirubin",
+  "group": "Böbrek ve karaciğer",
+  "name": "Total / direkt bilirubin",
+  "purpose": "Bilirubin metabolizması değerlendirmesi",
+  "context": "Önceki değer ve diğer karaciğer testlerine göre uygun kalemler seçilir.",
+  "source": null,
+  "education": "Alyuvarların yıkımıyla oluşan bilirubinin toplam ve doğrudan ölçülen bölümünü değerlendirir. Sarılık, karaciğerde işlenme ve safra yoluyla atılım hakkında bilgi sağlar.",
+  "educationSource": {
+   "name": "MedlinePlus · Total / direkt bilirubin",
+   "url": "https://medlineplus.gov/lab-tests/bilirubin-blood-test/"
+  }
+ },
+ {
+  "id": "albumin",
+  "group": "Böbrek ve karaciğer",
+  "name": "Albümin",
+  "purpose": "Seçilmiş protein / organ değerlendirmesi",
+  "context": "İnflamasyon, sıvı durumu, karaciğer ve böbrek bağlamıyla yorumlanır; tek başına beslenme puanı değildir.",
+  "source": null,
+  "education": "Karaciğerde üretilen başlıca kan proteinlerinden albüminin düzeyini ölçer. Karaciğerin protein üretimi, protein kaybı ve iltihabi durumların değerlendirilmesine katkı sağlar.",
+  "educationSource": {
+   "name": "MedlinePlus · Albümin",
+   "url": "https://medlineplus.gov/lab-tests/albumin-blood-test/"
+  }
+ },
+ {
+  "id": "protein",
+  "group": "Böbrek ve karaciğer",
+  "name": "Total protein",
+  "purpose": "Serum protein değerlendirmesi",
+  "context": "Albümin ve klinik bağlamla seçilir; herkese otomatik gerekli değildir.",
+  "source": null,
+  "education": "Kandaki albümin ve globülinlerin toplam miktarını ölçer. Protein üretimi, kaybı ve bağışıklık proteinlerindeki değişikliklerin değerlendirilmesine yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Total protein",
+   "url": "https://medlineplus.gov/lab-tests/total-protein-and-albumin-globulin-a-g-ratio/"
+  }
+ },
+ {
+  "id": "urea",
+  "group": "Böbrek ve karaciğer",
+  "name": "Üre",
+  "purpose": "Böbrek ve metabolik bağlam değerlendirmesi",
+  "context": "Kreatinin/eGFR, sıvı durumu ve beslenmeyle birlikte yorumlanır.",
+  "source": null,
+  "education": "Proteinlerin parçalanmasıyla oluşan ve böbreklerden atılan üreyi ölçer. Böbreklerin atık uzaklaştırması, sıvı durumu ve protein metabolizması hakkında bilgi verir.",
+  "educationSource": {
+   "name": "MedlinePlus · Üre",
+   "url": "https://medlineplus.gov/lab-tests/bun-blood-urea-nitrogen/"
+  }
+ },
+ {
+  "id": "tsh",
+  "group": "Tiroid",
+  "name": "TSH",
+  "purpose": "Tiroid fonksiyonunu değerlendirme",
+  "context": "Asemptomatik tüm erişkinlerde taramanın yararına ilişkin kanıt yetersizdir. Risk veya kullanıcı talebi hekimle değerlendirilir.",
+  "source": "thyroid",
+  "education": "Hipofiz bezinden salgılanan ve tiroid bezini uyaran TSH hormonunu ölçer. Tiroidin çalışma düzeninin değerlendirilmesinde kullanılır.",
+  "educationSource": {
+   "name": "MedlinePlus · TSH",
+   "url": "https://medlineplus.gov/lab-tests/tsh-thyroid-stimulating-hormone-test/"
+  }
+ },
+ {
+  "id": "ft4",
+  "group": "Tiroid",
+  "name": "Serbest T4",
+  "purpose": "Tiroid değerlendirmesini tamamlayıcı test",
+  "context": "TSH yüksekliğinde; TSH düşükse serbest T3 ile birlikte değerlendirilir. Hipofiz hastalığı şüphesinde TSH ile birlikte gerekebilir. Bu test seçimi kuralı genel toplum taraması önerisi değildir.",
+  "source": "thyroidTests",
+  "education": "Tiroidin ürettiği tiroksin hormonunun kanda proteinlere bağlı olmayan bölümünü ölçer. TSH ile birlikte tiroid hormon durumunu değerlendirir.",
+  "educationSource": {
+   "name": "MedlinePlus · Serbest T4",
+   "url": "https://medlineplus.gov/lab-tests/thyroxine-t4-test/"
+  }
+ },
+ {
+  "id": "ft3",
+  "group": "Tiroid",
+  "name": "Serbest T3 (FT3)",
+  "purpose": "Tiroid hormon değerlendirmesi",
+  "context": "Özellikle TSH düşük olduğunda FT4 ile birlikte değerlendirilir. Normal TSH ile genel check-up için otomatik eklenmez.",
+  "source": "thyroidTests",
+  "education": "Tiroid hormonlarından T3’ün kanda proteinlere bağlı olmayan bölümünü ölçer. Özellikle tiroidin fazla çalışmasının değerlendirilmesinde ek bilgi sağlar.",
+  "educationSource": {
+   "name": "MedlinePlus · Serbest T3 (FT3)",
+   "url": "https://medlineplus.gov/lab-tests/triiodothyronine-t3-tests/"
+  }
+ },
+ {
+  "id": "antitpo",
+  "group": "Tiroid",
+  "name": "Anti-TPO",
+  "purpose": "Tiroid otoimmünitesinin değerlendirilmesi",
+  "context": "TSH yüksek erişkinde düşünülebilir. Hormon düzeyini ölçmez; rutin seri tekrar önerilmez. Kullanıcı talebi ve klinik bağlam hekimce değerlendirilir.",
+  "source": "thyroidTests",
+  "education": "Tiroid hormon üretiminde görevli TPO enzimine karşı gelişen antikorları araştırır. Hashimoto tiroiditi gibi otoimmün tiroid hastalıklarının değerlendirilmesine yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Anti-TPO",
+   "url": "https://medlineplus.gov/lab-tests/thyroid-antibody-tests/"
+  }
+ },
+ {
+  "id": "antitg",
+  "group": "Tiroid",
+  "name": "Anti-Tg",
+  "purpose": "Seçilmiş tiroid otoimmünitesi değerlendirmesi",
+  "context": "Anti-TPO ile birlikte herkese otomatik panel yapılmaz. Ek katkısı ve önceki sonuçlar hekimce değerlendirilir.",
+  "source": null,
+  "education": "Tiroidde bulunan tiroglobulin proteinine karşı gelişen antikorları araştırır. Tiroid otoimmünitesinin değerlendirilmesine katkı sağlar.",
+  "educationSource": {
+   "name": "MedlinePlus · Anti-Tg",
+   "url": "https://medlineplus.gov/lab-tests/thyroid-antibody-tests/"
+  }
+ },
+ {
+  "id": "trab",
+  "group": "Tiroid",
+  "name": "TRAb",
+  "purpose": "Seçilmiş Graves hastalığı değerlendirmesi",
+  "context": "Tirotoksikoz etiyolojisinde hekim değerlendirmesiyle kullanılır. Rutin check-up taraması değildir; şüphede ilgili klinik değerlendirmeye geçilir.",
+  "source": "thyroidTests",
+  "education": "Tiroid hücrelerindeki TSH reseptörüne karşı gelişen antikorları araştırır. Graves hastalığının değerlendirilmesinde kullanılır.",
+  "educationSource": {
+   "name": "MedlinePlus · TRAb",
+   "url": "https://medlineplus.gov/lab-tests/thyroid-antibody-tests/"
+  }
+ },
+ {
+  "id": "vitd",
+  "group": "Vitaminler",
+  "name": "D vitamini · 25-OH D",
+  "purpose": "D vitamini durumunu öğrenme",
+  "context": "Kullanıcı talebi kaydedilir. Sağlıklı erişkinlerin tümüne rutin ölçüm önerilmez; riskler, takviye ve önceki sonuçlar hekimle değerlendirilir.",
+  "source": "vitd",
+  "education": "Kandaki 25-OH D düzeyini ölçerek D vitamini durumu hakkında bilgi verir. D vitamini, kalsiyum emilimi ve kemik sağlığında görev alır.",
+  "educationSource": {
+   "name": "MedlinePlus · D vitamini · 25-OH D",
+   "url": "https://medlineplus.gov/lab-tests/vitamin-d-test/"
+  }
+ },
+ {
+  "id": "b12",
+  "group": "Vitaminler",
+  "name": "Vitamin B12",
+  "purpose": "B12 durumunu değerlendirme",
+  "context": "Beslenme, emilim, ilaçlar ve önceki sonuçlar önemlidir. Talep tek başına eksiklik tanısı değildir.",
+  "source": "b12",
+  "education": "Kan hücresi yapımı ve sinir sistemi işlevlerinde görevli B12 vitamininin düzeyini değerlendirir. B12 eksikliğinin araştırılmasına yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Vitamin B12",
+   "url": "https://medlineplus.gov/lab-tests/vitamin-b-test/"
+  }
+ },
+ {
+  "id": "folate",
+  "group": "Vitaminler",
+  "name": "Folat",
+  "purpose": "Folat durumunu değerlendirme",
+  "context": "Beslenme ve kan sayımıyla birlikte hekimce değerlendirilir.",
+  "source": null,
+  "education": "Hücre bölünmesi ve kan hücresi yapımında görevli folatın durumunu değerlendirir. Bazı kansızlık türleri ve beslenmeyle ilişkili eksikliklerin araştırılmasına yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Folat",
+   "url": "https://medlineplus.gov/lab-tests/vitamin-b-test/"
+  }
+ },
+ {
+  "id": "magnesium",
+  "group": "Mineraller",
+  "name": "Magnezyum",
+  "purpose": "Magnezyum durumunu değerlendirme",
+  "context": "Öykü veya kullanıcı talebiyle görüşülür; bu prototipte herkese rutin tarama kuralı yoktur.",
+  "source": null,
+  "education": "Kas, sinir ve birçok enzim sisteminde görevli magnezyumun kandaki düzeyini ölçer. Mineral dengesinin değerlendirilmesine yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Magnezyum",
+   "url": "https://medlineplus.gov/lab-tests/magnesium-blood-test/"
+  }
+ },
+ {
+  "id": "zinc",
+  "group": "Mineraller",
+  "name": "Çinko",
+  "purpose": "Seçilmiş beslenme / emilim değerlendirmesi",
+  "context": "Diyet ve klinik bağlam gerekir; bu prototipte otomatik tarama kuralı yoktur.",
+  "source": null,
+  "education": "Bağışıklık işlevleri, yara iyileşmesi ve hücresel süreçlerde görevli çinkonun durumunu değerlendirmeye yardımcı olur.",
+  "educationSource": {
+   "name": "NIH ODS · Çinko",
+   "url": "https://ods.od.nih.gov/factsheets/Zinc-HealthProfessional/"
+  }
+ },
+ {
+  "id": "na",
+  "group": "Mineraller",
+  "name": "Sodyum",
+  "purpose": "Sıvı / elektrolit dengesi",
+  "context": "İlaçlar, sıvı durumu, böbrek fonksiyonu ve önceki sonuçlarla seçilir.",
+  "source": null,
+  "education": "Vücudun su dengesinde önemli rol oynayan sodyumun kandaki düzeyini ölçer. Sıvı ve elektrolit dengesinin değerlendirilmesinde kullanılır.",
+  "educationSource": {
+   "name": "MedlinePlus · Sodyum",
+   "url": "https://medlineplus.gov/lab-tests/sodium-blood-test/"
+  }
+ },
+ {
+  "id": "k",
+  "group": "Mineraller",
+  "name": "Potasyum",
+  "purpose": "Elektrolit dengesi",
+  "context": "İlaçlar, böbrek fonksiyonu ve numune koşullarıyla yorumlanır.",
+  "source": null,
+  "education": "Kalp, kas ve sinir hücrelerinin çalışmasında görevli potasyumun kandaki düzeyini ölçer. Elektrolit dengesinin değerlendirilmesinde kullanılır.",
+  "educationSource": {
+   "name": "MedlinePlus · Potasyum",
+   "url": "https://medlineplus.gov/lab-tests/potassium-blood-test/"
+  }
+ },
+ {
+  "id": "calcium",
+  "group": "Mineraller",
+  "name": "Total kalsiyum",
+  "purpose": "Kalsiyum dengesi",
+  "context": "Albümin ve klinik bağlamla yorumlanır; gerektiğinde iyonize kalsiyum hekimce seçilir.",
+  "source": null,
+  "education": "Kemik yapısı, kas kasılması ve sinir iletiminde görevli kalsiyumun kandaki toplam düzeyini ölçer. Proteinlere bağlı ve serbest kalsiyumu birlikte içerir.",
+  "educationSource": {
+   "name": "MedlinePlus · Total kalsiyum",
+   "url": "https://medlineplus.gov/lab-tests/calcium-blood-test/"
+  }
+ },
+ {
+  "id": "phosphate",
+  "group": "Mineraller",
+  "name": "Fosfor",
+  "purpose": "Kemik / mineral metabolizması",
+  "context": "Böbrek, kalsiyum ve diğer sonuçlarla birlikte değerlendirilir.",
+  "source": null,
+  "education": "Kemik yapısı ve hücresel enerji süreçlerinde görevli fosfatın kandaki düzeyini ölçer. Kemik ve mineral metabolizmasının değerlendirilmesine yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Fosfor",
+   "url": "https://medlineplus.gov/lab-tests/phosphate-in-blood/"
+  }
+ },
+ {
+  "id": "selenium",
+  "group": "Mineraller",
+  "name": "Selenyum",
+  "purpose": "Seçilmiş beslenme / maruziyet değerlendirmesi",
+  "context": "Genel toplumda otomatik tarama kuralı yoktur. Takviye kullanımı ve toksisite olasılığı hekimce değerlendirilir.",
+  "source": null,
+  "education": "Antioksidan enzimler ve tiroid hormon metabolizmasında görevli selenyumun durumunu değerlendirmeye yardımcı olur.",
+  "educationSource": {
+   "name": "NIH ODS · Selenyum",
+   "url": "https://ods.od.nih.gov/factsheets/Selenium-HealthProfessional/"
+  }
+ },
+ {
+  "id": "iodine",
+  "group": "Mineraller",
+  "name": "İyot değerlendirmesi",
+  "purpose": "Seçilmiş iyot alımı değerlendirmesi",
+  "context": "Örnek türünü hekim belirler. Tek spot idrar iyodu bireyin uzun dönem iyot durumunu tek başına güvenilir biçimde sınıflandırmaz; rutin bireysel tarama olarak önerilmez.",
+  "source": "iodine",
+  "education": "Tiroid hormonlarının yapımı için gerekli iyotla ilgili bilgi sağlar. İdrar iyot ölçümü yakın dönem alımı yansıtır; bireysel durumun yorumlanması örnekleme biçimine bağlıdır.",
+  "educationSource": {
+   "name": "NIH ODS · İyot değerlendirmesi",
+   "url": "https://ods.od.nih.gov/factsheets/Iodine-HealthProfessional/"
+  }
+ },
+ {
+  "id": "pth",
+  "group": "Kemik ve hormonlar",
+  "name": "Parathormon (PTH)",
+  "purpose": "Kalsiyum / kemik metabolizması değerlendirmesi",
+  "context": "Kalsiyum, böbrek fonksiyonu ve D vitaminiyle birlikte hekimce seçilir; herkese rutin tarama değildir.",
+  "source": null,
+  "education": "Paratiroid bezlerinden salgılanan ve kalsiyum dengesini düzenleyen hormonu ölçer. Kalsiyum, fosfor, D vitamini ve böbrek fonksiyonlarıyla birlikte kemik ve mineral metabolizmasını değerlendirir.",
+  "educationSource": {
+   "name": "MedlinePlus · Parathormon (PTH)",
+   "url": "https://medlineplus.gov/lab-tests/parathyroid-hormone-pth-test/"
+  }
+ },
+ {
+  "id": "testosterone",
+  "group": "Kemik ve hormonlar",
+  "name": "Total testosteron",
+  "purpose": "Seçilmiş gonadal hormon değerlendirmesi",
+  "context": "Asemptomatik erkeklerin tümüne rutin tarama önerilmez. Öykü gerekiyorsa ayrı klinik değerlendirme; uygun örnekleme ve gerektiğinde doğrulama gerekir.",
+  "source": "testosterone",
+  "education": "Üreme işlevleri, kas ve kemik sağlığıyla ilişkili testosteronun kandaki toplam düzeyini ölçer. Hormon durumunun değerlendirilmesine yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Total testosteron",
+   "url": "https://medlineplus.gov/lab-tests/testosterone-levels-test/"
+  }
+ },
+ {
+  "id": "fsh",
+  "group": "Kemik ve hormonlar",
+  "name": "FSH / LH",
+  "purpose": "Seçilmiş üreme / hipofiz değerlendirmesi",
+  "context": "Klinik soruya göre hangi hormonun gerektiği hekimce kararlaştırılır; yaş ve döngü bağlamı önemlidir.",
+  "source": null,
+  "education": "Hipofizden salgılanan FSH ve LH hormonlarını ölçer. Yumurtalık ve testis işlevleri, yumurtlama ve üreme hormonlarının düzenlenmesi hakkında bilgi sağlar.",
+  "educationSource": {
+   "name": "MedlinePlus · FSH / LH",
+   "url": "https://medlineplus.gov/lab-tests/follicle-stimulating-hormone-fsh-levels-test/"
+  }
+ },
+ {
+  "id": "estradiol",
+  "group": "Kemik ve hormonlar",
+  "name": "Estradiol",
+  "purpose": "Seçilmiş üreme hormonu değerlendirmesi",
+  "context": "Döngü, menopoz ve ilaçlarla birlikte değerlendirilir; sağlıklı kişide otomatik panel değildir.",
+  "source": null,
+  "education": "Östrojen hormonlarından estradiolün kandaki düzeyini ölçer. Yumurtalık işlevleri, adet döngüsü ve menopozla ilişkili hormon durumunun değerlendirilmesine yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Estradiol",
+   "url": "https://medlineplus.gov/lab-tests/estrogen-levels-test/"
+  }
+ },
+ {
+  "id": "prolactin",
+  "group": "Kemik ve hormonlar",
+  "name": "Prolaktin",
+  "purpose": "Seçilmiş hipofiz hormonu değerlendirmesi",
+  "context": "Öykü, ilaçlar, stres ve örnek koşulları gözden geçirilir. Şüphe varsa ilgili klinik değerlendirme gerekir.",
+  "source": null,
+  "education": "Hipofizden salgılanan ve süt üretiminde görevli prolaktin hormonunu ölçer. Üreme ve hipofiz işlevleriyle ilişkili hormonal değerlendirmelerde kullanılır.",
+  "educationSource": {
+   "name": "MedlinePlus · Prolaktin",
+   "url": "https://medlineplus.gov/lab-tests/prolactin-levels/"
+  }
+ },
+ {
+  "id": "crp",
+  "group": "Diğer seçilmiş değerlendirmeler",
+  "name": "CRP",
+  "purpose": "İnflamasyon değerlendirmesi",
+  "context": "Nedene özgü değildir; şikâyetsiz kişide kanser veya enfeksiyon yokluğunu göstermez.",
+  "source": null,
+  "education": "İltihabi süreçlerde karaciğerin ürettiği CRP proteinini ölçer. Vücuttaki iltihabi etkinlik hakkında bilgi verir; kaynağını tek başına belirlemez.",
+  "educationSource": {
+   "name": "MedlinePlus · CRP",
+   "url": "https://medlineplus.gov/lab-tests/c-reactive-protein-crp-test/"
+  }
+ },
+ {
+  "id": "esr",
+  "group": "Diğer seçilmiş değerlendirmeler",
+  "name": "Sedimentasyon (ESR)",
+  "purpose": "Seçilmiş inflamasyon değerlendirmesi",
+  "context": "Yaş, anemi ve klinik bağlam sonucu etkiler; genel sağlık puanı değildir.",
+  "source": null,
+  "education": "Alyuvarların bir tüpte belirli sürede çökme hızını ölçer. İltihabi süreçlerin değerlendirilmesine yardımcı olan dolaylı bir göstergedir.",
+  "educationSource": {
+   "name": "MedlinePlus · Sedimentasyon (ESR)",
+   "url": "https://medlineplus.gov/lab-tests/erythrocyte-sedimentation-rate-esr/"
+  }
+ },
+ {
+  "id": "urinalysis",
+  "group": "Diğer seçilmiş değerlendirmeler",
+  "name": "Tam idrar tahlili",
+  "purpose": "Seçilmiş üriner değerlendirme",
+  "context": "Öykü ve böbrek riskine göre değerlendirilir. Bulgular tek başına idrar yolu enfeksiyonu tanısı veya antibiyotik gerekçesi değildir.",
+  "source": null,
+  "education": "İdrarın fiziksel ve kimyasal özelliklerini ve hücresel içeriğini inceler. Kan, protein, glukoz ve idrar yollarıyla ilişkili bulgular hakkında bilgi sağlar.",
+  "educationSource": {
+   "name": "MedlinePlus · Tam idrar tahlili",
+   "url": "https://medlineplus.gov/ency/article/003579.htm"
+  }
+ },
+ {
+  "id": "coeliac",
+  "group": "Diğer seçilmiş değerlendirmeler",
+  "name": "Çölyak serolojisi · tTG-IgA + total IgA",
+  "purpose": "Seçilmiş emilim / otoimmünite değerlendirmesi",
+  "context": "Şüphe veya riskte hekim seçer. Gluten tüketimi ve IgA durumu önemlidir; pozitif seroloji tek başına nihai tanı değildir.",
+  "source": "coeliac",
+  "education": "Glutene karşı gelişen otoimmün yanıtla ilişkili tTG-IgA antikorlarını araştırır. Total IgA ölçümü, antikor sonucunun doğru yorumlanmasına yardımcı olur.",
+  "educationSource": {
+   "name": "MedlinePlus · Çölyak serolojisi · tTG-IgA + total IgA",
+   "url": "https://medlineplus.gov/lab-tests/celiac-disease-screening/"
+  }
+ }
+];
+function validateProfile(p){if(p.route!=='well')throw Error('Bu başvuru rutin check-up kapsamında değil.');if(!Number.isInteger(+p.age)||p.age<18||p.age>120)throw Error('Bu prototip 18–120 yaş erişkinler içindir.');if(!p.sex?.trim())throw Error('Cinsiyet bilgisini yazın.');if(!Number.isFinite(+p.height)||p.height<100||p.height>250||!Number.isFinite(+p.weight)||p.weight<20||p.weight>500)throw Error('Boyu cm, kiloyu kg olarak kontrol edin.');const bmi=p.weight/((p.height/100)**2);if((bmi<12||bmi>80)&&!p.measureConfirmed)throw Error('Boy ve kilo sıra dışı görünüyor. Değerleri kontrol edip doğrulayın.');return +bmi.toFixed(1);}
+
+function createPanel(ids=[]){const known=new Set(CATALOG.map(t=>t.id));if(ids.some(id=>!known.has(id)))throw Error('Bilinmeyen tetkik.');return CATALOG.filter(t=>ids.includes(t.id)).map(t=>({id:t.id,name:t.name,education:t.education,educationSource:t.educationSource,source:t.source}));}
+function savePanel(s){if(!s.submitted)throw Error('Önce başvuru gerekli.');if(!s.clinician?.trim()||!s.reviewed)throw Error('Hekim adını ve değerlendirme onayını tamamlayın.');if(!s.plan.length&&!s.consultNote?.trim())throw Error('Tetkik planlanmadıysa değerlendirme notu yazın.');s.plan=createPanel(s.plan.map(t=>t.id));s.approved=true;s.approvedAt=new Date().toISOString();s.closed=false;delete s.closedAt;return true;}
+function emptyFollowup(owner=''){return {owner,date:'',result:'pending',action:'',resultsReceived:false,reviewed:false,completed:false};}
+function validDate(v){if(!/^\d{4}-\d{2}-\d{2}$/.test(v||''))return false;const d=new Date(v+'T12:00:00Z');return Number.isFinite(+d)&&d.toISOString().slice(0,10)===v;}
+function canComplete(f){return Boolean(f.owner?.trim()&&f.action?.trim()&&validDate(f.date)&&f.reviewed&&f.completed&&(f.noTests?f.result==='not_ordered':f.resultsReceived&&['normal','abnormal'].includes(f.result)));}
+if(typeof module!=='undefined')module.exports={VERSION,SOURCES,CATALOG,validateProfile,createPanel,savePanel,emptyFollowup,validDate,canComplete};
+</script><script>/* Browser-local prototype workflow; no clinical recommendation or service order. */
+(function(root){
+const catalog=typeof module!=='undefined'?require('./catalog.js').CATALOG:CATALOG;
+const profileValidator=typeof module!=='undefined'?require('./catalog.js').validateProfile:validateProfile;
+const dateValidator=typeof module!=='undefined'?require('./catalog.js').validDate:validDate;
+const unique=ids=>[...new Set(ids)].filter(id=>catalog.some(t=>t.id===id));
+function newCase(){return {id:'HX-001',profile:{name:'',age:'',sex:'',weight:'',height:'',healthHistory:'',supplements:'',pregnancyNote:'',familyHistory:'',previous:'',wish:'',measureConfirmed:false},requested:[],clinical:[],status:'draft',doctor:'',note:'',reviewed:false,results:{},followup:{owner:'',date:'',action:'',reviewed:false,completed:false},submittedAt:null,approvedAt:null,closedAt:null};}
+function submit(c){const p={...c.profile,route:'well',age:+c.profile.age,weight:+c.profile.weight,height:+c.profile.height};p.bmi=profileValidator(p);c.profile=p;c.requested=unique(c.requested);c.clinical=[];c.results={};c.reviewed=false;c.doctor='';c.note='';c.status='submitted';c.submittedAt=new Date().toISOString();return c;}
+function approve(c){if(c.status!=='submitted')throw Error('Önce başvuruyu gönderin.');if(!c.doctor.trim()||!c.reviewed)throw Error('Hekim adını ve değerlendirme onayını tamamlayın.');const ids=unique(c.clinical);if(!ids.length&&!c.note.trim())throw Error('Tetkik planlanmadıysa değerlendirme notu yazın.');c.clinical=ids;c.status='approved';c.approvedAt=new Date().toISOString();c.results=Object.fromEntries(ids.map(id=>[id,{received:false,value:''}]));c.followup={owner:c.doctor,date:'',action:'',reviewed:false,completed:false};c.closedAt=null;return c;}
+function close(c){const f=c.followup;if(c.status!=='approved')throw Error('Önce hekim panelini kaydedin.');if(c.clinical.some(id=>!c.results[id]?.received))throw Error('Paneldeki tüm sonuçlar ulaşmadan takip tamamlanamaz.');if(!f.owner.trim()||!f.action.trim()||!dateValidator(f.date)||!f.reviewed||!f.completed)throw Error('Takip sorumlusu, plan, tarih ve değerlendirme onaylarını tamamlayın.');c.status='closed';c.closedAt=new Date().toISOString();return c;}
+function reopen(c){if(!['approved','closed'].includes(c.status))return;c.status='submitted';c.reviewed=false;c.approvedAt=null;c.closedAt=null;c.results={};c.followup={owner:c.doctor,date:'',action:'',reviewed:false,completed:false};}
+function editFollowup(c){if(c.status==='closed'){c.status='approved';c.closedAt=null;}c.followup.reviewed=false;c.followup.completed=false;}
+function presentationCase(){const c=newCase();c.id='HX-DEMO-001';c.presentationOnly=true;c.profile={...c.profile,name:'Deniz Örnek · Demo',age:40,sex:'Kadın',weight:60,height:160,measureConfirmed:true,healthHistory:'Bilinen kronik hastalık veya operasyon yok. (Kurgusal örnek)',supplements:'Düzenli ilaç veya takviye kullanımı yok. (Kurgusal örnek)',pregnancyNote:'Gebelik veya emzirme yok. (Kurgusal örnek)',familyHistory:'Örnek senaryoda ek aile öyküsü belirtilmedi.',previous:'Önceki sonuçlar bu sunum senaryosuna eklenmedi.',wish:'Rutin kontrol planımı oluşturmak, demir depoları ve D vitamini hakkında bilgi almak istiyorum. (Kurgusal örnek)'};c.requested=['ferritin','vitd'];return c;}
+function presentationPanel(c){if(!c.presentationOnly||c.status!=='submitted')throw Error('Örnek panel yalnızca sunumdaki gönderilmiş başvuruya eklenebilir.');c.clinical=['cbc','glycemia','lipid','ferritin','vitd'];c.doctor='Dr. Örnek Hekim · Demo';c.note='Sunum için seçilen örnek panel. Gerçek tetkik istemi değildir.';c.reviewed=false;return c;}
+function presentationResults(c){if(!c.presentationOnly||c.status!=='approved')throw Error('Örnek sonuçlar için sunum panelinin hekim tarafından onaylanması gerekir.');if(!c.clinical.length)throw Error('Panelde tetkik bulunmuyor.');for(const id of c.clinical)c.results[id]={received:true,value:'Kurgusal sonuç kaydı · Sunum amacıyla eklendi; gerçek laboratuvar sonucu içermez.'};const next=new Date();next.setUTCDate(next.getUTCDate()+30);c.followup={owner:c.doctor,date:next.toISOString().slice(0,10),action:'Kurgusal takip notu: Örnek sonuçlar gözden geçirildi; sonraki kontrol adımı kullanıcıyla paylaşıldı.',reviewed:false,completed:false};return c;}
+root.Flow={newCase,submit,approve,close,reopen,editFollowup,unique,presentationCase,presentationPanel,presentationResults};if(typeof module!=='undefined')module.exports=root.Flow;
+})(typeof window!=='undefined'?window:globalThis);
+</script><script>const UI={page:'public',role:null,stage:0,search:'',doctorSearch:'',menu:false,filter:'all',presentation:false,presentationPhase:1,case:Flow.newCase()};
+const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const modules=[
+ ['Rutin kontrol / Check-up','Sağlık bilgilerinizden hekim paneline, sonuçlardan takibe.','pulse','Çalışan demo'],
+ ['Kronik hastalık takibi','Düzenli kontrolleri ve takip planını bir arada yönetin.','heart','Geliştiriliyor'],
+ ['İlaç raporu yenileme','Rapor tarihleri ve yenileme sürecini takip edin.','file','Planlanıyor'],
+ ['Longevity / Healthy Aging','Sağlıklı yaş alma için değerlendirme ve takip.','sun','Planlanıyor'],
+ ['Kişiselleştirilmiş kanser taraması','Tarama geçmişi ve hekim tarafından belirlenen kontrol planı.','shield','Planlanıyor'],
+ ['Evde bakım hizmetleri','Bakım gereksinimleri ve takip adımlarının düzenlenmesi.','home','Planlanıyor'],
+ ['Anne & bebek sağlığı','Gebelik yolculuğunda kontrol ve takip adımları.','flower','Planlanıyor'],
+ ['Kurumsal sağlık ve çalışan takibi','Çalışan sağlığı başvuruları ve kontrol süreçleri.','building','Planlanıyor']];
+function icon(name){const paths={pulse:'<path d="M3 12h4l3-7 4 14 3-7h4"/>',heart:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',file:'<path d="M14 2H5v20h14V7Z"/><path d="M14 2v5h5M8 12h8M8 16h6"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>',shield:'<path d="m12 2 8 3v6c0 5-8 11-8 11S4 16 4 11V5Z"/><path d="m8 11 3 3 5-5"/>',home:'<path d="m3 10 9-8 9 8M5 8v13h14V8M9 21v-8h6v8"/>',flower:'<circle cx="12" cy="12" r="2"/><path d="M10 9C5 3 15 0 14 8c8-2 10 8 2 6 3 8-7 10-6 2-8 2-10-7-2-6"/>',building:'<path d="M4 22V3h11v19M15 9h5v13M8 7h3M8 11h3M8 15h3M8 19h3M2 22h20"/>',grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',arrow:'<path d="M4 12h16m-6-6 6 6-6 6"/>',check:'<path d="m5 12 4 4L19 6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',users:'<circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-16a3 3 0 0 1 0 6m3 3a5 5 0 0 1 2 4v3"/>'};return `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${paths[name]||paths.file}</svg>`;}
+function toast(t){$('toast').textContent=t;$('toast').hidden=false;clearTimeout(UI.toast);UI.toast=setTimeout(()=>$('toast').hidden=true,6000);}
+function goto(page,stage){UI.page=page;if(stage!==undefined)UI.stage=stage;UI.menu=false;render();window.scrollTo({top:0,behavior:'instant'});}
+function statusLabel(){return {draft:'Taslak',submitted:'Hekim değerlendirmesinde',approved:'Sonuçlar takip ediliyor',closed:'Takip tamamlandı'}[UI.case.status];}
+function navigateApp(){goto(UI.case.status==='draft'?'application':'tracking');}
+function sidebar(){$('sidebar').innerHTML='';}
+function topbar(){const guest=!UI.role;$('topbar').innerHTML=`<a class="brand" href="#" data-route="${guest?'public':'modules'}"><span class="brandmark">✳</span>HELUNEXA</a><nav class="website-nav" aria-label="Üst menü">${guest?`<button class="web-login" data-action="patientLogin">Hasta Girişi</button><button class="web-login filled" data-action="doctorLogin">Hekim Girişi</button>`:`<button class="web-nav-link ${UI.page==='modules'?'current':''}" data-route="modules">8 Modül</button><button class="web-nav-link ${['doctor','tracking'].includes(UI.page)?'current':''}" data-route="${UI.role==='doctor'?'doctor':'tracking'}">${UI.role==='doctor'?'Başvurular':'Başvurum ve Takip'}</button><span class="portal-badge">${UI.role==='doctor'?'Hekim':'Hasta'} paneli <small>DEMO</small></span><button class="web-nav-link exit" data-action="logout">Çıkış Yap</button>`}</nav>`;}
+function moduleCards(){return `<div class="module-grid">${modules.map((m,i)=>`<article class="module ${i===0?'ready':''}"><div class="module-top"><span class="square">${icon(m[2])}</span><span class="module-no">0${i+1}</span></div><h3>${m[0]}</h3><p>${m[1]}</p><div class="module-bottom"><span class="tag ${i?'neutral':''}">${m[3]}</span><button data-module="${i}" aria-label="${m[0]} ${i?'ayrıntıları':'modülünü aç'}">${i?'Ayrıntı':'Başla'} ${icon('arrow')}</button></div></article>`).join('')}</div>`;}
+function home(){return `<section class="web-hero"><div class="eyebrow">HEKİM DESTEĞİYLE DÜZENLİ SAĞLIK TAKİBİ</div><h1>Sağlığınız için birlikte,<br>her adımda takipte.</h1><p>Başvurunuzu paylaşın. Hekiminizin oluşturduğu planı<br class="desktop-break"> ve sonraki adımlarınızı tek yerden takip edin.</p><div class="entry-actions"><button class="entry-button" data-action="patientLogin"><span class="entry-icon">${icon('heart')}</span><span><b>Hasta Girişi</b><small>Başvuru ve sağlık takibi</small></span>${icon('arrow')}</button><button class="entry-button doctor-entry" data-action="doctorLogin"><span class="entry-icon">${icon('users')}</span><span><b>Hekim Girişi</b><small>Değerlendirme ve takip planı</small></span>${icon('arrow')}</button></div><span class="web-demo-note">Etkileşimli prototip · Girişler örnek hesaplarla çalışır.</span><div class="presentation-start"><button class="text-button" data-action="startPresentation">2 dakikalık sunumu başlat ${icon('arrow')}</button></div></section><section class="web-modules" aria-labelledby="modulesTitle"><div class="section-head"><div><div class="eyebrow">HELUNEXA'NIN 8 MODÜLÜ</div><h2 id="modulesTitle">Sağlığınızın farklı alanları, aynı yaklaşım.</h2><p>Check-up modülü hazır. Diğer modüller adım adım ekleniyor.</p></div><span class="module-count">01 / 08 <small>Çalışan modül</small></span></div>${moduleCards()}</section><section class="web-process"><div><span>01</span><h3>Bilgilerinizi paylaşın</h3><p>Sağlık geçmişiniz, önceki sonuçlarınız ve beklentileriniz.</p></div><div><span>02</span><h3>Hekiminiz planlasın</h3><p>Değerlendirme ve tetkik paneli hekiminiz tarafından oluşturulur.</p></div><div><span>03</span><h3>Sonraki adımı takip edin</h3><p>Sonuçlarınız ve kontrol planınız aynı yerde görünür.</p></div></section>`;}
+function modulesPage(){return `<div class="page-head"><div><div class="eyebrow">${UI.role==='doctor'?'HEKİM PANELİ':'HASTA PANELİ'}</div><h1>${UI.role==='doctor'?'Sağlık modülleri ve başvurular.':'Sağlık modülleriniz.'}</h1><p>${UI.role==='doctor'?'İlgili modülü açarak başvuruları ve takip süreçlerini yönetin.':'İlgili modülü seçerek başvurunuza veya takibinize başlayın.'}</p></div><span class="demo-pill">ÖRNEK OTURUM</span></div>${moduleCards()}<section class="bottom-strip"><div><h3>${UI.role==='doctor'?'Check-up başvurularını inceleyin.':'Check-up başvurunuz ve takip planınız.'}</h3><p>${UI.role==='doctor'?'Başvuruyu değerlendirin, paneli oluşturun ve sonuçları takip edin.':'Başvuru durumunu, hekim panelini ve sonraki adımı görüntüleyin.'}</p></div><button class="btn secondary small" data-route="${UI.role==='doctor'?'doctor':'tracking'}">${UI.role==='doctor'?'Başvurulara git':'Başvuruma bak'} ${icon('arrow')}</button></section>`;}
+function education(t){const ref=t.educationSource||SOURCES[t.source];return `<details class="education"><summary>Neyi değerlendirir?</summary><p>${esc(t.education)}</p>${ref?`<p><a href="${esc(ref.url)}" target="_blank" rel="noopener noreferrer">${esc(ref.name)} ↗</a></p>`:''}</details>`;}
+function item(id){return CATALOG.find(t=>t.id===id);}
+function catalog(mode){const clinical=mode==='clinical',query=(clinical?UI.doctorSearch:UI.search).toLocaleLowerCase('tr-TR');const list=CATALOG.filter(t=>(t.name+' '+t.group+' '+t.purpose).toLocaleLowerCase('tr-TR').includes(query));const ids=clinical?UI.case.clinical:UI.case.requested;return `<div class="catalog-toolbar"><label class="search"><span class="visually-hidden">${clinical?'Hekim tetkik arama':'Tetkik arama'}</span><input type="search" id="${clinical?'clinicalSearch':'catalogSearch'}" placeholder="Tetkik veya başlık ara…" value="${esc(clinical?UI.doctorSearch:UI.search)}"></label><span class="counter" id="selectionCount">${clinical?'Panel':'Tercih'}: ${ids.length} / 50</span></div><div class="catalog" id="catalogList">${catalogGroups(list,mode,!!query)}</div>`;}
+function catalogGroups(list,mode,open){const clinical=mode==='clinical',ids=clinical?UI.case.clinical:UI.case.requested;return list.length?[...new Set(list.map(t=>t.group))].map(g=>`<details class="catalog-group" ${open?'open':''}><summary>${esc(g)}<small>${list.filter(t=>t.group===g).length} seçenek</small></summary>${list.filter(t=>t.group===g).map(t=>`<article class="catalog-test"><label class="check"><input type="checkbox" name="${mode}" value="${t.id}" ${ids.includes(t.id)?'checked':''}><span><b>${esc(t.name)}</b><small>${clinical?(UI.case.requested.includes(t.id)?'Kullanıcının görüşmek istediği tetkik':''):esc(t.purpose)}</small></span></label>${education(t)}</article>`).join('')}</details>`).join(''):'<p class="empty-list">Aramanızla eşleşen tetkik bulunamadı.</p>';}
+function steps(){return `<div class="steps">${['Bilgileriniz','Tercihleriniz','Kontrol ve gönderim'].map((x,i)=>`<div class="step ${i===UI.stage?'active':''}" ${i===UI.stage?'aria-current="step"':''}><span>${i+1}</span>${x}</div>`).join('')}</div>`;}
+function profileSummary(){const p=UI.case.profile;return `<div class="review-grid"><div><span>Ad / başvuru adı</span>${esc(p.name||'Örnek başvuru')}</div><div><span>Yaş / cinsiyet</span>${esc(p.age)} · ${esc(p.sex)}</div><div><span>Boy / kilo</span>${esc(p.height)} cm · ${esc(p.weight)} kg</div><div><span>BKİ</span>${esc(p.bmi??((+p.weight&&+p.height)?((+p.weight)/((+p.height/100)**2)).toFixed(1):'—'))}</div></div>`;}
+function historySummary(){const p=UI.case.profile;return `<details class="review-block" ${UI.role==='doctor'?'open':''}><summary>Paylaşılan sağlık bilgileri</summary>${[['Kronik hastalık / operasyon öyküsü',p.healthHistory],['İlaç, vitamin ve takviyeler',p.supplements],['Gebelik / gebelik şüphesi / emzirme',p.pregnancyNote],['Aile öyküsü',p.familyHistory],['Önceki sonuçlar',p.previous],['Beklenti ve notlar',p.wish]].map(([label,value])=>`<p class="preserve"><b>${label}:</b> ${esc(value||'Belirtilmedi')}</p>`).join('')}</details>`;}
+function sideSummary(){const c=UI.case;return `<aside><div class="summary-card"><div class="eyebrow">01 / RUTİN KONTROL</div><h3>Hekiminizle birlikte<br>bir kontrol planı.</h3><p>Şikâyeti olmayan erişkinler için başvuru ve takip.</p><div class="mini-label">BİLGİLENDİRME KATALOĞU</div><b>10 başlık · 50 seçenek</b><div class="mini-label">SİZİN TERCİHLERİNİZ</div><div id="asideSelection">${c.requested.length?`<ul>${c.requested.map(id=>`<li>${esc(item(id).name)}</li>`).join('')}</ul>`:'<p>Henüz tercih belirtilmedi.</p>'}</div></div><p class="aside-note">Tetkik panelini hekiminiz oluşturur. Tercih belirtmek zorunlu değildir.</p></aside>`;}
+function application(){if(UI.case.status!=='draft')return tracking();const p=UI.case.profile;return `<div class="page-head"><div><div class="eyebrow">MODÜL 01 / CHECK-UP</div><h1>Kontrol planınıza başlayalım.</h1><p>10 sağlık başlığında 50 değerlendirme seçeneği. Planınızı hekiminizle birlikte oluşturun.</p></div><button class="btn secondary small" data-action="example">Örnek doldur</button></div><div class="content-grid"><section class="panel">${steps()}${UI.stage===0?`<h2>Kısaca sizi tanıyalım.</h2><p>Mevcut bilgilerinizi ve beklentilerinizi paylaşın.</p><form id="profileForm"><div class="form-fields"><label class="full">Ad / başvuru adı <small>İsteğe bağlı</small><input id="name" value="${esc(p.name)}" placeholder="Örnek başvuru"></label><label>Yaş<input id="age" type="number" min="18" max="120" required value="${esc(p.age)}"></label><label>Cinsiyet<select id="sex" required><option value="">Seçiniz</option>${['Kadın','Erkek','Diğer / belirtmek istemiyorum'].map(x=>`<option ${p.sex===x?'selected':''}>${x}</option>`).join('')}</select></label><label>Kilo (kg)<input id="weight" type="number" min="20" max="500" step="0.1" required value="${esc(p.weight)}"></label><label>Boy (cm)<input id="height" type="number" min="100" max="250" step="0.1" required value="${esc(p.height)}"></label><label class="full">Kronik hastalık veya operasyon öyküsü <small>İsteğe bağlı</small><textarea id="healthHistory" placeholder="Varsa belirtiniz…">${esc(p.healthHistory)}</textarea></label><label class="full">İlaçlar, vitaminler ve takviyeler <small>İsteğe bağlı</small><textarea id="supplements">${esc(p.supplements)}</textarea></label><label class="full">Gebelik, gebelik şüphesi veya emzirme <small>Geçerliyse</small><input id="pregnancyNote" value="${esc(p.pregnancyNote)}"></label><label class="full">Ailenizde bilinen önemli hastalıklar <small>İsteğe bağlı</small><textarea id="familyHistory">${esc(p.familyHistory)}</textarea></label><label class="full">Önceki tahlillerinizin tarihi ve sonuçları <small>İsteğe bağlı</small><textarea id="previous" placeholder="Sonuçlarınızı ve tarihlerini buraya not edebilirsiniz.">${esc(p.previous)}</textarea></label><label class="full">Beklentileriniz ve eklemek istedikleriniz <small>İsteğe bağlı</small><textarea id="wish">${esc(p.wish)}</textarea></label><label class="check full"><input id="measureConfirmed" type="checkbox" ${p.measureConfirmed?'checked':''}>Boy ve kilomu kontrol ettim.</label></div><div class="form-actions"><button type="button" class="btn secondary" data-route="home">Geri</button><button class="btn">Tercihlerime geç ${icon('arrow')}</button></div></form>`:UI.stage===1?`<h2>Merak ettiklerinizi paylaşın.</h2><p>Hekiminizle değerlendirmek istediğiniz tetkikleri işaretleyebilirsiniz.</p>${catalog('requested')}<div class="form-actions"><button class="btn secondary" data-stage="0">Geri</button><button class="btn" data-stage="2">Başvurumu incele ${icon('arrow')}</button></div>`:`<h2>Başvurunuzu kontrol edin.</h2><div class="review-block">${profileSummary()}</div>${historySummary()}<div class="review-block"><h3>Hekimle görüşmek istediğiniz tetkikler · ${UI.case.requested.length}</h3>${requestedList()}</div><p class="notice">Panel, başvurunuz değerlendirildikten sonra hekiminiz tarafından oluşturulur.</p><div class="form-actions"><button class="btn secondary" data-stage="1">Düzenle</button><button class="btn" data-action="submit">Başvuruyu gönder ${icon('arrow')}</button></div>`}</section>${sideSummary()}</div>`;}
+function requestedList(){return UI.case.requested.length?`<ul style="font-size:12px;padding-left:18px">${UI.case.requested.map(id=>`<li>${esc(item(id).name)}</li>`).join('')}</ul>`:'<p class="empty-list">Tetkik tercihi belirtilmedi.</p>';}
+function timeline(){const c=UI.case;return `<div class="timeline">${[['Başvuru','Bilgileriniz iletildi.'],['Hekim paneli',c.status==='submitted'?'Değerlendirme bekleniyor.':'Panel oluşturuldu.'],['Sonuç takibi',c.status==='closed'?'Takip tamamlandı.':'Sonuçlar ve sonraki adım.']].map(([a,b],i)=>`<div class="timeline-item ${i===0||i===1&&c.status!=='submitted'||i===2&&['approved','closed'].includes(c.status)?'current':''}"><b>0${i+1} / ${a}</b><small>${b}</small></div>`).join('')}</div>`;}
+function tracking(){const c=UI.case;if(c.status==='draft')return `<div class="page-head"><div><div class="eyebrow">BAŞVURU VE TAKİP</div><h1>Her adımınız burada.</h1></div></div><section class="panel empty"><span class="square">${icon('file')}</span><h2>Henüz gönderilmiş başvurunuz yok.</h2><p>Check-up başvurunuzu tamamladıktan sonra hekim panelinizi ve takip adımlarınızı buradan görebilirsiniz.</p><button class="btn" data-action="application">${c.profile.age?'Taslağa devam et':'Başvuruya başla'} ${icon('arrow')}</button></section>`;return `<div class="page-head"><div><div class="eyebrow">CHECK-UP / ${c.id}</div><h1>Başvurunuz ve kontrol planınız.</h1><p>${esc(c.profile.name||'Örnek başvuru')} · ${statusLabel()}</p></div><button class="btn secondary small" data-action="export">Özeti indir ↗</button></div><div class="content-grid"><section class="panel">${timeline()}<div class="review-block">${profileSummary()}</div>${historySummary()}${c.status==='submitted'?`<div class="status-line"><span class="square">${icon('clock')}</span><div><h3>Hekim değerlendirmesi bekleniyor.</h3><p>Tetkik paneliniz henüz oluşturulmadı.</p></div></div><div class="review-block"><h3>Paylaştığınız tetkik tercihleri</h3>${requestedList()}</div><div class="form-actions"><button class="btn secondary" data-action="editDraft">Başvurumu düzenle</button><button class="btn secondary" data-route="modules">Modüllere dön</button></div>`:`<div class="row-heading"><h3>Hekimin belirlediği panel · ${c.clinical.length}</h3><span class="tag">Kaydedildi</span></div>${c.clinical.length?c.clinical.map(id=>`<article class="result-item"><h3 style="font-size:13px">${esc(item(id).name)}</h3><span class="module-status">${c.results[id]?.received?'✓ Sonuç ulaştı':'○ Sonuç bekleniyor'}</span>${c.results[id]?.value?`<p class="preserve" style="font-size:12px;color:var(--muted)">${esc(c.results[id].value)}</p>`:''}${education(item(id))}</article>`).join(''):'<p class="empty-list">Tetkik planlanmadı.</p>'}<div class="review-block"><h3>Hekim değerlendirmesi</h3><p><b>${esc(c.doctor)}</b></p><p class="preserve">${esc(c.note||'Değerlendirme notu eklenmedi.')}</p></div><div class="status-line"><span class="square">${icon(c.status==='closed'?'check':'clock')}</span><div><h3>${c.status==='closed'?'Takip tamamlandı':'Takibiniz sürüyor'}</h3><p>${esc(c.followup.action||'Sonraki adım hekiminiz tarafından kaydedilecek.')}</p>${c.followup.date?`<p>Kontrol / sonraki işlem: ${esc(c.followup.date)}</p>`:''}<p>Takip sorumlusu: ${esc(c.followup.owner)}</p></div></div>`}</section>${sideSummary()}</div>`;}
+function doctor(){if(UI.role!=='doctor')return `<section class="panel empty"><h2>Hekim görünümüne geçin.</h2><p>Bu alan yalnızca hekim iş akışının demosudur.</p><button class="btn" data-action="logout">Giriş sayfasına dön</button></section>`;const c=UI.case;const active=c.status!=='draft';if(UI.doctorDetail&&active)return doctorDetail();return `<div class="page-head"><div><div class="eyebrow">HEKİM ÇALIŞMA ALANI / DEMO</div><h1>Başvurular ve takip.</h1><p>Başvuruyu inceleyin, paneli oluşturun ve sonraki adımı kaydedin.</p></div></div><div class="metrics"><div class="metric"><b>${active?1:0}</b><span>Toplam başvuru</span></div><div class="metric"><b>${c.status==='submitted'?1:0}</b><span>Değerlendirme bekliyor</span></div><div class="metric"><b>${c.status==='closed'?1:0}</b><span>Takip tamamlandı</span></div></div><div class="tabs" aria-label="Başvuru filtresi">${[['all','Tümü'],['submitted','Bekleyen'],['approved','Takipte'],['closed','Tamamlanan']].map(([v,l])=>`<button class="${UI.filter===v?'active':''}" data-filter="${v}">${l}</button>`).join('')}</div>${active&&(UI.filter==='all'||UI.filter===c.status)?`<article class="case-row"><div><h3>${esc(c.profile.name||'Örnek başvuru')}</h3><p>${c.id} · Rutin kontrol / Check-up · ${esc(c.profile.age)} yaş</p><span class="tag">${statusLabel()}</span></div><button class="btn secondary small" data-action="caseDetail">Başvuruyu aç ${icon('arrow')}</button></article>`:`<section class="panel empty"><span class="square">${icon('users')}</span><h2>${active?'Bu filtrede başvuru yok.':'Henüz başvuru yok.'}</h2><p>${active?'Başvurunuzu görmek için diğer filtrelere geçin.':'Henüz gönderilmiş check-up başvurusu bulunmuyor.'}</p></section>`}`;}
+function clinicalList(){return UI.case.clinical.length?UI.case.clinical.map(id=>`<div class="selected-row"><span>${esc(item(id).name)}</span><button data-remove="${id}" aria-label="${esc(item(id).name)} panelden çıkar">×</button></div>`).join(''):'<p class="empty-list">Henüz tetkik seçilmedi.</p>';}
+function doctorDetail(){const c=UI.case;return `<div class="page-head"><div><div class="eyebrow">HEKİM / ${c.id}</div><h1>${c.status==='submitted'?'Tetkik panelini oluşturun.':'Sonuçları ve takibi kaydedin.'}</h1><p>${esc(c.profile.name||'Örnek başvuru')} · Rutin kontrol / Check-up</p></div><button class="btn secondary small" data-action="doctorList">Başvurulara dön</button></div><section class="panel"><div class="review-block">${profileSummary()}</div>${historySummary()}${c.status==='submitted'?`${c.presentationOnly?'<div class="presentation-tool"><span>Sunum için kurgusal örnek panel</span><button class="btn secondary small" data-action="loadPresentationPanel">Örnek paneli yükle</button></div>':''}<div class="review-block"><h3>Kullanıcının tetkik tercihleri · ${c.requested.length}</h3>${requestedList()}</div><div class="form-fields"><label class="full">Değerlendiren hekim<input id="doctorName" value="${esc(c.doctor)}" placeholder="Hekim adı"></label></div><div class="row-heading"><h3>Hekimin seçtiği panel · <span id="clinicalCount">${c.clinical.length}</span></h3><span class="tag neutral">Otomatik seçim yok</span></div><div id="clinicalList">${clinicalList()}</div><details class="review-block" open><summary>Tetkik kataloğundan seç</summary>${catalog('clinical')}</details><div class="form-fields"><label class="full">Değerlendirme ve takip notu <small>İsteğe bağlı</small><textarea id="doctorNote">${esc(c.note)}</textarea></label><label class="check full"><input id="reviewed" type="checkbox" ${c.reviewed?'checked':''}>Başvuru bilgilerini ve önceki sonuçları değerlendirerek paneli belirledim.</label></div><div class="form-actions"><button class="btn secondary" data-action="doctorList">Geri</button><button class="btn" data-action="approve">Paneli onayla ${icon('check')}</button></div>`:`<div class="row-heading"><h3>Hekim paneli · ${c.clinical.length} tetkik</h3><button class="text-button" data-action="reopen">Paneli düzenle ↗</button></div>${c.presentationOnly&&c.status==='approved'?'<div class="presentation-tool"><span>Kurgusal sonuçlar ve örnek takip notu</span><button class="btn secondary small" data-action="loadPresentationResults">Örnek sonuçları yükle</button></div>':''}<div class="result-list">${c.clinical.length?c.clinical.map(id=>`<article class="result-item"><label class="check"><input type="checkbox" data-result="${id}" ${c.results[id]?.received?'checked':''}><span><b>${esc(item(id).name)}</b><small>Sonuç ulaştı ve kayda alındı.</small></span></label><label class="visually-hidden" for="result-${id}">${esc(item(id).name)} sonuç notu</label><input type="text" id="result-${id}" data-value="${id}" value="${esc(c.results[id]?.value||'')}" placeholder="Sonuç / değerlendirme notu · İsteğe bağlı"></article>`).join(''):'<p class="empty-list">Bu başvuruda tetkik planlanmadı.</p>'}</div><div class="form-fields"><label>Takip sorumlusu<input id="owner" value="${esc(c.followup.owner)}"></label><label>Kontrol / sonraki işlem tarihi<input type="date" id="followDate" value="${esc(c.followup.date)}"></label><label class="full">Sonuç değerlendirmesi ve sonraki adım<textarea id="action">${esc(c.followup.action)}</textarea></label><label class="check full"><input type="checkbox" id="followReviewed" ${c.followup.reviewed?'checked':''}>Değerlendirmeyi tamamladım ve kullanıcıyı bilgilendirdim.</label><label class="check full"><input type="checkbox" id="completed" ${c.followup.completed?'checked':''}>Gerekli sonraki işlem tamamlandı veya ek işlem gerekmediği kaydedildi.</label></div>${c.status==='closed'?'<div id="closedBanner" class="status-line"><span class="square">'+icon('check')+'</span><h3>Takip tamamlandı.</h3></div>':''}<div class="form-actions"><button class="btn secondary" data-action="saveFollow">Takibi açık tutarak kaydet</button><button class="btn" data-action="complete">Takibi tamamla ${icon('check')}</button></div>`}</section>`;}
+function modal(title,body,actions=''){const d=$('dialog');d.innerHTML=`<h2>${title}</h2>${body}<div class="form-actions">${actions}<button class="btn secondary" data-action="closeDialog">Kapat</button></div>`;d.showModal();}
+function about(){modal('HELUNEXA platform önizlemesi','<p>Check-up başvurusu, hekim paneli ve sonuç takibi çalışan bir demodur. Diğer modüller geliştirme aşamasındadır.</p><p>Örnek bilgilerle deneyin. Gerçek hesap, hekim hizmeti, tetkik istemi veya ödeme oluşturulmaz. “2 dakikalık sunumu başlat” hazır kurgusal bir başvuru açar; rehber sizi hasta, hekim ve sonuç adımlarında ilerletir. Veriler yalnızca bu tarayıcı oturumunun belleğinde tutulur; sayfa yenilendiğinde silinir.</p><p>Hasta ve hekim girişleri örnek oturumlardır; gerçek kimlik doğrulama değildir. Canlı kullanım için kimlik doğrulama, güvenli kayıt ve kurum entegrasyonu ayrıca geliştirilmelidir.</p><div class="link-row"><a class="text-button" href="HELUNEXA_Platform.zip" download>Kaynak ZIP’i indir ↗</a><button class="text-button" data-action="export">Başvuru özetini indir ↗</button></div>');}
+function readProfile(){for(const key of ['name','age','sex','weight','height','healthHistory','supplements','pregnancyNote','familyHistory','previous','wish'])if($(key))UI.case.profile[key]=$(key).value;UI.case.profile.measureConfirmed=$('measureConfirmed')?.checked||false;}
+function beginPresentation(){UI.case=Flow.presentationCase();UI.presentation=true;UI.presentationPhase=1;UI.stage=0;UI.search='';UI.doctorSearch='';UI.filter='all';UI.role='patient';UI.doctorDetail=false;$('dialog').close();goto('application',0);}
+function presentationBar(){if(!UI.presentation)return '';const phase=UI.presentationPhase;const labels=['Başvuru','Hekim paneli','Hasta planı','Sonuçlar','Takip'];let title='',next='';if(phase===1){title='Hazır başvuruyu inceleyip gönderin.';}else if(phase===2){title=UI.role==='doctor'?'Örnek paneli yükleyin, inceleyip onaylayın.':'Başvuru hazır; hekim değerlendirmesine geçin.';if(UI.role!=='doctor')next='Hekim paneline geç';}else if(phase===3){title='Hekim planı kaydedildi. Hasta tarafında gösterin.';next='Hasta planını göster';}else if(phase===4){title=UI.role==='doctor'?'Örnek sonuçları yükleyin; inceleme onaylarını verip takibi tamamlayın.':'Hekimin oluşturduğu plan burada. Şimdi sonuç takibini gösterin.';if(UI.role!=='doctor')next='Sonuç takibine geç';}else{title=UI.role==='patient'?'Sunum tamamlandı. Hasta, sonuçları ve sonraki adımı görüyor.':'Takip tamamlandı. Son durumu hasta tarafında gösterin.';if(UI.role!=='patient')next='Hasta takibini göster';}return `<section class="presentation-guide" aria-label="Sunum rehberi"><div class="presentation-heading"><b>CHECK-UP SUNUMU <small>Kurgusal örnek</small></b><button class="text-button" data-action="restartPresentation">Yeniden başlat ↻</button></div><ol>${labels.map((x,i)=>`<li class="${i+1===phase?'active':i+1<phase?'done':''}" ${i+1===phase?'aria-current="step"':''}><span>${i+1}</span>${x}</li>`).join('')}</ol><div class="presentation-next"><p>${title}</p>${next?`<button class="btn small" data-action="presentationNext">${next} ${icon('arrow')}</button>`:''}</div></section>`;}
+function presentationNext(){const phase=UI.presentationPhase;if(phase===2){UI.role='doctor';UI.doctorDetail=true;goto('doctor');}else if(phase===3){UI.role='patient';UI.presentationPhase=4;goto('tracking');}else if(phase===4){UI.role='doctor';UI.doctorDetail=true;goto('doctor');}else if(phase===5){UI.role='patient';goto('tracking');}}
+function render(){if(!UI.role&&!['public'].includes(UI.page))UI.page='public';if(UI.role==='patient'&&UI.page==='doctor')UI.page='modules';if(UI.role==='doctor'&&['application','tracking'].includes(UI.page))UI.page='modules';sidebar();topbar();document.body.classList.toggle('public-page',!UI.role);document.body.classList.remove('menu-open');$('backdrop').hidden=true;$('main').innerHTML=presentationBar()+({public:home,home:modulesPage,modules:modulesPage,application,tracking,doctor}[UI.page]||home)();bind();}
+function bind(){if($('profileForm')){$('profileForm').oninput=readProfile;$('profileForm').onsubmit=e=>{e.preventDefault();readProfile();try{const p=UI.case.profile;validateProfile({...p,route:'well',age:+p.age,weight:+p.weight,height:+p.height});goto('application',1);}catch(err){toast(err.message);}};}bindCatalog();if($('doctorName'))$('doctorName').oninput=e=>{UI.case.doctor=e.target.value;};if($('doctorNote'))$('doctorNote').oninput=e=>{UI.case.note=e.target.value;};if($('reviewed'))$('reviewed').onchange=e=>UI.case.reviewed=e.target.checked;const invalidates=()=>{Flow.editFollowup(UI.case);if(UI.presentation)UI.presentationPhase=4;$('closedBanner')?.remove();if($('followReviewed'))$('followReviewed').checked=false;if($('completed'))$('completed').checked=false;};document.querySelectorAll('[data-result]').forEach(el=>el.onchange=()=>{UI.case.results[el.dataset.result].received=el.checked;invalidates();});document.querySelectorAll('[data-value]').forEach(el=>el.oninput=()=>{UI.case.results[el.dataset.value].value=el.value;invalidates();});for(const [id,key] of [['owner','owner'],['followDate','date'],['action','action']])if($(id))$(id).oninput=e=>{UI.case.followup[key]=e.target.value;invalidates();};for(const [id,key] of [['followReviewed','reviewed'],['completed','completed']])if($(id))$(id).onchange=e=>{if(UI.case.status==='closed'){UI.case.status='approved';UI.case.closedAt=null;$('closedBanner')?.remove();}UI.case.followup[key]=e.target.checked;};}
+function bindCatalog(){const clinical=UI.page==='doctor',name=clinical?'clinical':'requested';document.querySelectorAll(`input[name="${name}"]`).forEach(el=>el.onchange=()=>{const prop=clinical?'clinical':'requested';const ids=new Set(UI.case[prop]);el.checked?ids.add(el.value):ids.delete(el.value);UI.case[prop]=Flow.unique([...ids]);if(clinical){UI.case.reviewed=false;if($('reviewed'))$('reviewed').checked=false;$('clinicalCount').textContent=UI.case.clinical.length;$('clinicalList').innerHTML=clinicalList();}if($('selectionCount'))$('selectionCount').textContent=`${clinical?'Panel':'Tercih'}: ${UI.case[prop].length} / 50`;if($('asideSelection'))$('asideSelection').innerHTML=UI.case.requested.length?'<ul>'+UI.case.requested.map(id=>`<li>${esc(item(id).name)}</li>`).join('')+'</ul>':'<p>Henüz tercih belirtilmedi.</p>';});const search=$(clinical?'clinicalSearch':'catalogSearch');if(search)search.oninput=()=>{const q=search.value;clinical?UI.doctorSearch=q:UI.search=q;const list=CATALOG.filter(t=>(t.name+' '+t.group+' '+t.purpose).toLocaleLowerCase('tr-TR').includes(q.toLocaleLowerCase('tr-TR')));$('catalogList').innerHTML=catalogGroups(list,name,!!q);bindCatalog();};}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-route],[data-stage],[data-action],[data-module],[data-filter],[data-remove]');if(!el)return;if(el.dataset.route){e.preventDefault();goto(el.dataset.route);return;}if(el.dataset.stage!==undefined){goto('application',+el.dataset.stage);return;}if(el.dataset.module!==undefined){const i=+el.dataset.module;if(i===0){if(!UI.role){modal('Rutin kontrol / Check-up','<p>Başvurunuz için hasta girişini, başvuruları değerlendirmek için hekim girişini kullanın.</p>','<button class="btn" data-action="patientLogin">Hasta Girişi</button><button class="btn secondary" data-action="doctorLogin">Hekim Girişi</button>');}else if(UI.role==='doctor'){UI.doctorDetail=false;goto('doctor');}else navigateApp();return;}modal(modules[i][0],`<p>${modules[i][1]}</p><p>Durum: ${modules[i][3]}. Bu modül henüz kullanıma açık değil.</p>`);return;}if(el.dataset.filter){UI.filter=el.dataset.filter;render();return;}if(el.dataset.remove){UI.case.clinical=UI.case.clinical.filter(id=>id!==el.dataset.remove);UI.case.reviewed=false;render();return;}const a=el.dataset.action;try{if(a==='startPresentation'){if(UI.case.status!=='draft'||UI.case.profile.name||UI.case.profile.age){modal('Sunum senaryosunu başlat','<p>Bu oturumdaki örnek başvurunun yerine hazır sunum senaryosu yüklenecek.</p>','<button class="btn" data-action="confirmPresentation">Sunumu başlat</button>');}else beginPresentation();}else if(a==='restartPresentation'){modal('Sunumu yeniden başlat','<p>Sunum başvuru aşamasına dönecek; örnek panel ve sonuçlar sıfırlanacak.</p>','<button class="btn" data-action="confirmPresentation">Yeniden başlat</button>');}else if(a==='confirmPresentation'){beginPresentation();}else if(a==='presentationNext'){presentationNext();}else if(a==='loadPresentationPanel'){if(UI.role!=='doctor')throw Error('Hekim girişi gerekli.');Flow.presentationPanel(UI.case);render();toast('Örnek panel eklendi. İnceleyip değerlendirme onayını verin.');}else if(a==='loadPresentationResults'){if(UI.role!=='doctor')throw Error('Hekim girişi gerekli.');Flow.presentationResults(UI.case);render();toast('Kurgusal sonuçlar eklendi. Takip onayları henüz verilmedi.');}else if(a==='patientLogin'||a==='doctorLogin'){$('dialog').close();UI.role=a==='patientLogin'?'patient':'doctor';UI.doctorDetail=false;UI.filter='all';goto('modules');}else if(a==='logout'){UI.role=null;UI.doctorDetail=false;goto('public');}else if(a==='application')navigateApp();else if(a==='about')about();else if(a==='closeDialog')$('dialog').close();else if(a==='menu'){UI.menu=!UI.menu;document.body.classList.toggle('menu-open',UI.menu);$('backdrop').hidden=!UI.menu;document.querySelector('.mobile-menu')?.setAttribute('aria-expanded',String(UI.menu));}else if(a==='example'){UI.case.profile={...UI.case.profile,name:'Örnek Kullanıcı',age:40,sex:'Kadın',weight:60,height:160,measureConfirmed:true};render();toast('Örnek bilgiler eklendi.');}else if(a==='submit'){Flow.submit(UI.case);if(UI.presentation)UI.presentationPhase=2;goto('tracking');}else if(a==='editDraft'){UI.case.status='draft';UI.case.submittedAt=null;if(UI.presentation)UI.presentationPhase=1;goto('application',0);}else if(a==='caseDetail'){UI.doctorDetail=true;render();}else if(a==='doctorList'){UI.doctorDetail=false;goto('doctor');}else if(a==='approve'){Flow.approve(UI.case);if(UI.presentation)UI.presentationPhase=3;render();window.scrollTo({top:0,behavior:'instant'});toast('Hekim paneli kaydedildi.');}else if(a==='reopen'){modal('Paneli yeniden düzenle','<p>Panel onayı kaldırılacak ve mevcut sonuç / takip kayıtları bu demoda sıfırlanacak.</p>','<button class="btn" data-action="confirmReopen">Düzenlemeye geç</button>');}else if(a==='confirmReopen'){Flow.reopen(UI.case);if(UI.presentation)UI.presentationPhase=2;$('dialog').close();render();}else if(a==='saveFollow'){if(UI.presentation)UI.presentationPhase=4;if(UI.case.status==='closed'){UI.case.status='approved';UI.case.closedAt=null;}toast('Takip açık olarak bu oturumda kaydedildi.');render();}else if(a==='complete'){Flow.close(UI.case);if(UI.presentation)UI.presentationPhase=5;render();toast('Takip tamamlandı.');}else if(a==='export'){const data={schemaVersion:'platform-1.2.0',prototypeOnly:true,case:UI.case};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='HELUNEXA_ornek_basvuru.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}}catch(err){toast(err.message);}});
+$('backdrop').onclick=()=>{UI.menu=false;document.body.classList.remove('menu-open');$('backdrop').hidden=true;};$('dialog').addEventListener('click',e=>{if(e.target===$('dialog'))$('dialog').close();});render();
+</script></body></html>

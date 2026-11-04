@@ -38,7 +38,7 @@ Proje, statik HTML dosyaları ve istemci taraflı (client-side) JavaScript kulla
 Proje herhangi bir sunucu (backend) gerektirmez, tamamen tarayıcı üzerinde çalışır. Ancak Supabase bağlantılarının doğru çalışması için:
 
 1.  Projeyi bilgisayarınıza klonlayın:
-    ```bash
+
     git clone https://github.com/KULLANICI_ADINIZ/helunexa1.git
 
 2. Klasörü VS Code veya herhangi bir editörde açın.
