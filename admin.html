@@ -11,11 +11,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, Arial, sans-serif; background: #f1f5f9; color: #0f172a; }
         .header { background: white; padding: 15px 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .header-left img { height: 100px; }
+        .header-left img { height: 80px; }
         .role-badge { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; }
         .role-badge.admin { background: #fef3c7; color: #92400e; }
         .role-badge.doctor { background: #dbeafe; color: #1e40af; }
-        .logout-btn { background: #ef4444; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; }
+        .logout-btn { background: #ef4444; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
@@ -37,28 +37,28 @@
         .badge.completed { background: #d1fae5; color: #065f46; }
         .badge.in_progress { background: #dbeafe; color: #1e40af; }
         .badge.appointment { background: #ecfdf5; color: #047857; border: 1px solid #10b981; margin-top: 5px; }
-        .action-btn { padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .action-btn { padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         
         /* MODAL STİLLERİ */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal { background: white; border-radius: 12px; max-width: 800px; width: 100%; max-height: 95vh; overflow-y: auto; padding: 30px; }
+        .modal { background: white; border-radius: 12px; max-width: 850px; width: 100%; max-height: 95vh; overflow-y: auto; padding: 30px; }
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; }
         .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; }
         .detail-row { margin-bottom: 15px; }
         .detail-row label { display: block; font-size: 12px; color: #64748b; margin-bottom: 4px; font-weight: bold; }
         .detail-row .value { font-size: 15px; }
-        textarea, select, input[type="text"] { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; }
+        textarea, select, input[type="text"], input[type="email"] { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; }
         textarea { min-height: 80px; resize: vertical; }
         .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-primary { background: #10b981; color: white; }
         .btn-secondary { background: #e2e8f0; color: #475569; }
 
         .patient-selected-tests { background: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f59e0b; }
-        .patient-selected-tests ul { list-style: none; padding: 0; margin-top: 10px; }
-        .patient-selected-tests li { background: white; padding: 8px 12px; border-radius: 4px; margin-bottom: 5px; font-size: 13px; border: 1px solid #fde68a; }
+        .patient-selected-tests ul { list-style: none; padding: 0; margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+        .patient-selected-tests li { background: white; padding: 6px 12px; border-radius: 4px; font-size: 13px; border: 1px solid #fde68a; color: #92400e; font-weight: 600; }
         
-        .eval-box { background: #f8fafc; border-left: 4px solid #3b82f6; padding: 15px; border-radius: 8px; margin-top: 15px; }
+        .eval-box { background: #f8fafc; border-left: 4px solid #3b82f6; padding: 20px; border-radius: 8px; margin-top: 20px; }
 
         @media (max-width: 768px) { .container { padding: 15px; } table { min-width: 800px; } }
     </style>
@@ -87,7 +87,6 @@
         </div>
 
         <div class="tab-content active" id="tab-applications">
-            <!-- YENİ EKLENEN RANDEVU FİLTRELERİ -->
             <div class="filters">
                 <span style="font-weight:bold; color:#64748b; margin-right:10px; font-size:14px;">Durum:</span>
                 <button class="filter-btn active" data-filter="all">Tümü</button>
@@ -107,18 +106,20 @@
         <div class="tab-content" id="tab-addDoctor">
             <div style="background:white; padding:25px; border-radius:12px;">
                 <h2>Yeni Doktor Ekle</h2>
-                <div style="margin-top:15px;">
-                    <label>Ad Soyad</label><input type="text" id="newDocName" style="margin-bottom:10px;">
-                    <label>E-posta</label><input type="email" id="newDocEmail" style="margin-bottom:10px;">
-                    <label>Branş</label>
-                    <select id="newDocSpecialty" style="margin-bottom:10px;">
-                        <option value="internal">Dahiliye</option>
-                        <option value="psychology">Psikoloji</option>
-                        <option value="gynecology">Kadın Doğum</option>
-                    </select>
-                    <label>Şifre</label><input type="text" id="newDocPassword" value="Helunexa123!" style="margin-bottom:15px;">
-                    <button class="btn btn-primary" id="saveDoctorBtn">Kaydet</button>
-                    <div id="doctorMessage" style="margin-top:10px;"></div>
+                <div style="margin-top:15px; display:grid; gap:10px; max-width:400px;">
+                    <div><label>Ad Soyad</label><input type="text" id="newDocName"></div>
+                    <div><label>E-posta</label><input type="email" id="newDocEmail"></div>
+                    <div>
+                        <label>Branş</label>
+                        <select id="newDocSpecialty">
+                            <option value="internal">Dahiliye</option>
+                            <option value="psychology">Psikoloji</option>
+                            <option value="gynecology">Kadın Doğum</option>
+                        </select>
+                    </div>
+                    <div><label>Şifre</label><input type="text" id="newDocPassword" value="Helunexa123!"></div>
+                    <button class="btn btn-primary" id="saveDoctorBtn" style="margin-top:10px;">Kaydet</button>
+                    <div id="doctorMessage" style="font-size:13px;"></div>
                 </div>
             </div>
         </div>
@@ -131,7 +132,7 @@
             <div class="modal-body" id="modalBody"></div>
             <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
                 <button class="btn btn-secondary" onclick="closeModal()">Kapat</button>
-                <button class="btn btn-primary" id="saveBtn">Kaydet</button>
+                <button class="btn btn-primary" id="saveBtn">Değişiklikleri Kaydet</button>
             </div>
         </div>
     </div>
@@ -145,6 +146,14 @@
         let currentRole = 'doctor', currentSpecialty = null, allApps = [], currentApp = null;
         let currentStatusFilter = 'all';
         let currentDateFilter = 'all';
+
+        // HEKİMİN KENDİ EKLEYEBİLECEĞİ TETKİK LİSTESİ
+        const DOCTOR_CATALOG = [
+            "Hemogram", "Ferritin", "Açlık glukozu ve HbA1c", "Lipid profili", 
+            "TSH", "Serbest T4", "D vitamini · 25-OH D", "Vitamin B12", 
+            "Kreatinin / eGFR", "ALT", "AST", "Tam idrar tahlili", 
+            "C-Reaktif Protein (CRP)", "Magnezyum", "Çinko", "Demir Bağlama Kapasitesi"
+        ];
 
         async function checkSession() {
             const { data: { session } } = await _supabase.auth.getSession();
@@ -196,26 +205,17 @@
         function renderTable() {
             let filtered = allApps;
 
-            // 1. Durum Filtresi
             if (currentStatusFilter !== 'all') {
                 filtered = filtered.filter(a => a.status === currentStatusFilter);
             }
 
-            // 2. Tarih Filtresi
             if (currentDateFilter !== 'all') {
-                const today = new Date();
-                today.setHours(0, 0, 0, 0); // Bugünün başlangıcı
-
+                const todayStr = new Date().toLocaleDateString('en-CA'); 
                 filtered = filtered.filter(app => {
-                    if (!app.appointment_date) return false; // Randevu tarihi yoksa listeleme
-                    const appDate = new Date(app.appointment_date);
-                    appDate.setHours(0, 0, 0, 0);
-
-                    if (currentDateFilter === 'today') {
-                        return appDate.getTime() === today.getTime();
-                    } else if (currentDateFilter === 'upcoming') {
-                        return appDate.getTime() > today.getTime();
-                    }
+                    if (!app.appointment_date) return false; 
+                    const appDateStr = new Date(app.appointment_date).toLocaleDateString('en-CA');
+                    if (currentDateFilter === 'today') return appDateStr === todayStr;
+                    if (currentDateFilter === 'upcoming') return appDateStr > todayStr;
                     return true;
                 });
             }
@@ -229,7 +229,6 @@
                     const statusCls = app.status === 'completed' ? 'completed' : (app.status === 'in_progress' ? 'in_progress' : 'pending');
                     const statusText = app.status === 'completed' ? 'Tamamlandı' : (app.status === 'in_progress' ? 'İşlemde' : 'Bekliyor');
                     
-                    // Randevu tarihini formatla ve vurgula
                     let appointmentHtml = '<span style="color:#94a3b8;">-</span>';
                     if (app.appointment_date) {
                         const apptDate = new Date(app.appointment_date);
@@ -251,7 +250,6 @@
             document.getElementById('tableContent').innerHTML = html;
         }
 
-        // Durum Filtresi Tıklamaları
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.onclick = () => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -261,7 +259,6 @@
             }
         });
 
-        // Tarih Filtresi Tıklamaları
         document.querySelectorAll('.date-filter-btn').forEach(btn => {
             btn.onclick = () => {
                 document.querySelectorAll('.date-filter-btn').forEach(b => b.classList.remove('active'));
@@ -284,8 +281,8 @@
                 
                 patientSelectedHtml = `
                     <div class="patient-selected-tests">
-                        <strong style="color:#92400e; font-size:14px;">🧪 Hastanın Seçtiği Tetkikler (Onay Bekliyor):</strong>
-                        <p style="font-size:12px; color:#b45309; margin-top:5px;">Hasta başvurusunda bu tetkikleri yaptırmak istediğini belirtti. Uygun bulduklarınızı reçeteye ekleyin.</p>
+                        <strong style="color:#92400e; font-size:14px;">🧪 Hastanın Seçtiği Tetkikler (Talep):</strong>
+                        <p style="font-size:12px; color:#b45309; margin-top:5px;">Hasta başvurusunda bu tetkikleri yaptırmak istediğini belirtti.</p>
                         <ul>
                             ${testList.map(t => `<li>${t}</li>`).join('')}
                         </ul>
@@ -293,7 +290,9 @@
                 `;
             }
 
+            let currentPrescription = currentApp.prescription || '';
             let appointmentDetail = '';
+            
             if (currentApp.appointment_date) {
                 appointmentDetail = `<div class="detail-row" style="background:#ecfdf5; padding:10px; border-radius:6px; border-left:4px solid #10b981;">
                     <label style="color:#065f46;">📅 Randevu Tarihi ve Saati</label>
@@ -304,9 +303,10 @@
             document.getElementById('modalBody').innerHTML = `
                 ${appointmentDetail}
                 ${patientSelectedHtml}
+                
                 <div class="detail-row"><label>Hizmet Türü</label><div class="value">${currentApp.service_type}</div></div>
                 <div class="detail-row"><label>Hasta Notları</label><div class="value" style="white-space:pre-wrap;">${currentApp.test_notes || '-'}</div></div>
-                <div class="detail-row"><label>Boy / Kilo (VKİ)</label><div class="value">${currentApp.test_notes && currentApp.test_notes.includes('Boy:') ? currentApp.test_notes.match(/Boy:.*?kg.*?VKİ: [\d.]+/)?.[0] || '-' : '-'}</div></div>
+                
                 <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
                 
                 <div class="eval-box">
@@ -322,18 +322,73 @@
                     </div>
                     <div class="detail-row"><label>Hekim Notu (Kısa)</label><textarea id="editNote">${currentApp.doctor_note || ''}</textarea></div>
                     <div class="detail-row"><label>Hekim Değerlendirmesi</label><textarea id="editEvaluation">${currentApp.evaluation || ''}</textarea></div>
-                    <div class="detail-row"><label>Reçete / Nihai Tetkik Listesi</label><textarea id="editPrescription">${currentApp.prescription || ''}</textarea></div>
+                    
+                    <!-- HEKİMİN ÖNERİ ALANI -->
+                    <div class="detail-row" style="background:#eff6ff; padding:15px; border-radius:8px; border:1px solid #bfdbfe; margin-top:20px;">
+                        <label style="color:#1e40af; font-size:13px;">➕ Hekimin Önerdiği Tetkikler (Kendi Önerisi)</label>
+                        <div style="display:flex; gap:10px; margin-top:10px; margin-bottom:10px;">
+                            <select id="doctorTestSelect" style="flex:1; padding:8px;">
+                                <option value="">Tetkik seçin...</option>
+                                ${DOCTOR_CATALOG.map(t => `<option value="${t}">${t}</option>`).join('')}
+                            </select>
+                            <button type="button" class="btn btn-primary" onclick="addDoctorTest()" style="padding: 8px 15px; font-size:13px;">Ekle</button>
+                        </div>
+                        <div id="doctorSelectedList" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px;">
+                            <!-- Eklenen tetkikler buraya gelecek -->
+                        </div>
+                        
+                        <label style="margin-top:10px; display:block; font-size:13px; font-weight:bold;">Nihai Reçete / Panel (Düzenlenebilir)</label>
+                        <textarea id="editPrescription" style="min-height:100px; background:white; border-color:#93c5fd; margin-top:5px;">${currentPrescription}</textarea>
+                    </div>
                 </div>
             `;
             
+            window.tempDoctorTests = currentPrescription ? currentPrescription.split('\n').filter(t => t.trim() !== '') : [];
+            renderDoctorSelectedList();
+
             document.getElementById('modalOverlay').classList.add('active');
+        };
+
+        window.addDoctorTest = function() {
+            const select = document.getElementById('doctorTestSelect');
+            const test = select.value;
+            if (!test) return;
+            
+            if (!window.tempDoctorTests.includes(test)) {
+                window.tempDoctorTests.push(test);
+                renderDoctorSelectedList();
+            }
+            select.value = ''; 
+        };
+
+        window.removeDoctorTest = function(test) {
+            window.tempDoctorTests = window.tempDoctorTests.filter(t => t !== test);
+            renderDoctorSelectedList();
+        };
+
+        window.renderDoctorSelectedList = function() {
+            const listContainer = document.getElementById('doctorSelectedList');
+            const presTextarea = document.getElementById('editPrescription');
+            
+            if (window.tempDoctorTests.length === 0) {
+                listContainer.innerHTML = '<span style="font-size:12px; color:#94a3b8;">Henüz öneri eklenmedi.</span>';
+            } else {
+                listContainer.innerHTML = window.tempDoctorTests.map(t => `
+                    <span style="background:#dbeafe; color:#1e40af; padding:4px 8px; border-radius:4px; font-size:12px; display:flex; align-items:center; gap:5px; border:1px solid #bfdbfe;">
+                        ${t}
+                        <button type="button" onclick="removeDoctorTest('${t}')" style="background:none; border:none; color:#1e40af; cursor:pointer; font-size:14px; font-weight:bold; padding:0;">×</button>
+                    </span>
+                `).join('');
+            }
+            
+            presTextarea.value = window.tempDoctorTests.join('\n');
         };
 
         window.closeModal = () => document.getElementById('modalOverlay').classList.remove('active');
 
         document.getElementById('saveBtn').onclick = async () => {
             if (!currentApp) return;
-            const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.textContent = '...';
+            const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.textContent = 'Kaydediliyor...';
             
             const { error } = await _supabase.from('applications').update({
                 status: document.getElementById('editStatus').value,
@@ -344,7 +399,7 @@
             
             if (error) alert('Hata: ' + error.message);
             else { closeModal(); loadApps(); }
-            btn.disabled = false; btn.textContent = 'Kaydet';
+            btn.disabled = false; btn.textContent = 'Değişiklikleri Kaydet';
         };
 
         document.getElementById('saveDoctorBtn').onclick = async () => {
