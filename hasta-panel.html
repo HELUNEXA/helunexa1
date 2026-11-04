@@ -45,12 +45,13 @@
         .modal-overlay.active { display: flex; }
         .modal { background: white; border-radius: 12px; max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 25px; }
         
-        .test-result-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-        .test-result-box h4 { font-size: 14px; margin-bottom: 10px; color: #0f172a; display: flex; align-items: center; gap: 8px; }
-        .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .metric { background: white; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0; text-align: center; }
-        .metric .val { font-size: 20px; font-weight: bold; color: #10b981; }
-        .metric .lbl { font-size: 11px; color: #64748b; text-transform: uppercase; margin-top: 4px; }
+        /* YENİ EKLENEN AÇIKLAMA KUTULARI */
+        .prescribed-test-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 15px; margin-bottom: 10px; }
+        .prescribed-test-item .test-name { font-weight: bold; font-size: 14px; color: #0f172a; display: block; }
+        .edu-box { margin-top: 5px; }
+        .edu-box summary { font-size: 11px; color: #3b82f6; cursor: pointer; font-weight: bold; display: inline-block; }
+        .edu-box p { font-size: 12px; color: #64748b; line-height: 1.6; margin-top: 6px; padding: 10px; background: white; border-left: 3px solid #3b82f6; border-radius: 4px; }
+        .edu-box a { font-size: 10px; text-decoration: underline; text-underline-offset: 3px; color: #3b82f6; font-weight: bold; display: inline-block; margin-top: 5px; }
         
         @media (max-width: 768px) {
             .header { padding: 10px 15px; flex-wrap: wrap; gap: 10px; }
@@ -67,7 +68,6 @@
             table { min-width: 700px; }
             th, td { padding: 10px 8px; font-size: 12px; white-space: nowrap; }
             .modal { max-width: 100%; padding: 20px; }
-            .metric-grid { grid-template-columns: 1fr; }
         }
         
         @media print {
@@ -127,28 +127,49 @@
         const supabaseUrl = 'https://grbjmhknmlheoyknmyhd.supabase.co';
         const supabaseKey = 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p';
         const _supabase = supabase.createClient(supabaseUrl, supabaseKey, {
-            auth: { persistSession: true, storageKey: 'helunexa-hasta-auth' } // OTURUM AYARI BURADA EŞİTLENDİ
+            auth: { persistSession: true, storageKey: 'helunexa-hasta-auth' }
         });
 
         let allApps = [];
         let currentUserEmail = '';
 
+        // HASTANIN TETKİKLERİN AÇIKLAMASINI GÖREBİLMESİ İÇİN KÜTÜPHANE
+        const TEST_DESCRIPTIONS = {
+            "Hepatit B · HBsAg / anti-HBs / total anti-HBc": { desc: "Hepatit B virüsüyle mevcut veya geçmiş karşılaşmayı ve bağışıklık durumunu değerlendirir.", url: "https://www.cdc.gov/hepatitis-b/hcp/diagnosis-testing/index.html" },
+            "Anti-HCV": { desc: "Hepatit C virüsüne karşı oluşan antikorları araştırarak virüsle karşılaşma hakkında bilgi verir.", url: "https://www.cdc.gov/hepatitis-c/hcp/diagnosis-testing/index.html" },
+            "Hemogram": { desc: "Alyuvarları, akyuvarları ve trombositleri inceler. Kansızlık ve bağışıklık hücrelerindeki değişiklikler hakkında bilgi sağlar.", url: "https://medlineplus.gov/lab-tests/complete-blood-count-cbc/" },
+            "Ferritin": { desc: "Vücudun demir depoları hakkında bilgi verir. Demir eksikliğinin değerlendirilmesinde kullanılır.", url: "https://medlineplus.gov/lab-tests/ferritin-blood-test/" },
+            "Transferrin satürasyonu / demir bağlama kapasitesi": { desc: "Demirin kanda taşınmasını ve taşıyıcı proteinlerin demirle doluluk oranını değerlendirir.", url: "https://medlineplus.gov/lab-tests/iron-tests/" },
+            "Açlık plazma glukozu ve HbA1c": { desc: "Açlık glukozu anlık kan şekerini, HbA1c ise son 2-3 aylık ortalama kan şekerini yansıtır.", url: "https://medlineplus.gov/lab-tests/diabetes-tests/" },
+            "Ürik asit": { desc: "Pürin maddelerinin yıkımıyla oluşan ürik asidin kandaki düzeyini ölçer. Gut hastalığı için önemlidir.", url: "https://medlineplus.gov/lab-tests/uric-acid-test/" },
+            "Lipid profili": { desc: "Total kolesterol, LDL, HDL ve trigliserid düzeylerini değerlendirir. Kalp ve damar hastalığı riskini gösterir.", url: "https://medlineplus.gov/lab-tests/cholesterol-levels/" },
+            "Kreatinin / eGFR": { desc: "Kreatinin üzerinden hesaplanan eGFR, böbreklerin kanı süzme kapasitesini tahmin etmeye yardımcı olur.", url: "https://medlineplus.gov/lab-tests/creatinine-test/" },
+            "TSH": { desc: "Hipofiz bezinden salgılanan ve tiroid bezini uyaran TSH hormonunu ölçer. Tiroidin çalışma düzenini gösterir.", url: "https://medlineplus.gov/lab-tests/tsh-thyroid-stimulating-hormone-test/" },
+            "D vitamini · 25-OH D": { desc: "D vitamini, kalsiyum emilimi ve kemik sağlığında görev alır. Vücuttaki D vitamini durumunu gösterir.", url: "https://medlineplus.gov/lab-tests/vitamin-d-test/" },
+            "Vitamin B12": { desc: "Kan hücresi yapımı ve sinir sistemi işlevlerinde görevli B12 vitamininin düzeyini değerlendirir.", url: "https://medlineplus.gov/lab-tests/vitamin-b-test/" },
+            "CRP": { desc: "İltihabi süreçlerde karaciğerin ürettiği CRP proteinini ölçer. Vücuttaki iltihabi etkinlik hakkında bilgi verir.", url: "https://medlineplus.gov/lab-tests/c-reactive-protein-crp-test/" },
+            "Tam idrar tahlili": { desc: "İdrarın fiziksel ve kimyasal özelliklerini inceler. Kan, protein, glukoz gibi bulgular hakkında bilgi sağlar.", url: "https://medlineplus.gov/ency/article/003579.htm" },
+            "Açlık insülini / HOMA-IR": { desc: "Açlık insülini ve glukozu kullanılarak hesaplanan HOMA-IR, insülin direnci hakkında bilgi verir.", url: "https://medlineplus.gov/lab-tests/insulin-in-blood-test/" },
+            "Serbest T4": { desc: "Tiroidin ürettiği tiroksin hormonunun kanda serbest dolaşan kısmını ölçer.", url: "https://medlineplus.gov/lab-tests/thyroxine-t4-test/" },
+            "ALT": { desc: "Karaciğer hücrelerinde bulunan bir enzimdir. Karaciğer hasarının değerlendirilmesinde kullanılır.", url: "https://medlineplus.gov/lab-tests/alt-blood-test/" },
+            "AST": { desc: "Karaciğer, kas ve diğer dokularda bulunur. Hücre hasarının değerlendirilmesine yardımcı olur.", url: "https://medlineplus.gov/lab-tests/ast-test/" },
+            "Magnezyum": { desc: "Kas, sinir ve enzim sistemlerinde görev alır. Mineral dengesinin değerlendirilmesinde kullanılır.", url: "https://medlineplus.gov/lab-tests/magnesium-blood-test/" },
+            "Çinko": { desc: "Bağışıklık ve yara iyileşmesinde rol oynar. Çinko seviyesinin değerlendirilmesinde kullanılır.", url: "https://ods.od.nih.gov/factsheets/Zinc-HealthProfessional/" }
+        };
+
         async function checkSession() {
-            // OTURUM OKUMA GECİKMESİNİ ÇÖZEN KOD (1 saniye bekler)
             await new Promise(r => setTimeout(r, 1000)); 
             
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUserEmail = session.user.email;
                 
-                // Hastanın adını veritabanından çekelim
                 const { data: roleData } = await _supabase.from('user_roles').select('display_name').eq('user_id', session.user.id).maybeSingle();
                 const name = roleData?.display_name || currentUserEmail.split('@')[0];
                 
                 document.getElementById('userNameDisplay').textContent = '👤 ' + name;
                 loadApplications(currentUserEmail);
             } else {
-                // Eğer gerçekten oturum yoksa giriş sayfasına at
                 window.location.replace('giris.html');
             }
         }
@@ -192,7 +213,7 @@
         }
 
         function renderTable(data) {
-            let html = `<table><thead><tr><th>Tarih</th><th>Hizmet</th><th>Randevu</th><th>Durum</th><th>Hekim Notu</th><th>İşlemler</th></tr></thead><tbody>`;
+            let html = `<table><thead><tr><th>Tarih</th><th>Hizmet</th><th>Randevu</th><th>Durum</th><th>İşlemler</th></tr></thead><tbody>`;
             data.forEach(app => {
                 const date = new Date(app.created_at).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' });
                 const status = app.status || 'pending';
@@ -207,7 +228,6 @@
                     <td>${app.service_type || '-'}</td>
                     <td>${aptInfo}</td>
                     <td><span class="badge ${status}">${statusText}</span></td>
-                    <td>${app.doctor_note || '<em style="color:#94a3b8;">Henüz not yok</em>'}</td>
                     <td><button class="action-btn" onclick="openDetail(${app.id})">Detay</button></td>
                 </tr>`;
             });
@@ -223,11 +243,41 @@
             const statusText = { pending: 'Bekliyor', paid: 'Ödendi', in_progress: 'İşlemde', completed: 'Tamamlandı', cancelled: 'İptal' }[status] || status;
             document.getElementById('modalTitle').textContent = app.service_type || 'Başvuru Detayı';
 
+            // Hekimin onayladığı tetkikleri bul (Nihai reçete kısmından)
+            let prescribedTests = [];
+            let testsHtml = '';
+            
+            if (app.prescription) {
+                prescribedTests = app.prescription.split('\n').map(t => t.trim()).filter(t => t !== '');
+                if (prescribedTests.length === 0) prescribedTests = app.prescription.split(',').map(t => t.trim()).filter(t => t !== '');
+            }
+
+            if (prescribedTests.length > 0) {
+                testsHtml = `
+                    <div style="background:#eff6ff; padding:15px; border-radius:8px; border-left:4px solid #3b82f6; margin-bottom:15px;">
+                        <label style="font-size:12px; color:#1e40af; text-transform:uppercase; font-weight:bold;">🧪 Hekimin İstediği Tetkikler</label>
+                        <div style="margin-top:10px;">
+                            ${prescribedTests.map(testName => {
+                                const info = TEST_DESCRIPTIONS[testName];
+                                const descHtml = info ? `
+                                    <details class="edu-box">
+                                        <summary>Neyi değerlendirir?</summary>
+                                        <p>${info.desc} ${info.url ? `<br><a href="${info.url}" target="_blank" rel="noopener noreferrer">Tıbbi Kaynak ↗</a>` : ''}</p>
+                                    </details>
+                                ` : '';
+                                return `<div class="prescribed-test-item"><span class="test-name">${testName}</span>${descHtml}</div>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                testsHtml = `<div style="background:#f8fafc; padding:15px; border-radius:8px; border-left:4px solid #cbd5e1; margin-bottom:15px; font-size:13px; color:#64748b;">Hekiminiz henüz bir tetkik istemedi veya not olarak ekledi.</div>`;
+            }
+
             let appointmentHtml = '';
             if (app.appointment_date) {
                 const d = new Date(app.appointment_date);
                 const formattedDate = d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric', weekday: 'long' });
-
                 appointmentHtml = `
                     <div style="background:#ecfdf5; padding:15px; border-radius:8px; border-left:4px solid #10b981; margin-bottom:15px;">
                         <label style="font-size:12px; color:#065f46; text-transform:uppercase; font-weight:bold;">📅 Randevunuz</label>
@@ -243,6 +293,8 @@
 
             document.getElementById('modalBody').innerHTML = `
                 ${appointmentHtml}
+                ${testsHtml}
+                
                 <div style="margin-bottom:15px;">
                     <label style="font-size:12px; color:#64748b; text-transform:uppercase; display:block; margin-bottom:4px;">Başvuru Tarihi</label>
                     <div style="font-size:15px;">${date}</div>
@@ -255,12 +307,6 @@
                 <div style="background:#eff6ff; padding:15px; border-radius:8px; border-left:4px solid #3b82f6; margin-bottom:15px;">
                     <label style="font-size:12px; color:#1e40af; text-transform:uppercase; font-weight:bold;">🩺 Hekim Değerlendirmesi</label>
                     <div style="font-size:14px; margin-top:8px; line-height:1.5;">${app.evaluation}</div>
-                </div>` : ''}
-                ${app.prescription ? `
-                <div style="background:#fef3c7; padding:15px; border-radius:8px; border-left:4px solid #f59e0b; margin-bottom:15px; position:relative;">
-                    <label style="font-size:12px; color:#92400e; text-transform:uppercase; font-weight:bold;">💊 Reçete</label>
-                    <div style="font-size:14px; margin-top:8px; white-space:pre-line; font-family:monospace; line-height:1.7;">${app.prescription}</div>
-                    <button onclick="window.print()" class="no-print" style="margin-top:10px; padding:8px 16px; background:white; color:#92400e; border:1px solid #f59e0b; border-radius:4px; font-size:12px; font-weight:bold; cursor:pointer;">🖨️ Reçeteyi Yazdır</button>
                 </div>` : ''}
                 
                 ${!app.evaluation && !app.prescription && !app.appointment_date ? `
