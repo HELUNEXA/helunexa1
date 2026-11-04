@@ -294,7 +294,7 @@
             let appointmentDetail = '';
             
             if (currentApp.appointment_date) {
-                appointmentDetail = `<div class="detail-row" style="background:#ecfdf5; padding:10px; border-radius:6px; border-left:4px solid #10b981;">
+                appointmentDetail = `<div class="detail-row" style="background:#ecfdf5; padding:10px; border-radius:6px; border-left:4px solid #10b981; margin-bottom:15px;">
                     <label style="color:#065f46;">📅 Randevu Tarihi ve Saati</label>
                     <div class="value" style="font-weight:bold; color:#047857;">${new Date(currentApp.appointment_date).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })} ${currentApp.appointment_time ? ' - Saat: ' + currentApp.appointment_time : ''}</div>
                 </div>`;
@@ -305,7 +305,7 @@
                 ${patientSelectedHtml}
                 
                 <div class="detail-row"><label>Hizmet Türü</label><div class="value">${currentApp.service_type}</div></div>
-                <div class="detail-row"><label>Hasta Notları</label><div class="value" style="white-space:pre-wrap;">${currentApp.test_notes || '-'}</div></div>
+                <div class="detail-row"><label>Hasta Notları</label><div class="value" style="white-space:pre-wrap; background:#f8fafc; padding:10px; border-radius:6px;">${currentApp.test_notes || '-'}</div></div>
                 
                 <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
                 
@@ -325,16 +325,15 @@
                     
                     <!-- HEKİMİN ÖNERİ ALANI -->
                     <div class="detail-row" style="background:#eff6ff; padding:15px; border-radius:8px; border:1px solid #bfdbfe; margin-top:20px;">
-                        <label style="color:#1e40af; font-size:13px;">➕ Hekimin Önerdiği Tetkikler (Kendi Önerisi)</label>
+                        <label style="color:#1e40af; font-size:13px; font-weight:bold;">➕ Hekimin Önerdiği Tetkikler (Öneri)</label>
                         <div style="display:flex; gap:10px; margin-top:10px; margin-bottom:10px;">
-                            <select id="doctorTestSelect" style="flex:1; padding:8px;">
+                            <select id="doctorTestSelect" style="flex:1; padding:8px; border:1px solid #93c5fd; border-radius:6px;">
                                 <option value="">Tetkik seçin...</option>
                                 ${DOCTOR_CATALOG.map(t => `<option value="${t}">${t}</option>`).join('')}
                             </select>
                             <button type="button" class="btn btn-primary" onclick="addDoctorTest()" style="padding: 8px 15px; font-size:13px;">Ekle</button>
                         </div>
-                        <div id="doctorSelectedList" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px;">
-                            <!-- Eklenen tetkikler buraya gelecek -->
+                        <div id="doctorSelectedList" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px; min-height:30px;">
                         </div>
                         
                         <label style="margin-top:10px; display:block; font-size:13px; font-weight:bold;">Nihai Reçete / Panel (Düzenlenebilir)</label>
@@ -343,7 +342,7 @@
                 </div>
             `;
             
-            window.tempDoctorTests = currentPrescription ? currentPrescription.split('\n').filter(t => t.trim() !== '') : [];
+            window.tempDoctorTests = currentPrescription ? currentPrescription.split('\n').map(t => t.trim()).filter(t => t !== '') : [];
             renderDoctorSelectedList();
 
             document.getElementById('modalOverlay').classList.add('active');
@@ -381,7 +380,9 @@
                 `).join('');
             }
             
-            presTextarea.value = window.tempDoctorTests.join('\n');
+            if (presTextarea) {
+                presTextarea.value = window.tempDoctorTests.join('\n');
+            }
         };
 
         window.closeModal = () => document.getElementById('modalOverlay').classList.remove('active');
