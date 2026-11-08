@@ -94,15 +94,10 @@
             </div>
 
             <div id="box_chronic" class="dynamic-box"><h4>🩺 Kronik Hastalık Takibi</h4><div class="form-group"><label for="chronic_diseases">Takip edilmesini istediğiniz kronik hastalıklarınız nelerdir? *</label><textarea id="chronic_diseases" rows="2" placeholder="Örn: Diyabet, Hipertansiyon, Tiroid..."></textarea></div></div>
-            
             <div id="box_prescription" class="dynamic-box"><h4>📄 İlaç Raporu Yenileme</h4><div class="form-group"><label for="rx_disease">Hastalık *</label><input type="text" id="rx_disease" placeholder="Örn: Astım"></div><div class="form-group"><label for="rx_meds">Kullanılan İlaçlar *</label><textarea id="rx_meds" rows="2" placeholder="İlaç adları..."></textarea></div><div class="form-group"><label for="rx_end_date">Rapor Bitiş Tarihi *</label><input type="date" id="rx_end_date"></div></div>
-            
             <div id="box_longevity" class="dynamic-box"><h4>🧬 Longevity / Healthy Aging</h4><div class="form-group"><label for="long_goals">Sağlık hedefleriniz nelerdir? *</label><textarea id="long_goals" rows="2" placeholder="Örn: Daha enerjik hissetmek..."></textarea></div><div class="form-group"><label for="long_prev_tests">Varsa önceki tetkikleriniz</label><textarea id="long_prev_tests" rows="2" placeholder="Son 6 ayda yapılan tahliller..."></textarea></div></div>
-            
             <div id="box_cancer" class="dynamic-box" style="border-left-color: #8b5cf6;"><h4 style="color: #6b21a8;">🔬 Kanser Tarama Anketi</h4><div class="form-group"><label for="cs_gender">Cinsiyetiniz *</label><select id="cs_gender"><option value="">Seçiniz</option><option value="female">Kadın</option><option value="male">Erkek</option></select></div><div class="form-group"><label for="cs_smoking">Sigara kullanımınız? *</label><select id="cs_smoking"><option value="">Seçiniz</option><option value="none">Hiç kullanmadım</option><option value="current">Kullanıyorum</option><option value="former">Bıraktım</option></select></div><div class="form-group"><label for="cs_family">Ailenizde kanser var mı? *</label><select id="cs_family"><option value="">Seçiniz</option><option value="no">Hayır</option><option value="yes">Evet</option></select></div><div class="form-group"><label for="cs_symptoms">Şikayetiniz var mı? *</label><select id="cs_symptoms"><option value="">Seçiniz</option><option value="none">Yok</option><option value="alarm">Var</option></select></div><div class="form-group"><label for="cs_symptoms_info">Şikayetiniz nedir?</label><textarea id="cs_symptoms_info" rows="2" placeholder="Belirtin..."></textarea></div></div>
-            
             <div id="box_homecare" class="dynamic-box" style="border-left-color: #f59e0b;"><h4 style="color: #92400e;">🏠 Evde Bakım Hizmetleri</h4><div class="form-group"><label for="home_service_req">İstenen Hizmet *</label><input type="text" id="home_service_req" placeholder="Pansuman, Enjeksiyon..."></div><div class="form-group"><label for="home_care_need">Bakım İhtiyacı *</label><textarea id="home_care_need" rows="2" placeholder="Kısaca durumu..."></textarea></div><div class="form-group"><label for="home_contact">İletişim Bilgileri *</label><textarea id="home_contact" rows="2" placeholder="Adres..."></textarea></div></div>
-            
             <div id="box_pregnancy" class="dynamic-box" style="border-left-color: #ec4899;"><h4 style="color: #be185d;">🤰 Anne & Bebek Sağlığı</h4><div class="form-group"><label for="preg_stage">Hangi aşamadasınız? *</label><select id="preg_stage"><option value="">Seçiniz</option><option value="pre">Gebelik Öncesi</option><option value="during">Gebelik Dönemi</option><option value="post">Doğum Sonrası</option></select></div><div id="preg_during_details" style="display:none; margin-top:10px; padding:10px; background:white; border-radius:6px;"><div class="form-group"><label for="preg_lmp">Son Adet Tarihiniz *</label><input type="date" id="preg_lmp"></div><div class="form-group"><label for="preg_complaints">Mevcut Şikayetleriniz</label><textarea id="preg_complaints" rows="2" placeholder="Bulantı, ağrı..."></textarea></div></div></div>
 
             <div id="appointmentBox" style="display:none; background:#ecfdf5; padding:15px; border-radius:8px; border-left:4px solid #10b981; margin-bottom:15px;">
@@ -353,19 +348,7 @@
             const service = document.getElementById('service_type').value;
             if (!service) { alert('Lütfen hizmet seçin.'); return; }
             
-            // YENİ EKLENEN KISIM: İLAÇ RAPORU SEÇİLDİĞİNDE DİREKT 3. MODÜL DEMOSUNA GİT
-            if (service === 'İlaç Raporu Yenileme') {
-                // Bilgileri sessionStorage'a kaydedip 3. modül demosuna yönlendiriyoruz
-                sessionStorage.setItem('kronik_hasta_bilgi', JSON.stringify({
-                    fullname: document.getElementById('fullname').value.trim(),
-                    age: document.getElementById('age').value,
-                    phone: document.getElementById('phone').value.trim()
-                }));
-                window.location.href = '3_modul_demo.html';
-                return;
-            }
-
-            // KRONİK TAKİP SEÇİLDİĞİNDE 2. MODÜL DEMOSUNA GİT (İsteğe bağlı, istersen bunu da ekledik)
+            // KRONİK TAKİP VE İLAÇ RAPORU SEÇİLDİĞİNDE DİREKT DEMOLARA GİT
             if (service === 'Kronik Hastalık Takibi') {
                 sessionStorage.setItem('kronik_hasta_bilgi', JSON.stringify({
                     fullname: document.getElementById('fullname').value.trim(),
@@ -373,6 +356,16 @@
                     phone: document.getElementById('phone').value.trim()
                 }));
                 window.location.href = '2_modul_demo.html';
+                return;
+            }
+
+            if (service === 'İlaç Raporu Yenileme') {
+                sessionStorage.setItem('kronik_hasta_bilgi', JSON.stringify({
+                    fullname: document.getElementById('fullname').value.trim(),
+                    age: document.getElementById('age').value,
+                    phone: document.getElementById('phone').value.trim()
+                }));
+                window.location.href = '3_modul_demo.html';
                 return;
             }
 
