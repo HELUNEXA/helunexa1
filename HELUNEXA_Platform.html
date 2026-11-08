@@ -1,128 +1,165 @@
-<!doctype html>
-<html lang="tr">
+<!DOCTYPE html>
+<html lang="tr" translate="no">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="theme-color" content="#163f37">
-    <meta name="description" content="HELUNEXA: sağlık başvurusu, hekim tarafından oluşturulan kontrol planı ve sonuç takibi.">
-    <title>HELUNEXA · Sağlık Takip Platformu</title>
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELUNEXA - Rutin Kontrol ve Kronik Takip</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
-        :root{--ink:#173e36;--muted:#75847e;--line:#dfe7e1;--paper:#f5f7f2;--white:#fff;--teal:#10b981;--light:#e9f1e9;--lime:#dcedac;--warm:#faf7ed;--radius:20px}
-        *{box-sizing:border-box}
-        body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 'DM Sans',system-ui,sans-serif}
-        h1,h2,h3,h4{font-family:Manrope,system-ui,sans-serif;line-height:1.25;letter-spacing:-.035em;margin:0}
-        h1{font-size:46px;font-weight:750}h2{font-size:28px}h3{font-size:18px}p{margin:10px 0 0}
-        button,a{font:inherit;cursor:pointer;text-decoration:none;color:inherit}
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, Arial, sans-serif; color: #0f172a; line-height: 1.6; }
         
-        header{height:91px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(28px,calc((100vw - 1180px)/2));border-bottom:1px solid var(--line)}
-        .brand{display:flex;align-items:center;gap:10px;font:800 24px Manrope,sans-serif;letter-spacing:.04em}
-        .brandmark{width:35px;height:35px;background:var(--ink);color:var(--lime);border-radius:12px;display:grid;place-items:center;font-size:27px;}
+        .header { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
+        .logo-img { height: 80px; width: auto; cursor: pointer; }
         
-        .nav-links { display: flex; gap: 15px; align-items: center; }
-        .btn-nav { padding: 10px 18px; border: 1px solid var(--line); border-radius: 8px; font-size: 13px; font-weight: bold; background: white; }
-        .btn-nav.primary { background: var(--teal); color: white; border-color: var(--teal); }
+        .nav { display: flex; gap: 25px; align-items: center; }
+        .nav a { color: #475569; text-decoration: none; font-size: 14px; font-weight: 500; }
+        .nav a:hover { color: #10b981; }
+        .btn-header { background: #10b981; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; }
+        .btn-header:hover { background: #059669; }
+
+        #menu-toggle { display: none; }
+        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; z-index: 101; }
+        .hamburger span { display: block; width: 25px; height: 3px; background-color: #0f172a; transition: 0.3s; border-radius: 3px; }
+
+        .hero { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); padding: 80px 5%; text-align: center; }
+        .hero h1 { font-size: 42px; color: #0f172a; margin-bottom: 20px; line-height: 1.2; max-width: 800px; margin-left: auto; margin-right: auto; }
+        .hero h1 span { color: #10b981; }
+        .hero p { font-size: 18px; color: #475569; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .hero-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .btn-primary { background: #10b981; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block; }
+        .btn-primary:hover { background: #059669; }
+        .btn-secondary { background: white; color: #10b981; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; border: 2px solid #10b981; display: inline-block; }
+        .btn-secondary:hover { background: #ecfdf5; }
+        .btn-demo { background: white; color: #3b82f6; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; border: 2px solid #3b82f6; display: inline-block; }
+        .btn-demo:hover { background: #eff6ff; }
         
-        main{max-width:1180px;margin:auto;padding:60px 20px}
-        .hero { text-align: center; margin-bottom: 50px; }
-        .hero h1 { font-size: 52px; font-weight: 750; line-height: 1.2; margin-bottom: 20px; }
-        .hero h1 span { color: var(--teal); }
-        .hero p { font-size: 18px; color: var(--muted); max-width: 600px; margin: 0 auto; }
+        .features { padding: 80px 5%; background: white; }
+        .section-title { text-align: center; font-size: 32px; margin-bottom: 15px; color: #0f172a; }
+        .section-subtitle { text-align: center; font-size: 16px; color: #64748b; margin-bottom: 50px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
         
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .feature-card { background: white; padding: 30px; border-radius: 16px; border: 1px solid var(--line); position: relative; cursor: pointer; transition: 0.2s; }
-        .feature-card:hover { border-color: var(--teal); transform: translateY(-2px); }
-        .feature-card h3 { font-size: 18px; margin-bottom: 8px; }
-        .feature-card p { font-size: 14px; color: var(--muted); margin: 0; }
-        .feature-icon { font-size: 32px; margin-bottom: 15px; }
+        .feature-card { background: #f8fafc; padding: 30px; border-radius: 12px; border-left: 4px solid #10b981; position: relative; }
+        .feature-icon { font-size: 36px; margin-bottom: 15px; }
+        .feature-card h3 { font-size: 18px; margin-bottom: 10px; color: #0f172a; }
+        .feature-card p { color: #64748b; font-size: 14px; }
         
-        .badge { position: absolute; top: 20px; right: 20px; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; }
-        .badge.ready { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
-        .badge.soon { background: #f1f5f9; color: #94a3b8; border: 1px solid #e2e8f0; }
+        .badge-demo { position: absolute; top: 20px; right: 20px; background: #d1fae5; color: #065f46; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; border: 1px solid #10b981; }
+        .badge-soon { position: absolute; top: 20px; right: 20px; background: #f1f5f9; color: #94a3b8; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0; }
+        .card-disabled { opacity: 0.7; border-left-color: #cbd5e1; }
+
+        .how { padding: 80px 5%; background: #f8fafc; }
+        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; max-width: 1100px; margin: 0 auto; }
+        .step { background: white; padding: 30px; border-radius: 12px; text-align: center; }
+        .step-num { width: 50px; height: 50px; background: #10b981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; margin: 0 auto 20px; }
+        .step h3 { font-size: 16px; margin-bottom: 10px; }
+        .step p { color: #64748b; font-size: 14px; }
         
-        .footer { text-align: center; padding: 40px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--line); margin-top: 60px; }
+        .cta { background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 60px 5%; text-align: center; color: white; }
+        .cta h2 { font-size: 32px; margin-bottom: 15px; }
+        .cta p { font-size: 18px; margin-bottom: 30px; opacity: 0.95; }
+        .cta .btn-secondary { background: white; color: #10b981; border-color: white; }
+        
+        .footer { background: #0f172a; color: #94a3b8; padding: 40px 5%; text-align: center; font-size: 14px; }
+        .footer a { color: #10b981; text-decoration: none; }
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a { margin: 0 15px; }
+
+        @media (max-width: 768px) {
+            .header { padding: 12px 5%; flex-wrap: nowrap; }
+            .logo-img { height: 60px; }
+            .hamburger { display: flex; }
+            .nav { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: white; padding: 20px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); border-bottom: 1px solid #e2e8f0; gap: 15px; }
+            #menu-toggle:checked ~ .nav { display: flex; }
+            .nav a { width: 100%; text-align: center; padding: 10px; }
+            .btn-header { width: 100%; display: block; text-align: center; }
+            .hero { padding: 50px 5%; }
+            .hero h1 { font-size: 26px; }
+            .hero p { font-size: 15px; }
+            .section-title { font-size: 24px; }
+            .features, .how { padding: 50px 5%; }
+            .features-grid, .steps { grid-template-columns: 1fr; }
+            .cta h2 { font-size: 24px; }
+            .cta p { font-size: 15px; }
+            .btn-primary, .btn-secondary, .btn-demo { padding: 12px 20px; font-size: 14px; }
+            .footer-links a { display: block; margin: 5px 0; }
+        }
     </style>
 </head>
-<body>
-    <header>
-        <div class="brand"><span class="brandmark">✳</span>HELUNEXA</div>
-        <div class="nav-links">
-            <a href="giris.html" class="btn-nav">Giriş Yap</a>
-            <a href="basvuru.html" class="btn-nav primary">Hemen Başvur</a>
-        </div>
+<body class="notranslate">
+    <header class="header">
+        <a href="index.html"><img src="logo.png" alt="HELUNEXA" class="logo-img"></a>
+        
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        
+        <nav class="nav">
+            <a href="#hizmetler">Hizmetler</a>
+            <a href="kvkk.html">KVKK</a>
+            <a href="giris.html" style="color:#10b981; font-weight:bold;">Giriş</a>
+            <a href="hasta-kayit.html" class="btn-header">Başvuru Yap</a>
+        </nav>
     </header>
 
-    <main>
-        <section class="hero">
-            <div style="font-size: 11px; letter-spacing: 2px; color: var(--teal); font-weight: bold; margin-bottom: 15px;">HEKİM DESTEĞİYLE DÜZENLİ SAĞLIK TAKİBİ</div>
-            <h1>Sağlığınız için birlikte,<br><span>her adımda takipte.</span></h1>
-            <p>Başvurunuzu paylaşın. Hekiminizin oluşturduğu planı ve sonraki adımlarınızı tek yerden takip edin.</p>
-        </section>
+    <section class="hero">
+        <h1>Rutin kontrol ve kronik takibi <span>evinize getiriyoruz</span></h1>
+        <p>Hastane randevusu, sıra ve tekrar başvuru yükü olmadan; hekim kontrollü, dijital sağlık takibi.</p>
+        <div class="hero-buttons">
+            <a href="hasta-kayit.html" class="btn-primary">Hemen Başvur</a>
+            <a href="HELUNEXA_Platform.html" class="btn-demo">🚀 İnteraktif Demoyu Başlat</a>
+        </div>
+    </section>
 
-        <section style="margin-top: 20px;">
-            <h2 style="text-align: center; margin-bottom: 30px; font-size: 24px;">Sunduğumuz Hizmetler</h2>
-            <div class="features-grid">
-                
-                <!-- MODÜL 1: CHECK-UP -->
-                <div class="feature-card" onclick="window.location.href='basvuru.html'">
-                    <span class="badge ready">✅ Çalışan Demo</span>
-                    <div class="feature-icon">🩺</div>
-                    <h3>Rutin Kontrol / Check-up</h3>
-                    <p>Sağlık bilgilerinizden hekim paneline, sonuçlardan takibe kadar tüm süreç.</p>
-                    <div style="margin-top:15px; font-size:13px; color:var(--teal); font-weight:bold;">Başla →</div>
-                </div>
-
-                <!-- MODÜL 2: KRONİK TAKİP (BURASI SİZİN SAYFANIZA GİDER) -->
-                <div class="feature-card" onclick="window.location.href='kronik-takip.html'">
-                    <span class="badge ready">✅ Çalışan Demo</span>
-                    <div class="feature-icon">💊</div>
-                    <h3>Kronik Hastalık Takibi</h3>
-                    <p>Diyabet, hipertansiyon ve tiroid için düzenli hekim takibi ve raporlama.</p>
-                    <div style="margin-top:15px; font-size:13px; color:var(--teal); font-weight:bold;">Başla →</div>
-                </div>
-
-                <!-- MODÜL 3 -->
-                <div class="feature-card" onclick="alert('Bu modül geliştirme aşamasındadır.')">
-                    <span class="badge soon">Yakında</span>
-                    <div class="feature-icon">📋</div>
-                    <h3>Dijital Hekim Değerlendirmesi</h3>
-                    <p>Sonuçlarınız hekim tarafından değerlendirilir, anlaşılır rapor hazırlanır.</p>
-                    <div style="margin-top:15px; font-size:13px; color:var(--muted); font-weight:bold;">Ayrıntı →</div>
-                </div>
-
-                <!-- MODÜL 4 -->
-                <div class="feature-card" onclick="alert('Bu modül geliştirme aşamasındadır.')">
-                    <span class="badge soon">Yakında</span>
-                    <div class="feature-icon">📄</div>
-                    <h3>İlaç Raporu Yenileme</h3>
-                    <p>Rapor bitiş hatırlatmaları ve süreç takibi ile zamanında yenileme.</p>
-                    <div style="margin-top:15px; font-size:13px; color:var(--muted); font-weight:bold;">Ayrıntı →</div>
-                </div>
-
-                <!-- MODÜL 5 -->
-                <div class="feature-card" onclick="alert('Bu modül geliştirme aşamasındadır.')">
-                    <span class="badge soon">Yakında</span>
-                    <div class="feature-icon">🏠</div>
-                    <h3>Evde Numune Alma</h3>
-                    <p>Evden kan/numune alımı ile hastaneye gitme yükünü ortadan kaldırır.</p>
-                    <div style="margin-top:15px; font-size:13px; color:var(--muted); font-weight:bold;">Ayrıntı →</div>
-                </div>
-
-                <!-- MODÜL 6 -->
-                <div class="feature-card" onclick="alert('Bu modül geliştirme aşamasındadır.')">
-                    <span class="badge soon">Yakında</span>
-                    <div class="feature-icon">🏥</div>
-                    <h3>Evde Kronik Takip</h3>
-                    <p>Evde düzenli sağlık takibi ve hemşire ziyaretleri.</p>
-                    <div style="margin-top:15px; font-size:13px; color:var(--muted); font-weight:bold;">Ayrıntı →</div>
-                </div>
-
+    <section class="features" id="hizmetler">
+        <h2 class="section-title">Sunduğumuz Hizmetler</h2>
+        <p class="section-subtitle">Sistemimizdeki 8 modül ile sağlığınızı kontrol altına alın.</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="badge-demo">✅ Aktif</span>
+                <div class="feature-icon">🩺</div>
+                <h3>Rutin Sağlık Kontrolü</h3>
+                <p>Yaş, öykü ve hekim değerlendirmesine göre planlanan kapsamlı kontrol.</p>
             </div>
-        </section>
-    </main>
+            <div class="feature-card">
+                <span class="badge-demo">✅ Aktif</span>
+                <div class="feature-icon">💊</div>
+                <h3>Kronik Hastalık Takibi</h3>
+                <p>Diyabet, hipertansiyon, tiroid için düzenli hekim takibi ve raporlama.</p>
+            </div>
+            <div class="feature-card card-disabled">
+                <span class="badge-soon">Yakında</span>
+                <div class="feature-icon">📋</div>
+                <h3>Dijital Hekim Değerlendirmesi</h3>
+                <p>Sonuçlarınız hekim tarafından değerlendirilir, anlaşılır rapor hazırlanır.</p>
+            </div>
+            <div class="feature-card card-disabled">
+                <span class="badge-soon">Yakında</span>
+                <div class="feature-icon">📄</div>
+                <h3>İlaç Raporu Yenileme</h3>
+                <p>Rapor bitiş hatırlatmaları ve süreç takibi ile zamanında yenileme.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Sağlığınızı ertelemeyin</h2>
+        <p>Hemen başvurun, hekimimiz sizinle iletişime geçsin</p>
+        <a href="hasta-kayit.html" class="btn-secondary">Ücretsiz Başvuru Yap</a>
+    </section>
 
     <footer class="footer">
-        © 2026 HELUNEXA. Tüm hakları saklıdır. · Bu bir demo ortamıdır.
+        <div class="footer-links">
+            <a href="index.html">Ana Sayfa</a>
+            <a href="hasta-kayit.html">Başvuru</a>
+            <a href="kvkk.html">KVKK</a>
+            <a href="giris.html">Giriş</a>
+        </div>
+        <p>© 2026 HELUNEXA. Tüm hakları saklıdır.</p>
     </footer>
 </body>
 </html>
