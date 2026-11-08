@@ -27,7 +27,8 @@
         .feature-card { background: white; padding: 30px; border-radius: 12px; border-left: 4px solid #10b981; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #e2e8f0; transition: all 0.2s; }
         .feature-card.active { cursor: pointer; border-left-color: #10b981; }
         .feature-card.active:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15); border-color: #10b981; }
-        .feature-card.disabled { opacity: 0.7; border-left-color: #cbd5e1; cursor: not-allowed; background: #f8fafc; }
+        .feature-card.disabled { opacity: 0.7; border-left-color: #cbd5e1; cursor: pointer; background: #f8fafc; }
+        .feature-card.disabled:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         
         .feature-icon { font-size: 36px; margin-bottom: 15px; }
         .feature-card h3 { font-size: 18px; margin-bottom: 10px; color: #0f172a; }
@@ -69,14 +70,56 @@
                 <p>Diyabet, hipertansiyon, tiroid için düzenli hekim takibi ve raporlama.</p>
             </div>
 
-            <!-- DİĞER MODÜLLER (Pasif) -->
-            <div class="feature-card disabled"><span class="badge-soon">Yakında</span><div class="feature-icon">📋</div><h3>Dijital Hekim Değerlendirmesi</h3><p>Sonuçlarınız hekim tarafından değerlendirilir.</p></div>
-            <div class="feature-card disabled"><span class="badge-soon">Yakında</span><div class="feature-icon">📄</div><h3>İlaç Raporu Yenileme</h3><p>Rapor bitiş hatırlatmaları ve süreç takibi.</p></div>
-            <div class="feature-card disabled"><span class="badge-soon">Yakında</span><div class="feature-icon">🏠</div><h3>Evde Numune Alma</h3><p>Evden kan/numune alımı.</p></div>
-            <div class="feature-card disabled"><span class="badge-soon">Yakında</span><div class="feature-icon">🏥</div><h3>Evde Kronik Takip</h3><p>Evde düzenli sağlık takibi ve hemşire ziyaretleri.</p></div>
-            <div class="feature-card disabled"><span class="badge-soon">Yakında</span><div class="feature-icon">🔬</div><h3>Kanser Taraması</h3><p>Kişiselleştirilmiş tarama programı.</p></div>
-            <div class="feature-card disabled"><span class="badge-soon">Yakında</span><div class="feature-icon">🌸</div><h3>Anne & Bebek Sağlığı</h3><p>Gebelik yolculuğunda takip.</p></div>
-            <div class="feature-card disabled"><span class="badge-soon">Yakında</span><div class="feature-icon">🏢</div><h3>Kurumsal Sağlık</h3><p>Çalışan sağlığı süreçleri.</p></div>
+            <!-- 3. MODÜL: İLAÇ RAPORU YENİLEME DEMOSU -->
+            <div class="feature-card active" onclick="window.location.href='3_modul_demo.html'">
+                <span class="badge-active">✅ Çalışan Demo</span>
+                <div class="feature-icon">📄</div>
+                <h3>İlaç Raporu Yenileme</h3>
+                <p>Rapor bitiş hatırlatmaları ve yenileme sürecinin hekim ve kurum ile birlikte takibi.</p>
+            </div>
+
+            <!-- DİĞER MODÜLLER (Yakında Uyarısı Verir) -->
+            <div class="feature-card disabled" onclick="alert('Dijital Hekim Değerlendirmesi modülü şu anda geliştirme aşamasındadır. Çok yakında hizmetinizde!')">
+                <span class="badge-soon">Yakında</span>
+                <div class="feature-icon">📋</div>
+                <h3>Dijital Hekim Değerlendirmesi</h3>
+                <p>Sonuçlarınız hekim tarafından değerlendirilir.</p>
+            </div>
+            
+            <div class="feature-card disabled" onclick="alert('Evde Numune Alma modülü şu anda geliştirme aşamasındadır. Çok yakında hizmetinizde!')">
+                <span class="badge-soon">Yakında</span>
+                <div class="feature-icon">🏠</div>
+                <h3>Evde Numune Alma</h3>
+                <p>Evden kan/numune alımı.</p>
+            </div>
+            
+            <div class="feature-card disabled" onclick="alert('Evde Kronik Takip modülü şu anda geliştirme aşamasındadır. Çok yakında hizmetinizde!')">
+                <span class="badge-soon">Yakında</span>
+                <div class="feature-icon">🏥</div>
+                <h3>Evde Kronik Takip</h3>
+                <p>Evde düzenli sağlık takibi ve hemşire ziyaretleri.</p>
+            </div>
+            
+            <div class="feature-card disabled" onclick="alert('Kanser Taraması modülü şu anda geliştirme aşamasındadır. Çok yakında hizmetinizde!')">
+                <span class="badge-soon">Yakında</span>
+                <div class="feature-icon">🔬</div>
+                <h3>Kanser Taraması</h3>
+                <p>Kişiselleştirilmiş tarama programı.</p>
+            </div>
+            
+            <div class="feature-card disabled" onclick="alert('Anne & Bebek Sağlığı modülü şu anda geliştirme aşamasındadır. Çok yakında hizmetinizde!')">
+                <span class="badge-soon">Yakında</span>
+                <div class="feature-icon">🌸</div>
+                <h3>Anne & Bebek Sağlığı</h3>
+                <p>Gebelik yolculuğunda takip.</p>
+            </div>
+            
+            <div class="feature-card disabled" onclick="alert('Kurumsal Sağlık modülü şu anda geliştirme aşamasındadır. Çok yakında hizmetinizde!')">
+                <span class="badge-soon">Yakında</span>
+                <div class="feature-icon">🏢</div>
+                <h3>Kurumsal Sağlık</h3>
+                <p>Çalışan sağlığı süreçleri.</p>
+            </div>
 
         </div>
     </div>
