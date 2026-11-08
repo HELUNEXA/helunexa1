@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HELUNEXA - Sağlık Modülleri</title>
+    <title>HELUNEXA - Sağlık Modülleri Demosu</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, Arial, sans-serif; color: #0f172a; line-height: 1.6; background: #f8fafc; }
+        
         .header { background: white; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
         .logo-img { height: 60px; width: auto; cursor: pointer; }
+        
         .nav { display: flex; gap: 25px; align-items: center; }
         .nav a { color: #475569; text-decoration: none; font-size: 14px; font-weight: 500; }
         .nav a:hover { color: #10b981; }
@@ -40,27 +42,29 @@
         <a href="index.html"><img src="logo.png" alt="HELUNEXA" class="logo-img"></a>
         <nav class="nav">
             <a href="index.html">Ana Sayfa</a>
-            <a href="giris.html" style="color:#10b981; font-weight:bold;">Giriş Yap</a>
-            <a href="basvuru.html" class="btn-header">Hemen Başvur</a>
+            <a href="giris.html" style="color:#10b981; font-weight:bold;">Sisteme Giriş</a>
+            <a href="basvuru.html" class="btn-header">Gerçek Başvuru Yap</a>
         </nav>
     </header>
 
     <div class="container">
-        <h2 class="section-title">Sunduğumuz Hizmetler</h2>
-        <p class="section-subtitle">Sağlığınızı kontrol altına almak için bir modül seçin. (İşlem için giriş yapmanız istenecektir).</p>
+        <h2 class="section-title">Sunduğumuz Hizmetler (Demo)</h2>
+        <p class="section-subtitle">Aşağıdaki modüllere tıklayarak sistemin nasıl çalıştığını giriş yapmadan deneyimleyebilirsiniz.</p>
         
         <div class="features-grid">
             
-            <!-- MODÜL 1: CHECK-UP (Artık Girişe Yönlendiriyor) -->
-            <div class="feature-card active" onclick="window.location.href='giris.html'">
+            <!-- MODÜL 1: CHECK-UP DEMO -->
+            <!-- Dr. arkadaşınızın yaptığı ilk demo dosyasının adı neyse (örn: 1_modul_demo.html) onu yazın -->
+            <div class="feature-card active" onclick="window.location.href='1_modul_demo.html'">
                 <span class="badge-active">✅ Çalışan Demo</span>
                 <div class="feature-icon">🩺</div>
                 <h3>Rutin Sağlık Kontrolü</h3>
                 <p>Yaş, öykü ve hekim değerlendirmesine göre planlanan kapsamlı kontrol.</p>
             </div>
 
-            <!-- MODÜL 2: KRONİK TAKİP (Artık Girişe Yönlendiriyor) -->
-            <div class="feature-card active" onclick="window.location.href='giris.html'">
+            <!-- MODÜL 2: KRONİK TAKİP DEMO -->
+            <!-- Dr. arkadaşınızın hazırladığı 2. demo dosyasının adı neyse (örn: 2_modul_demo.html) onu yazın -->
+            <div class="feature-card active" onclick="window.location.href='2_modul_demo.html'">
                 <span class="badge-active">✅ Çalışan Demo</span>
                 <div class="feature-icon">💊</div>
                 <h3>Kronik Hastalık Takibi</h3>
