@@ -32,8 +32,6 @@
         .btn-primary:hover { background: #059669; }
         .btn-secondary { background: white; color: #10b981; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; border: 2px solid #10b981; display: inline-block; }
         .btn-secondary:hover { background: #ecfdf5; }
-        .btn-demo { background: white; color: #3b82f6; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; border: 2px solid #3b82f6; display: inline-block; }
-        .btn-demo:hover { background: #eff6ff; }
         
         .features { padding: 80px 5%; background: white; }
         .section-title { text-align: center; font-size: 32px; margin-bottom: 15px; color: #0f172a; }
@@ -55,6 +53,19 @@
         .step-num { width: 50px; height: 50px; background: #10b981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; margin: 0 auto 20px; }
         .step h3 { font-size: 16px; margin-bottom: 10px; }
         .step p { color: #64748b; font-size: 14px; }
+        
+        .pricing { padding: 80px 5%; background: white; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1100px; margin: 0 auto; }
+        .price-card { background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 30px; text-align: center; position: relative; }
+        .price-card.featured { border-color: #10b981; transform: scale(1.05); box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2); }
+        .price-card .badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #10b981; color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+        .price-card h3 { font-size: 20px; margin-bottom: 10px; }
+        .price-card .price { font-size: 36px; font-weight: bold; color: #10b981; margin: 15px 0; }
+        .price-card .price span { font-size: 14px; color: #64748b; font-weight: normal; }
+        .price-card ul { list-style: none; text-align: left; margin: 20px 0; padding: 0; }
+        .price-card ul li { padding: 8px 0; color: #475569; font-size: 14px; border-bottom: 1px solid #f1f5f9; }
+        .price-card ul li:before { content: "✅ "; color: #10b981; margin-right: 5px; }
+        .price-card .btn-primary { width: 100%; margin-top: 15px; }
         
         .cta { background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 60px 5%; text-align: center; color: white; }
         .cta h2 { font-size: 32px; margin-bottom: 15px; }
@@ -78,11 +89,13 @@
             .hero h1 { font-size: 26px; }
             .hero p { font-size: 15px; }
             .section-title { font-size: 24px; }
-            .features, .how { padding: 50px 5%; }
-            .features-grid, .steps { grid-template-columns: 1fr; }
+            .section-subtitle { font-size: 14px; margin-bottom: 30px; }
+            .features, .how, .pricing { padding: 50px 5%; }
+            .features-grid, .pricing-grid { grid-template-columns: 1fr; }
+            .price-card.featured { transform: none; }
             .cta h2 { font-size: 24px; }
             .cta p { font-size: 15px; }
-            .btn-primary, .btn-secondary, .btn-demo { padding: 12px 20px; font-size: 14px; }
+            .btn-primary, .btn-secondary { padding: 12px 20px; font-size: 14px; }
             .footer-links a { display: block; margin: 5px 0; }
         }
     </style>
@@ -100,6 +113,8 @@
         
         <nav class="nav">
             <a href="#hizmetler">Hizmetler</a>
+            <a href="#nasil">Nasıl Çalışır?</a>
+            <a href="#fiyatlar">Fiyatlar</a>
             <a href="kvkk.html">KVKK</a>
             <a href="giris.html" style="color:#10b981; font-weight:bold;">Giriş</a>
             <a href="hasta-kayit.html" class="btn-header">Başvuru Yap</a>
@@ -111,22 +126,22 @@
         <p>Hastane randevusu, sıra ve tekrar başvuru yükü olmadan; hekim kontrollü, dijital sağlık takibi.</p>
         <div class="hero-buttons">
             <a href="hasta-kayit.html" class="btn-primary">Hemen Başvur</a>
-            <a href="HELUNEXA_Platform.html" class="btn-demo">🚀 İnteraktif Demoyu Başlat</a>
+            <a href="#nasil" class="btn-secondary">Nasıl Çalışır?</a>
         </div>
     </section>
 
     <section class="features" id="hizmetler">
         <h2 class="section-title">Sunduğumuz Hizmetler</h2>
-        <p class="section-subtitle">Sistemimizdeki 8 modül ile sağlığınızı kontrol altına alın.</p>
+        <p class="section-subtitle">Şu an sadece Check-up modülü aktiftir. Diğer modüller geliştirilmektedir.</p>
         <div class="features-grid">
             <div class="feature-card">
-                <span class="badge-demo">✅ Aktif</span>
+                <span class="badge-demo">✅ Çalışan Demo</span>
                 <div class="feature-icon">🩺</div>
                 <h3>Rutin Sağlık Kontrolü</h3>
                 <p>Yaş, öykü ve hekim değerlendirmesine göre planlanan kapsamlı kontrol.</p>
             </div>
-            <div class="feature-card">
-                <span class="badge-demo">✅ Aktif</span>
+            <div class="feature-card card-disabled">
+                <span class="badge-soon">Yakında</span>
                 <div class="feature-icon">💊</div>
                 <h3>Kronik Hastalık Takibi</h3>
                 <p>Diyabet, hipertansiyon, tiroid için düzenli hekim takibi ve raporlama.</p>
@@ -142,6 +157,45 @@
                 <div class="feature-icon">📄</div>
                 <h3>İlaç Raporu Yenileme</h3>
                 <p>Rapor bitiş hatırlatmaları ve süreç takibi ile zamanında yenileme.</p>
+            </div>
+            <div class="feature-card card-disabled">
+                <span class="badge-soon">Yakında</span>
+                <div class="feature-icon">🏠</div>
+                <h3>Evde Numune Alma</h3>
+                <p>Evden kan/numune alımı ile hastaneye gitme yükünü ortadan kaldırır.</p>
+            </div>
+            <div class="feature-card card-disabled">
+                <span class="badge-soon">Yakında</span>
+                <div class="feature-icon">🏥</div>
+                <h3>Evde Kronik Takip</h3>
+                <p>Evde düzenli sağlık takibi ve hemşire ziyaretleri.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="how" id="nasil">
+        <h2 class="section-title">Nasıl Çalışır?</h2>
+        <p class="section-subtitle">4 basit adımda sağlığınızı takip edin</p>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <h3>Başvuru Yap</h3>
+                <p>Formu doldur, sağlık geçmişini ve ihtiyacını paylaş.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <h3>Hekim Değerlendirir</h3>
+                <p>Uzman hekim ihtiyacını belirler, plan hazırlar.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <h3>Tetkik & Sonuç</h3>
+                <p>Tetkikler yapılır, sonuçlar dijital ortama aktarılır.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <h3>Rapor & Takip</h3>
+                <p>Anlaşılır rapor hazırlanır, takip planı belirlenir.</p>
             </div>
         </div>
     </section>
@@ -160,6 +214,10 @@
             <a href="giris.html">Giriş</a>
         </div>
         <p>© 2026 HELUNEXA. Tüm hakları saklıdır.</p>
+        <p style="margin-top: 10px; font-size: 12px; color:#64748b;">HELUNEXA, hastanenin yerine geçmez. Klinik karar hekimdedir.</p>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #334155; font-size: 12px; color: #64748b;">
+            ⚠️ <strong>Tanıtım Sürümü:</strong> Bu sistem bir demo (prototip) ortamıdır. Gerçek sağlık verisi girmeyiniz.
+        </div>
     </footer>
 </body>
 </html>
