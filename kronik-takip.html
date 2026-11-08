@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>HELUNEXA · Kronik Hastalık Takibi</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root{--ink:#0f172a;--muted:#64748b;--teal:#10b981;--soft:#ecfdf5;--line:#e2e8f0;--bg:#f8fafc}
+        *{box-sizing:border-box}
+        body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,-apple-system,sans-serif}
+        
+        header{height:94px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5vw}
+        .brand-container { display: flex; align-items: center; gap: 15px; text-decoration: none; }
+        .brand-container img { height: 60px; width: auto; }
+        .brand{color:var(--teal);font-size:25px;font-weight:750;letter-spacing:2px;text-decoration:none}
+        .brand span{display:block;font-size:10px;font-weight:400;letter-spacing:.4px;color:var(--muted)}
+        
+        .shell{max-width:1280px;margin:auto;display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 94px)}
+        aside{padding:42px 26px;border-right:1px solid var(--line)}
+        .side-title,.eyebrow{font-size:10px;letter-spacing:1.5px;color:var(--teal);font-weight:700}
+        nav{margin-top:24px;display:grid;gap:8px}
+        button{font:inherit;cursor:pointer}
+        nav button{background:none;border:0;text-align:left;padding:13px;border-radius:9px;color:var(--muted);display:flex;gap:18px; font-weight: 500;}
+        nav button.active{background:var(--soft);color:var(--teal); font-weight: 700;}
+        nav button span{font-weight:600}
+        .side-note{border-top:1px solid var(--line);padding-top:24px;margin-top:50px;font-size:12px}
+        .side-note p,.tiny{color:var(--muted)}
+        
+        main{padding:40px 46px;max-width:960px;width:100%}
+        h1{font-size:34px;font-weight:550;line-height:1.18;letter-spacing:-1.2px;margin:13px 0}
+        h2{font-size:20px;font-weight:600;margin:0 0 6px}
+        h3{font-size:15px;margin:0 0 10px}
+        p{margin:8px 0 18px}
+        .lead{color:var(--muted);max-width:580px}
+        .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:25px;margin:20px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.02);}
+        .card p{color:var(--muted);font-size:13px}
+        .grid,.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+        .disease{border:1px solid var(--line);border-radius:11px;padding:17px;cursor:pointer;display:flex;align-items:center;gap:13px;margin:0}
+        .disease:has(input:checked){border-color:var(--teal);background:var(--soft)}
+        .disease span{display:block}
+        .disease small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+        input[type=checkbox],input[type=radio]{accent-color:var(--teal);width:18px;height:18px;flex-shrink:0}
+        label{display:block;font-size:12px;font-weight:600;margin:12px 0}
+        input:not([type=radio]):not([type=checkbox]),select,textarea{font:inherit;display:block;width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:8px;background:white;color:var(--ink);margin-top:6px}
+        textarea{min-height:80px;resize:vertical}
+        input,select,textarea{max-width:100%}
+        .radio{display:flex;align-items:center;gap:8px; font-weight: 500;}
+        .radio-group{display:flex;gap:24px}
+        
+        .primary,.secondary{border-radius:8px;padding:11px 18px;border:1px solid var(--teal);background:var(--teal);color:white;font-size:13px; font-weight: 600;}
+        .primary:hover { background: #059669; }
+        .secondary{background:white;color:var(--teal);border-color:var(--line)}
+        .secondary:hover { background: var(--soft); }
+        .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
+        .note{background:var(--soft);padding:15px 18px;border-radius:9px;color:#065f46;font-size:12px}
+        .warning{background:#fef3c7;color:#92400e}
+        
+        .error{color:#ef4444;font-size:13px}
+        .line{border-top:1px solid var(--line);padding:18px 0 0;margin-top:18px}
+        .small{font-size:12px;color:var(--muted)}
+        .preserve{white-space:pre-wrap;overflow-wrap:anywhere}
+        .empty{padding:40px 15px;text-align:center}
+        #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 22px;background:var(--ink);color:white;border-radius:9px;display:none;z-index:1000}
+        
+        .wizard{display:flex;gap:14px;margin:25px 0 5px;color:var(--muted);font-size:12px}
+        .wizard>span{flex:1;border-bottom:2px solid var(--line);padding-bottom:12px}
+        .wizard b{font-size:11px;margin-right:6px}
+        .wizard .current{border-color:var(--teal);color:var(--teal); font-weight: 700;}
+
+        /* ÖDEME MODALI STİLLERİ */
+        .payment-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .payment-overlay.active { display: flex; }
+        .payment-modal { background: white; border-radius: 16px; max-width: 450px; width: 100%; padding: 30px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .payment-modal h3 { color: #0f172a; margin-bottom: 20px; font-size: 20px; }
+        .payment-summary { background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--teal); }
+        .payment-summary div { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .payment-total { display: flex; justify-content: space-between; align-items: center; background: var(--soft); padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--teal); }
+        .payment-total span { font-size: 14px; color: #065f46; font-weight: bold; }
+        .payment-total strong { font-size: 22px; color: #059669; }
+        .demo-warning { background: #fef3c7; padding: 12px; border-radius: 6px; font-size: 13px; color: #92400e; margin-bottom: 15px; border-left: 4px solid #f59e0b; }
+        .payment-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .payment-buttons button { flex: 1; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; border: none; }
+        .btn-cancel { background: #e2e8f0; color: #475569; }
+        .btn-pay { background: #3b82f6; color: white; }
+        .btn-pay:disabled { background: #94a3b8; cursor: not-allowed; }
+
+        @media(max-width:760px){
+            header{height:80px;padding:0 20px}
+            .brand-container img { height: 40px; }
+            .brand{font-size:21px}
+            .shell{display:block}
+            aside{padding:15px 20px;border-right:0;border-bottom:1px solid var(--line)}
+            .side-title,.side-note{display:none}
+            nav{display:flex;margin:0;gap:3px}
+            nav button{padding:10px;font-size:12px;gap:7px}
+            main{padding:26px 20px}
+            h1{font-size:29px}
+            .card{padding:20px}
+            .grid,.two{grid-template-columns:1fr}
+            input:not([type=radio]):not([type=checkbox]),textarea,select{font-size:16px}
+            .actions button{flex:1}
+            .radio-group{flex-wrap:wrap;gap:10px 24px}
+            .wizard{gap:8px;font-size:11px}
+            .wizard b{display:block;margin-bottom:3px}
+            .payment-modal { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="brand-container" href="hasta-panel.html">
+            <img src="logo.png" alt="HELUNEXA">
+            <div class="brand">HELUNEXA<span>Sağlığınızın devamını düşünür.</span></div>
+        </a>
+    </header>
+    
+    <div class="shell">
+        <aside>
+            <div class="side-title">KRONİK HASTALIK TAKİBİ</div>
+            <nav aria-label="Ekranlar">
+                <button class="active">01 <span>Başvuru</span></button>
+            </nav>
+            <div class="side-note">
+                <b>Birlikte, düzenli takip.</b>
+                <p>Dört hastalık, tek başvuru.<br>Her hastalık için ayrı takip planı.</p>
+            </div>
+        </aside>
+        <main id="main" tabindex="-1"></main>
+    </div>
+    
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <!-- ÖDEME MODALI -->
+    <div class="payment-overlay" id="paymentGatewayModal">
+        <div class="payment-modal">
+            <h3>💳 Güvenli Ödeme</h3>
+            <div class="payment-summary">
+                <div><span style="color:#64748b;">Hasta Adı:</span><strong id="payPatient">-</strong></div>
+                <div><span style="color:#64748b;">Hizmet:</span><strong>Kronik Hastalık Takibi</strong></div>
+            </div>
+            <div class="payment-total"><span>Ödenecek Tutar</span><strong>₺1.500</strong></div>
+            <div class="demo-warning">⚠️ <strong>Demo Ödeme:</strong> Bu bir test ödeme ekranıdır.</div>
+            <div>
+                <div style="margin-bottom:15px;"><label>Kart Numarası *</label><input type="text" id="card_number" maxlength="19" placeholder="0000 0000 0000 0000"></div>
+                <div style="margin-bottom:15px;"><label>Kart Üzerindeki İsim *</label><input type="text" id="card_name" placeholder="Ad Soyad"></div>
+                <div style="display:flex; gap:10px;">
+                    <div style="flex:1;"><label>Son Kullanma *</label><input type="text" id="card_expiry" maxlength="5" placeholder="AA/YY"></div>
+                    <div style="flex:1;"><label>CVV *</label><input type="text" id="card_cvv" maxlength="4" placeholder="123"></div>
+                </div>
+            </div>
+            <div class="payment-buttons">
+                <button type="button" class="btn-cancel" id="cancelPaymentBtn">İptal</button>
+                <button type="button" class="btn-pay" id="payBtn">Ödemeyi Tamamla</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const SUPABASE_URL = 'https://grbjmhknmlheoyknmyhd.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p';
+    const { createClient } = supabase;
+    const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'helunexa-hasta-auth' }, global: { headers: { 'apikey': SUPABASE_ANON_KEY } } });
+
+    const diseases={ht:{name:'Hipertansiyon',sub:'Ev tansiyon ölçümleri'},dm:{name:'Tip 2 diyabet',sub:'HbA1c ve tedavi takibi'},lip:{name:'Dislipidemi',sub:'Kolesterol takibi'},thy:{name:'Hipotiroidi',sub:'Tiroid tedavisi takibi'}};
+    const blank=()=>({step:1,selected:[],symptom:'',common:{}});
+    let state=blank(), currentUser=null, pendingFormData=null;
+    const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    
+    function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';setTimeout(()=>$('#toast').style.display='none',3000)}
+    
+    async function checkSession() {
+        const { data: { session } } = await _supabase.auth.getSession();
+        if (session) { 
+            currentUser = session.user; 
+            const kisi = JSON.parse(sessionStorage.getItem('kronik_hasta_bilgi'));
+            if(kisi) {
+                state.common = { ...state.common, fullname: kisi.fullname, age: kisi.age, phone: kisi.phone };
+            }
+            render(); 
+        } else { 
+            window.location.href = 'giris.html'; 
+        }
+    }
+
+    function heading(tag,title,desc){return `<div class="eyebrow">${tag}</div><h1>${title}</h1><p class="lead">${desc}</p>`}
+    function common(label,key,type='text'){return `<label>${label}${type==='textarea'?`<textarea aria-label="${esc(label)}" data-group="common" data-key="${key}">${esc(state.common[key]||'')}</textarea>`:`<input aria-label="${esc(label)}" type="${type}" data-group="common" data-key="${key}" value="${esc(state.common[key]||'')}">`}</label>`}
+    function select(label,key,options){return `<label>${label}<select aria-label="${esc(label)}" data-group="common" data-key="${key}"><option value="">Seçiniz</option>${options.map(([v,t])=>`<option value="${v}" ${state.common[key]===v?'selected':''}>${t}</option>`).join('')}</select></label>`}
+    function symptomSection(){return `<h2>Şu anda şikâyetiniz var mı?</h2><div class="radio-group">${[['no','Hayır, rutin kontrol'],['yes','Evet, şikâyetim var']].map(([v,t])=>`<label class="radio"><input type="radio" name="symptom" value="${v}" ${state.symptom===v?'checked':''}>${t}</label>`).join('')}</div>${state.symptom==='yes'?`<label>Şikâyetinizi kısaca yazın<textarea id="complaint" data-group="common" data-key="complaint">${esc(state.common.complaint||'')}</textarea></label><div class="note warning"><b>Muayeneye yönlendirelim.</b><br>Şikâyetiniz olduğunda rutin takip başvurusu yerine muayene ile değerlendirme gerekir.</div>`:''}`}
+
+    function render(){
+        const step=state.step;
+        let html = heading('BAŞVURU','Kronik Hastalık Takibi','Hekiminizle birlikte kişisel takip planınızı oluşturun.');
+        if (step === 1) {
+            html += `<div class="wizard"><span class="current"><b>1</b> Takip alanı</span><span><b>2</b> İlaçlarım</span><span><b>3</b> Ödeme</span></div>
+            <form id="appForm"><section class="card"><h2>Hangi hastalıklar için takip istiyorsunuz?</h2><div class="grid">${Object.entries(diseases).map(([k,d])=>`<label class="disease"><input type="checkbox" name="disease" value="${k}" ${state.selected.includes(k)?'checked':''}><span>${d.name}<small>${d.sub}</small></span></label>`).join('')}</div><div class="line">${symptomSection()}</div></section>
+            <div class="actions"><button type="button" class="primary" onclick="nextStep()">Devam et →</button></div></form>`;
+        } else if (step === 2) {
+            html += `<div class="wizard"><span><b>1</b> Takip alanı</span><span class="current"><b>2</b> İlaçlarım</span><span><b>3</b> Ödeme</span></div>
+            <form id="appForm"><section class="card"><h2>İlaç ve Sağlık Bilgileriniz</h2>
+            ${common('Ad Soyad','fullname')}
+            ${common('Yaş','age','number')}
+            ${common('Telefon','phone')}
+            ${common('Kullandığınız ilaçlar','meds','textarea')}
+            ${select('İlaçlarınızdan memnun musunuz?','satisfaction',[['Evet','Evet'],['Kısmen','Kısmen'],['Hayır','Hayır'],['Kullanmıyorum','Kullanmıyorum']])}
+            ${state.selected.includes('ht')?common('Ev Tansiyon Ölçümleriniz','bp','textarea'):''}
+            </section>
+            <div class="actions"><button type="button" class="secondary" onclick="prevStep()">← Geri</button><button type="button" class="primary" onclick="preparePayment()">Ödemeye Geç →</button></div></form>`;
+        }
+        $('#main').innerHTML = html;
+        bind();
+    }
+
+    function bind(){
+        document.querySelectorAll('[data-group="common"]').forEach(el=>el.oninput=()=>{state.common[el.dataset.key]=el.value;});
+        document.querySelectorAll('[name=disease]').forEach(el=>el.onchange=()=>{state.selected=Array.from(document.querySelectorAll('[name=disease]:checked')).map(e=>e.value);render()});
+        document.querySelectorAll('[name=symptom]').forEach(el=>el.onchange=()=>{state.symptom=el.value;render()});
+    }
+
+    window.nextStep = function() {
+        if(!state.selected.length) return toast('En az bir hastalık seçin.');
+        if(!state.symptom) return toast('Şikayet durumunuzu seçin.');
+        state.step = 2; render();
+    }
+    window.prevStep = function() { state.step = 1; render(); }
+
+    window.preparePayment = function() {
+        if(!state.common.fullname || !state.common.age || !state.common.phone) return toast('Lütfen ad, yaş ve telefon girin.');
+        
+        pendingFormData = {
+            user_id: currentUser.id,
+            email: currentUser.email,
+            fullname: state.common.fullname,
+            age: parseInt(state.common.age),
+            phone: state.common.phone,
+            service_type: 'Kronik Hastalık Takibi',
+            test_notes: `Hastalıklar: ${state.selected.map(k=>diseases[k].name).join(', ')} | İlaçlar: ${state.common.meds || '-'} | Memnuniyet: ${state.common.satisfaction || '-'} | Şikayet: ${state.symptom === 'yes' ? state.common.complaint : 'Yok'}`,
+            status: 'pending',
+            payment_amount: 1500,
+            is_corporate: false
+        };
+
+        document.getElementById('payPatient').textContent = pendingFormData.fullname;
+        document.getElementById('paymentGatewayModal').classList.add('active');
+    }
+
+    // Kart Formatlama
+    document.getElementById('card_number').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '').substring(0, 16);
+        e.target.value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+    });
+    document.getElementById('card_expiry').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        e.target.value = value;
+    });
+    document.getElementById('card_cvv').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+    });
+
+    document.getElementById('cancelPaymentBtn').onclick = () => document.getElementById('paymentGatewayModal').classList.remove('active');
+
+    document.getElementById('payBtn').addEventListener('click', async function() {
+        const cardNum = document.getElementById('card_number').value.replace(/\s/g, '');
+        const cardName = document.getElementById('card_name').value.trim();
+        const cardExp = document.getElementById('card_expiry').value;
+        const cardCvv = document.getElementById('card_cvv').value;
+
+        if (cardNum.length < 16) return alert('Lütfen 16 haneli kart numarasını girin.');
+        if (cardName.length < 3) return alert('Lütfen kart üzerindeki ismi girin.');
+        if (!/^\d{2}\/\d{2}$/.test(cardExp)) return alert('Son kullanma tarihi AA/YY formatında olmalıdır.');
+        if (cardCvv.length < 3) return alert('Lütfen geçerli bir CVV girin.');
+
+        this.disabled = true; this.textContent = 'İşleniyor...';
+        
+        // Ödeme simülasyonu için 1.5 saniye bekle
+        await new Promise(r => setTimeout(r, 1500));
+
+        // Veritabanına kaydet
+        const { error } = await _supabase.from('applications').insert([pendingFormData]);
+        
+        if (error) {
+            alert('Hata: ' + error.message);
+            this.disabled = false; this.textContent = 'Ödemeyi Tamamla';
+        } else {
+            alert('✅ Ödeme başarılı ve başvurunuz hekim paneline iletildi!');
+            sessionStorage.removeItem('kronik_hasta_bilgi');
+            window.location.href = 'hasta-panel.html';
+        }
+    });
+
+    checkSession();
+    </script>
+</body>
+</html>

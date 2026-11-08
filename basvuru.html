@@ -234,7 +234,12 @@
             if (val === 'Evde Bakım') document.getElementById('box_homecare').style.display = 'block';
             if (val === 'Gebelik Takibi') document.getElementById('box_pregnancy').style.display = 'block';
 
-            if (val) document.getElementById('appointmentBox').style.display = 'block';
+            // Randevu kutusu, Kronik Takip seçildiğinde GİZLENMELİ. Diğerlerinde açılmalı.
+            if (val && val !== 'Kronik Hastalık Takibi') {
+                document.getElementById('appointmentBox').style.display = 'block';
+            } else {
+                document.getElementById('appointmentBox').style.display = 'none';
+            }
         });
 
         document.getElementById('preg_stage').addEventListener('change', function() {
@@ -300,7 +305,6 @@
         });
 
         async function checkSession() {
-            // 150ms bekleme, tarayıcının oturumu hafızaya alması için toleranstır
             await new Promise(resolve => setTimeout(resolve, 150)); 
             const { data: { session } } = await _supabase.auth.getSession();
             
@@ -337,7 +341,6 @@
         document.getElementById('healthForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            // OTURUM KONTROLÜ
             if (!currentUser || !currentUser.id) {
                 alert('Oturumunuz bulunamadı veya sonlanmış. Lütfen tekrar giriş yapın.');
                 window.location.href = 'giris.html';
@@ -349,6 +352,18 @@
             const service = document.getElementById('service_type').value;
             if (!service) { alert('Lütfen hizmet seçin.'); return; }
             
+            // === KRONİK TAKİP YÖNLENDİRMESİ ===
+            if (service === 'Kronik Hastalık Takibi') {
+                sessionStorage.setItem('kronik_hasta_bilgi', JSON.stringify({
+                    fullname: document.getElementById('fullname').value.trim(),
+                    age: document.getElementById('age').value,
+                    phone: document.getElementById('phone').value.trim()
+                }));
+                window.location.href = 'kronik-takip.html';
+                return;
+            }
+            // ===================================
+
             // EĞER CHECK-UP SEÇİLDİYSE VE CDSS'TEN GELMEDİYSE, CDSS SAYFASINA YÖNLENDİR
             if (service === 'Rutin Kontrol' && !isFromCdss) {
                 const fullnameVal = document.getElementById('fullname').value.trim();
@@ -402,7 +417,6 @@
                 }
             }
 
-            if (service === 'Kronik Hastalık Takibi') pendingFormData.test_notes = "Kronik: " + document.getElementById('chronic_diseases').value;
             if (service === 'İlaç Raporu Yenileme') pendingFormData.test_notes = "İlaç: " + document.getElementById('rx_meds').value;
             if (service === 'Longevity Takibi') pendingFormData.test_notes = "Hedef: " + document.getElementById('long_goals').value;
             if (service === 'Gebelik Takibi') {
