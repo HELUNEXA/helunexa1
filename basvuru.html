@@ -79,7 +79,7 @@
                     <option value="Longevity Takibi">4. Longevity / Sağlıklı Yaş Alma</option>
                     <option value="Kanser Taraması">5. Kişiselleştirilmiş Kanser Taraması</option>
                     <option value="Evde Bakım">6. Evde Bakım Hizmetleri</option>
-                    <option value="Gebelik Takibi">7. Anne ve Bebek Sağlığı / Gebelik Yolculuğu</option>
+                    <option value="Gebelik Takibi">7. Anne ve Bebek Sağlığı / Gebelik</option>
                     <option value="Kurumsal Sağlık">8. Kurumsal Sağlık ve Çalışan Takibi</option>
                 </select>
             </div>
@@ -217,6 +217,7 @@
             const service = document.getElementById('service_type').value;
             if (!service) return alert('Lütfen hizmet seçin.');
 
+            // FORMU DOLDUR VE VERİTABANINA GÖNDER
             pendingFormData = {
                 user_id: currentUser.id, email: currentUser.email,
                 fullname: document.getElementById('fullname').value.trim(),
@@ -225,7 +226,7 @@
                 service_type: service,
                 medical_history: document.getElementById('medical_history').value.trim(),
                 test_notes: document.getElementById('test_notes').value.trim(),
-                status: 'pending', // Onay bekliyor
+                status: 'pending', // Hekim onayı bekliyor
                 is_corporate: document.getElementById('corporate_code').value.trim().length > 0
             };
 
@@ -246,7 +247,7 @@
             const { error } = await _supabase.from('applications').insert([pendingFormData]);
             if (error) { alert('Hata: ' + error.message); this.disabled = false; this.textContent = 'Başvuruyu Onayla'; }
             else { 
-                alert('✅ Başvurunuz alındı! Hastane randevu ve ödeme detayları için sizinle iletişime geçecektir.'); 
+                alert('✅ Başvurunuz alındı! Hekiminiz değerlendirdikten sonra paneline yansıyacaktır.'); 
                 window.location.href = 'hasta-panel.html'; 
             }
         });
