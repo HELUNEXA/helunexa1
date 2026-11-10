@@ -40,15 +40,14 @@
         .section-subtitle { text-align: center; font-size: 16px; color: #64748b; margin-bottom: 50px; }
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
         
-        .feature-card { background: #f8fafc; padding: 30px; border-radius: 12px; border-left: 4px solid #10b981; position: relative; cursor: pointer; transition: 0.2s; }
-        .feature-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        /* TIKLAMA İPTAL EDİLDİ - Sadece Görsel Kartlar */
+        .feature-card { background: #f8fafc; padding: 30px; border-radius: 12px; border-left: 4px solid #10b981; position: relative; pointer-events: none; }
         .feature-icon { font-size: 36px; margin-bottom: 15px; }
         .feature-card h3 { font-size: 18px; margin-bottom: 10px; color: #0f172a; }
         .feature-card p { color: #64748b; font-size: 14px; }
         
+        /* Kartların üzerinde "Canlı Önizleme" yazısı */
         .badge-demo { position: absolute; top: 20px; right: 20px; background: #d1fae5; color: #065f46; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; border: 1px solid #10b981; }
-        .badge-soon { position: absolute; top: 20px; right: 20px; background: #f1f5f9; color: #94a3b8; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0; }
-        .card-disabled { opacity: 0.7; border-left-color: #cbd5e1; }
 
         .footer { background: #0f172a; color: #94a3b8; padding: 40px 5%; text-align: center; font-size: 14px; }
         .footer a { color: #10b981; text-decoration: none; }
@@ -97,75 +96,75 @@
         <p>Hastane randevusu, sıra ve tekrar başvuru yükü olmadan; hekim kontrollü, dijital sağlık takibi.</p>
         <div class="hero-buttons">
             <a href="giris.html" class="btn-primary">Hemen Başvur</a>
-            <a href="HELUNEXA_Platform.html" target="_blank" class="btn-demo">🚀 Sistemi İncele</a>
+            <a href="HELUNEXA_Platform.html" class="btn-demo">🚀 Sistemi İncele</a>
         </div>
     </section>
 
     <section class="features" id="hizmetler">
         <h2 class="section-title">Sunduğumuz Hizmetler</h2>
-        <p class="section-subtitle">Size en uygun sağlık takip modülünü seçin.</p>
+        <p class="section-subtitle">8 farklı sağlık modülüyle size özel çözümler sunuyoruz.</p>
         
         <div class="features-grid">
             
             <!-- 1. MODÜL -->
-            <div class="feature-card" onclick="window.location.href='giris.html'">
-                <span class="badge-demo">✅ Aktif</span>
+            <div class="feature-card">
+                <span class="badge-demo">✅ Canlı Önizleme</span>
                 <div class="feature-icon">🩺</div>
                 <h3>1. Rutin Kontrol / Check-up</h3>
                 <p>Yaş, öykü ve hekim değerlendirmesine göre planlanan kapsamlı kontrol.</p>
             </div>
 
             <!-- 2. MODÜL -->
-            <div class="feature-card" onclick="window.location.href='giris.html'">
-                <span class="badge-demo">✅ Aktif</span>
+            <div class="feature-card">
+                <span class="badge-demo">✅ Canlı Önizleme</span>
                 <div class="feature-icon">💊</div>
                 <h3>2. Kronik Hastalık Takibi</h3>
                 <p>Diyabet, hipertansiyon, tiroid için düzenli hekim takibi ve raporlama.</p>
             </div>
 
             <!-- 3. MODÜL -->
-            <div class="feature-card" onclick="window.location.href='giris.html'">
-                <span class="badge-demo">✅ Aktif</span>
+            <div class="feature-card">
+                <span class="badge-demo">✅ Canlı Önizleme</span>
                 <div class="feature-icon">📄</div>
                 <h3>3. İlaç Raporu Yenileme</h3>
                 <p>Rapor bitiş hatırlatmaları ve süreç takibi ile zamanında yenileme.</p>
             </div>
 
             <!-- 4. MODÜL -->
-            <div class="feature-card" onclick="window.location.href='giris.html'">
-                <span class="badge-demo">✅ Aktif</span>
+            <div class="feature-card">
+                <span class="badge-demo">✅ Canlı Önizleme</span>
                 <div class="feature-icon">🧬</div>
                 <h3>4. Longevity / Sağlıklı Yaş Alma</h3>
                 <p>Hareket, beslenme ve uyku hedefleriyle kişiselleştirilmiş sağlıklı yaşam planı.</p>
             </div>
 
             <!-- 5. MODÜL -->
-            <div class="feature-card" onclick="window.location.href='giris.html'">
-                <span class="badge-demo">✅ Aktif</span>
+            <div class="feature-card">
+                <span class="badge-demo">✅ Canlı Önizleme</span>
                 <div class="feature-icon">🔬</div>
-                <h3>5. Kişiselleştirilmiş Kanser taraması </h3>
-                <p>Kişiselleştirilmiş tarama programı ve hekim değerlendirmesi.</p>
+                <h3>5. Kişiselleştirilmiş Kanser Taraması</h3>
+                <p>Kişinin risk faktörleri, yaşı ve geçmişine göre özel olarak planlanan tarama programı.</p>
             </div>
 
             <!-- 6. MODÜL -->
-            <div class="feature-card" onclick="window.location.href='giris.html'">
-                <span class="badge-demo">✅ Aktif</span>
+            <div class="feature-card">
+                <span class="badge-demo">✅ Canlı Önizleme</span>
                 <div class="feature-icon">🏠</div>
                 <h3>6. Evde Bakım Hizmetleri</h3>
                 <p>Evde sağlık takibi, hemşire ziyaretleri ve ekip koordinasyonu.</p>
             </div>
 
             <!-- 7. MODÜL -->
-            <div class="feature-card" onclick="window.location.href='giris.html'">
-                <span class="badge-demo">✅ Aktif</span>
+            <div class="feature-card">
+                <span class="badge-demo">✅ Canlı Önizleme</span>
                 <div class="feature-icon">🌸</div>
                 <h3>7. Anne & Bebek Sağlığı</h3>
                 <p>Gebelik yolculuğunda kontrol ve takip adımları.</p>
             </div>
 
             <!-- 8. MODÜL (Yakında) -->
-            <div class="feature-card card-disabled" onclick="alert('Kurumsal Sağlık modülü geliştirme aşamasındadır.')">
-                <span class="badge-soon">Yakında</span>
+            <div class="feature-card" style="opacity: 0.7; border-left-color: #cbd5e1;">
+                <span class="badge-demo" style="background: #f1f5f9; color: #94a3b8; border-color: #e2e8f0;">Yakında</span>
                 <div class="feature-icon">🏢</div>
                 <h3>8. Kurumsal Sağlık ve Çalışan Takibi</h3>
                 <p>Çalışan sağlığı başvuruları ve kontrol süreçleri.</p>
