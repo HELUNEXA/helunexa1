@@ -4,44 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HELUNEXA · Anne ve Bebek Sağlığı İncelemesi</title>
-    <link rel="icon" href="favicon.ico">
     <style>
         :root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;--teal:#10b981;--teal-dark:#059669;--light:#ecfdf5}
         *{box-sizing:border-box;margin:0;padding:0}
         body{font-family:-apple-system,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
-        .header{background:#fff;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100}
+        .header{background:#fff;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
         .logo-img{height:60px}
         .nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;margin-left:20px}
         .nav a:hover{color:var(--teal)}
-        .hero{max-width:1000px;margin:0 auto;padding:60px 20px;text-align:center}
-        .hero h1{font-size:clamp(32px,4vw,48px);color:var(--ink);margin-bottom:20px;letter-spacing:-1px}
-        .hero p{font-size:18px;color:var(--muted);max-width:700px;margin:0 auto 40px}
         
-        .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px;max-width:1000px;margin:0 auto 60px;padding:0 20px}
-        .feature-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px;text-align:left}
-        .feature-card h3{font-size:18px;margin-bottom:10px;color:var(--ink)}
-        .feature-card p{font-size:14px;color:var(--muted)}
-        .feature-icon{font-size:32px;margin-bottom:15px}
+        .container{max-width:800px;margin:40px auto;padding:0 20px}
+        .title{text-align:center;margin-bottom:30px}
+        .title h1{font-size:32px;color:var(--ink)}
+        .title p{color:var(--muted);font-size:16px}
         
-        .cta-section{background:var(--light);border-top:1px solid #a7f3d0;border-bottom:1px solid #a7f3d0;padding:60px 20px;text-align:center;margin-bottom:60px}
-        .cta-section h2{font-size:28px;margin-bottom:15px;color:var(--teal-dark)}
-        .cta-section p{color:#065f46;margin-bottom:30px;font-size:16px}
-        .cta-buttons{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+        /* ADIMLI SUNUM KARTLARI */
+        .step-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px;margin-bottom:20px;display:none; box-shadow: 0 4px 6px rgba(0,0,0,0.02); animation: fadeIn 0.5s ease-in-out;}
+        .step-card.active{display:block}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .btn{display:inline-block;padding:14px 32px;border-radius:8px;font-weight:bold;font-size:16px;text-decoration:none;transition:0.2s;border:none;cursor:pointer}
-        .btn-primary{background:var(--teal);color:white}
-        .btn-primary:hover{background:var(--teal-dark)}
-        .btn-secondary{background:#fff;color:var(--ink);border:2px solid var(--line)}
-        .btn-secondary:hover{background:#f1f5f9;border-color:#cbd5e1}
+        .step-badge{background:var(--light);color:var(--teal-dark);display:inline-block;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:15px}
+        .step-card h2{font-size:22px;margin-bottom:10px}
+        .step-card p.desc{color:var(--muted);font-size:14px;margin-bottom:20px}
         
-        .workflow{max-width:800px;margin:0 auto 60px;padding:0 20px}
-        .workflow h2{text-align:center;font-size:24px;margin-bottom:30px}
-        .step{display:flex;align-items:flex-start;gap:20px;margin-bottom:25px;background:#fff;padding:20px;border-radius:12px;border:1px solid var(--line)}
-        .step-num{background:var(--teal);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0}
-        .step-content h4{font-size:16px;margin-bottom:5px}
-        .step-content p{font-size:14px;color:var(--muted)}
+        /* FORM TASARIMI */
+        .form-group{margin-bottom:15px}
+        label{display:block;font-weight:600;font-size:13px;margin-bottom:5px;color:#334155}
+        input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;font-family:inherit;font-size:14px;color:#64748b;cursor:not-allowed}
         
-        footer{text-align:center;padding:40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+        /* BUTONLAR */
+        .nav-buttons{display:flex;justify-content:space-between;margin-top:30px;border-top:1px solid var(--line);padding-top:20px}
+        .btn{padding:12px 24px;border-radius:8px;font-weight:bold;font-size:14px;text-decoration:none;border:none;cursor:pointer;transition:0.2s}
+        .btn-next{background:var(--teal);color:white}
+        .btn-next:hover{background:var(--teal-dark)}
+        .btn-prev{background:#e2e8f0;color:#475569}
+        .btn-login{background:var(--ink);color:white;display:block;text-align:center;margin-top:20px}
+        
+        .arrow { font-size: 18px; margin-left: 8px; }
     </style>
 </head>
 <body>
@@ -53,66 +52,72 @@
         </nav>
     </header>
 
-    <section class="hero">
-        <div style="color:var(--teal);font-weight:bold;font-size:12px;letter-spacing:2px;margin-bottom:10px;">MODÜL 07 · ANNE VE BEBEK SAĞLIĞI</div>
-        <h1>Yeni bir yolculuk, birlikte takipte.</h1>
-        <p>Gebelikten doğum sonrasına, bebeğinizin kontrollerine kadar; hekiminizin planını ve sonraki adımları tek bir dijital platform üzerinden takip edin.</p>
-    </section>
+    <div class="container">
+        <div class="title">
+            <h1>7. Modül İncelemesi</h1>
+            <p>Anne ve Bebek Sağlığı süreci nasıl işliyor? (Adımları ilerleyerek görün)</p>
+        </div>
 
-    <div class="features">
-        <div class="feature-card">
-            <div class="feature-icon">🤰</div>
-            <h3>Gebelik Takibi</h3>
-            <p>Gebelik sürecinizdeki kontrol planları, tetkik sonuçları ve hekim notları tek ekranda.</p>
+        <!-- ADIM 1: HASTA BAŞVURUSU -->
+        <div class="step-card active" id="step-1">
+            <span class="step-badge">ADIM 1 / HASTA BAŞVURUSU</span>
+            <h2>Hasta / Ebeveyn Ekranı</h2>
+            <p class="desc">Hasta sisteme giriş yaptığında karşısına çıkan kısa başvuru formudur. Sadece randevu tercihi ve kısa not alınır.</p>
+            
+            <div class="form-group"><label>Takip Alanı</label><input type="text" value="Gebelik Yolculuğu" disabled></div>
+            <div class="form-group"><label>Ad Soyad</label><input type="text" value="Ayşe Yılmaz" disabled></div>
+            <div class="form-group"><label>Görüşme Tercihi</label><input type="text" value="Online Görüşme" disabled></div>
+            <div class="form-group"><label>Kısa Notunuz</label><textarea disabled>Rutin gebelik kontrolüm için randevu almak istiyorum.</textarea></div>
+            
+            <div class="nav-buttons">
+                <span></span> <!-- Boşluk -->
+                <button class="btn btn-next" onclick="nextStep(2)">Hekim Ekranını Gör <span class="arrow">→</span></button>
+            </div>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon">🌺</div>
-            <h3>Doğum Sonrası Destek</h3>
-            <p>Doğum sonrası anne sağlığı, emzirme ve iyilik hâli takibi.</p>
+
+        <!-- ADIM 2: HEKİM DEĞERLENDİRMESİ -->
+        <div class="step-card" id="step-2">
+            <span class="step-badge">ADIM 2 / HEKİM DEĞERLENDİRMESİ</span>
+            <h2>Hekim Paneli (Tıbbi Detaylar)</h2>
+            <p class="desc">Hasta başvurusu hekim paneline düşer. Hekim, görüşme sırasında tıbbi detayları (gebelik haftası, riskler) bu ekrandan girer.</p>
+            
+            <div class="form-group"><label>Gebelik Haftası</label><input type="text" value="24 Hafta" disabled></div>
+            <div class="form-group"><label>Gravida / Parite</label><input type="text" value="G2 / P1" disabled></div>
+            <div class="form-group"><label>Tıbbi Not / Risk Durumu</label><textarea disabled>Kanama yok, tansiyon normal. Rutin takibe devam.</textarea></div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-prev" onclick="nextStep(1)">← Geri</button>
+                <button class="btn btn-next" onclick="nextStep(3)">Hasta Planını Gör <span class="arrow">→</span></button>
+            </div>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon">👶</div>
-            <h3>Bebek Kontrolleri</h3>
-            <p>Bebeğinizin büyüme, aşı ve tarama kayıtlarının düzenli olarak takibi.</p>
+
+        <!-- ADIM 3: HASTA TAKİBİ -->
+        <div class="step-card" id="step-3">
+            <span class="step-badge">ADIM 3 / SONUÇ VE TAKİP</span>
+            <h2>Hasta Takip Planı</h2>
+            <p class="desc">Hekim onayladıktan sonra hasta kendi panelinde planını görür. Tüm tıbbi veriler hekim tarafından doldurulmuştur.</p>
+            
+            <div style="background:var(--light); border-left:4px solid var(--teal); padding:15px; border-radius:8px; margin-bottom:15px;">
+                <h4 style="color:var(--teal-dark); margin-bottom:5px;">Hekim Planı Onaylandı</h4>
+                <p style="font-size:14px; margin:0;">Sonraki kontrolünüz: <strong>14 Gün Sonra</strong></p>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-prev" onclick="nextStep(2)">← Geri</button>
+                <span></span>
+            </div>
+            
+            <a href="giris.html" class="btn btn-login">Gerçek Sisteme Giriş Yap (Hasta / Hekim) →</a>
         </div>
+
     </div>
 
-    <section class="cta-section">
-        <h2>Sistemi Deneyimleyin</h2>
-        <p>Hasta veya hekim girişi yaparak Anne & Bebek Sağlığı modülünün arka planını inceleyebilirsiniz.</p>
-        <div class="cta-buttons">
-            <a href="giris.html" class="btn btn-primary">Hasta Girişi Yap →</a>
-            <a href="giris.html" class="btn btn-secondary">Hekim Paneli →</a>
-        </div>
-    </section>
-
-    <section class="workflow">
-        <h2>Süreç Nasıl İşliyor?</h2>
-        <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-content">
-                <h4>Kısa Başvuru</h4>
-                <p>Hasta, sistem üzerinden sadece randevu tercihini (Online/Yüz Yüze) ve kısa notunu iletir.</p>
-            </div>
-        </div>
-        <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-content">
-                <h4>Hekim Değerlendirmesi</h4>
-                <p>Hekim, hasta ile görüşür. Tüm tıbbi detaylar (gebelik haftası, riskler) hekim tarafından sisteme girilir.</p>
-            </div>
-        </div>
-        <div class="step">
-            <div class="step-num">3</div>
-            <div class="step-content">
-                <h4>Takip Planı</h4>
-                <p>Hasta, kendi paneli üzerinden hekimin oluşturduğu kontrol planını ve sonraki adımları görüntüler.</p>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        © 2026 HELUNEXA. Tüm hakları saklıdır. Bu sayfa bir bilgilendirme ve yönlendirme ekranıdır.
-    </footer>
+    <script>
+        function nextStep(step) {
+            document.querySelectorAll('.step-card').forEach(card => card.classList.remove('active'));
+            document.getElementById('step-' + step).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>

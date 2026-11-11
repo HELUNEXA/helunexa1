@@ -4,44 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HELUNEXA · Kurumsal Sağlık İncelemesi</title>
-    <link rel="icon" href="favicon.ico">
     <style>
         :root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;--teal:#10b981;--teal-dark:#059669;--light:#ecfdf5}
         *{box-sizing:border-box;margin:0;padding:0}
         body{font-family:-apple-system,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
-        .header{background:#fff;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100}
+        .header{background:#fff;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
         .logo-img{height:60px}
         .nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;margin-left:20px}
         .nav a:hover{color:var(--teal)}
-        .hero{max-width:1000px;margin:0 auto;padding:60px 20px;text-align:center}
-        .hero h1{font-size:clamp(32px,4vw,48px);color:var(--ink);margin-bottom:20px;letter-spacing:-1px}
-        .hero p{font-size:18px;color:var(--muted);max-width:700px;margin:0 auto 40px}
         
-        .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px;max-width:1000px;margin:0 auto 60px;padding:0 20px}
-        .feature-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px;text-align:left}
-        .feature-card h3{font-size:18px;margin-bottom:10px;color:var(--ink)}
-        .feature-card p{font-size:14px;color:var(--muted)}
-        .feature-icon{font-size:32px;margin-bottom:15px}
+        .container{max-width:800px;margin:40px auto;padding:0 20px}
+        .title{text-align:center;margin-bottom:30px}
+        .title h1{font-size:32px;color:var(--ink)}
+        .title p{color:var(--muted);font-size:16px}
         
-        .cta-section{background:var(--light);border-top:1px solid #a7f3d0;border-bottom:1px solid #a7f3d0;padding:60px 20px;text-align:center;margin-bottom:60px}
-        .cta-section h2{font-size:28px;margin-bottom:15px;color:var(--teal-dark)}
-        .cta-section p{color:#065f46;margin-bottom:30px;font-size:16px}
-        .cta-buttons{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+        /* ADIMLI SUNUM KARTLARI */
+        .step-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px;margin-bottom:20px;display:none; box-shadow: 0 4px 6px rgba(0,0,0,0.02); animation: fadeIn 0.5s ease-in-out;}
+        .step-card.active{display:block}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .btn{display:inline-block;padding:14px 32px;border-radius:8px;font-weight:bold;font-size:16px;text-decoration:none;transition:0.2s;border:none;cursor:pointer}
-        .btn-primary{background:var(--teal);color:white}
-        .btn-primary:hover{background:var(--teal-dark)}
-        .btn-secondary{background:#fff;color:var(--ink);border:2px solid var(--line)}
-        .btn-secondary:hover{background:#f1f5f9;border-color:#cbd5e1}
+        .step-badge{background:var(--light);color:var(--teal-dark);display:inline-block;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:15px}
+        .step-card h2{font-size:22px;margin-bottom:10px}
+        .step-card p.desc{color:var(--muted);font-size:14px;margin-bottom:20px}
         
-        .workflow{max-width:800px;margin:0 auto 60px;padding:0 20px}
-        .workflow h2{text-align:center;font-size:24px;margin-bottom:30px}
-        .step{display:flex;align-items:flex-start;gap:20px;margin-bottom:25px;background:#fff;padding:20px;border-radius:12px;border:1px solid var(--line)}
-        .step-num{background:var(--teal);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0}
-        .step-content h4{font-size:16px;margin-bottom:5px}
-        .step-content p{font-size:14px;color:var(--muted)}
+        /* FORM TASARIMI */
+        .form-group{margin-bottom:15px}
+        label{display:block;font-weight:600;font-size:13px;margin-bottom:5px;color:#334155}
+        input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;font-family:inherit;font-size:14px;color:#64748b;cursor:not-allowed}
         
-        footer{text-align:center;padding:40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+        /* BUTONLAR */
+        .nav-buttons{display:flex;justify-content:space-between;margin-top:30px;border-top:1px solid var(--line);padding-top:20px}
+        .btn{padding:12px 24px;border-radius:8px;font-weight:bold;font-size:14px;text-decoration:none;border:none;cursor:pointer;transition:0.2s}
+        .btn-next{background:var(--teal);color:white}
+        .btn-next:hover{background:var(--teal-dark)}
+        .btn-prev{background:#e2e8f0;color:#475569}
+        .btn-login{background:var(--ink);color:white;display:block;text-align:center;margin-top:20px}
+        
+        .arrow { font-size: 18px; margin-left: 8px; }
     </style>
 </head>
 <body>
@@ -53,66 +52,72 @@
         </nav>
     </header>
 
-    <section class="hero">
-        <div style="color:var(--teal);font-weight:bold;font-size:12px;letter-spacing:2px;margin-bottom:10px;">MODÜL 08 · KURUMSAL SAĞLIK VE ÇALIŞAN TAKİBİ</div>
-        <h1>Çalışan sağlığında dijital dönüşüm.</h1>
-        <p>Şirket çalışanlarının sağlık taramalarını, check-up süreçlerini ve iş yeri hekimliği değerlendirmelerini tek bir platformda yönetin.</p>
-    </section>
+    <div class="container">
+        <div class="title">
+            <h1>8. Modül İncelemesi</h1>
+            <p>Kurumsal Sağlık süreci nasıl işliyor? (Adımları ilerleyerek görün)</p>
+        </div>
 
-    <div class="features">
-        <div class="feature-card">
-            <div class="feature-icon">🏢</div>
-            <h3>Çalışan Sağlığı Takibi</h3>
-            <p>Şirket kodunuz ve sicil numaranız ile kurumsal sağlık taramalarınıza katılın.</p>
+        <!-- ADIM 1: ÇALIŞAN BAŞVURUSU -->
+        <div class="step-card active" id="step-1">
+            <span class="step-badge">ADIM 1 / ÇALIŞAN BAŞVURUSU</span>
+            <h2>Çalışan Ekranı</h2>
+            <p class="desc">Çalışan sisteme giriş yaptığında şirket kodu ve sicil numarası ile kısa bir randevu talebi oluşturur.</p>
+            
+            <div class="form-group"><label>Şirket Kodu</label><input type="text" value="PILOT01" disabled></div>
+            <div class="form-group"><label>Çalışan / Sicil No</label><input type="text" value="EMP-1001" disabled></div>
+            <div class="form-group"><label>Görüşme Tercihi</label><input type="text" value="Yüz Yüze (İş Yeri Hekimliği)" disabled></div>
+            <div class="form-group"><label>Kısa Notunuz</label><textarea disabled>Masa başı çalışıyorum, sırt ağrılarım için ergonomi değerlendirmesi istiyorum.</textarea></div>
+            
+            <div class="nav-buttons">
+                <span></span> <!-- Boşluk -->
+                <button class="btn btn-next" onclick="nextStep(2)">Hekim Ekranını Gör <span class="arrow">→</span></button>
+            </div>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon">👨‍⚕️</div>
-            <h3>İş Yeri Hekimliği</h3>
-            <p>İş yeri hekimlerinin çalışanlara özel tıbbi değerlendirmeleri ve ergonomi notları.</p>
+
+        <!-- ADIM 2: İŞ YERİ HEKİMİ DEĞERLENDİRMESİ -->
+        <div class="step-card" id="step-2">
+            <span class="step-badge">ADIM 2 / HEKİM DEĞERLENDİRMESİ</span>
+            <h2>İş Yeri Hekimi Paneli</h2>
+            <p class="desc">Hekim, çalışanın şikayetini değerlendirir ve gerekli tıbbi notları (ergonomi, geçmiş) bu ekrandan girer.</p>
+            
+            <div class="form-group"><label>Şirket Kodu</label><input type="text" value="PILOT01" disabled></div>
+            <div class="form-group"><label>Sicil No</label><input type="text" value="EMP-1001" disabled></div>
+            <div class="form-group"><label>İş Yeri Hekimliği Notu / Ergonomi Değerlendirmesi</label><textarea disabled>Boyun ve sırt ağrısı mevcut. Ergonomi eğitimi verildi. Fizyoterapiye yönlendirildi.</textarea></div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-prev" onclick="nextStep(1)">← Geri</button>
+                <button class="btn btn-next" onclick="nextStep(3)">Çalışan Sonucunu Gör <span class="arrow">→</span></button>
+            </div>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3>Kurumsal Raporlama</h3>
-            <p>Şirket yöneticileri için anonimleştirilmiş toplu katılım ve sağlık trend raporları.</p>
+
+        <!-- ADIM 3: ÇALIŞAN SONUCU -->
+        <div class="step-card" id="step-3">
+            <span class="step-badge">ADIM 3 / SONUÇ VE TAKİP</span>
+            <h2>Çalışan Takip Paneli</h2>
+            <p class="desc">Hekim onayladıktan sonra çalışan kendi panelinde sonucu ve planı görür. (Şirket yöneticisi kişisel verileri göremez, sadece anonim özet görür).</p>
+            
+            <div style="background:var(--light); border-left:4px solid var(--teal); padding:15px; border-radius:8px; margin-bottom:15px;">
+                <h4 style="color:var(--teal-dark); margin-bottom:5px;">Değerlendirme Tamamlandı</h4>
+                <p style="font-size:14px; margin:0;">Ergonomi eğitimi ve fizyoterapi planınız oluşturuldu.</p>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-prev" onclick="nextStep(2)">← Geri</button>
+                <span></span>
+            </div>
+            
+            <a href="giris.html" class="btn btn-login">Gerçek Sisteme Giriş Yap (Çalışan / Hekim) →</a>
         </div>
+
     </div>
 
-    <section class="cta-section">
-        <h2>Sistemi Deneyimleyin</h2>
-        <p>Hasta veya hekim girişi yaparak Kurumsal Sağlık modülünün arka planını inceleyebilirsiniz.</p>
-        <div class="cta-buttons">
-            <a href="giris.html" class="btn btn-primary">Hasta Girişi Yap →</a>
-            <a href="giris.html" class="btn btn-secondary">Hekim Paneli →</a>
-        </div>
-    </section>
-
-    <section class="workflow">
-        <h2>Süreç Nasıl İşliyor?</h2>
-        <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-content">
-                <h4>Kısa Başvuru</h4>
-                <p>Çalışan, şirket kodu ve sicil numarası ile online veya yüz yüze randevu talebi oluşturur.</p>
-            </div>
-        </div>
-        <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-content">
-                <h4>Hekim Değerlendirmesi</h4>
-                <p>İş yeri hekimi, çalışanın talebini inceler ve gerekli tıbbi notları (ergonomi, geçmiş vs.) kendi paneline girer.</p>
-            </div>
-        </div>
-        <div class="step">
-            <div class="step-num">3</div>
-            <div class="step-content">
-                <h4>Kurumsal Takip</h4>
-                <p>Çalışan kendi panelinden sonuçları görürken, şirket yöneticisi sadece anonim toplu verileri görüntüler.</p>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        © 2026 HELUNEXA. Tüm hakları saklıdır. Bu sayfa bir bilgilendirme ve yönlendirme ekranıdır.
-    </footer>
+    <script>
+        function nextStep(step) {
+            document.querySelectorAll('.step-card').forEach(card => card.classList.remove('active'));
+            document.getElementById('step-' + step).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
