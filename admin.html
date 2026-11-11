@@ -48,7 +48,7 @@
         .detail-row { margin-bottom: 15px; }
         .detail-row label { display: block; font-size: 12px; color: #64748b; margin-bottom: 4px; font-weight: bold; }
         .detail-row .value { font-size: 15px; }
-        textarea, select, input[type="text"], input[type="email"] { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; }
+        textarea, select, input[type="text"], input[type="email"], input[type="number"] { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; }
         textarea { min-height: 80px; resize: vertical; }
         .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-primary { background: #10b981; color: white; }
@@ -60,7 +60,13 @@
         
         .eval-box { background: #f8fafc; border-left: 4px solid #3b82f6; padding: 20px; border-radius: 8px; margin-top: 20px; }
 
-        @media (max-width: 768px) { .container { padding: 15px; } table { min-width: 800px; } }
+        /* 7 VE 8. MODÜL ÖZEL FORM STİLLERİ */
+        .special-medical-form { display: none; margin-top: 20px; background: #ecfdf5; padding: 20px; border-radius: 12px; border: 2px dashed #10b981; }
+        .special-medical-form h3 { color: #059669; margin-bottom: 15px; font-size: 16px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-full { grid-column: 1 / -1; }
+
+        @media (max-width: 768px) { .container { padding: 15px; } table { min-width: 800px; } .grid-2 { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body class="notranslate">
@@ -130,6 +136,26 @@
         <div class="modal">
             <div class="modal-header"><h2 id="modalTitle">Hasta Detayı</h2><button class="close-btn" onclick="closeModal()">×</button></div>
             <div class="modal-body" id="modalBody"></div>
+            
+            <!-- 7. VE 8. MODÜL İÇİN ÖZEL TIBBİ FORM -->
+            <div id="specialMedicalForm" class="special-medical-form">
+                <h3>🩺 Hekim Tıbbi Değerlendirmesi (Özel Modül)</h3>
+                
+                <!-- 7. Modül: Anne ve Bebek -->
+                <div id="form_7_modul" class="grid-2" style="display:none;">
+                    <div><label>Gebelik Haftası</label><input type="number" id="med_week" placeholder="Örn: 24"></div>
+                    <div><label>Gravida / Parite</label><input type="text" id="med_gravida" placeholder="Örn: G2 P1"></div>
+                    <div class="grid-full"><label>Tıbbi Not / Risk Durumu</label><textarea id="med_pregnancy_note" placeholder="Kanama, tansiyon, şeker, bebek hareketleri vb..."></textarea></div>
+                </div>
+
+                <!-- 8. Modül: Kurumsal Sağlık -->
+                <div id="form_8_modul" class="grid-2" style="display:none;">
+                    <div><label>Şirket Kodu</label><input type="text" id="med_corp_code" placeholder="Örn: PILOT01"></div>
+                    <div><label>Sicil No</label><input type="text" id="med_emp_no" placeholder="Örn: EMP-1001"></div>
+                    <div class="grid-full"><label>İş Yeri Hekimliği Notu / Ergonomi Değerlendirmesi</label><textarea id="med_corporate_note" placeholder="Masa başı çalışma, sırt ağrısı, iş kazası öyküsü vb..."></textarea></div>
+                </div>
+            </div>
+
             <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
                 <button class="btn btn-secondary" onclick="closeModal()">Kapat</button>
                 <button class="btn btn-primary" id="saveBtn">Değişiklikleri Kaydet</button>
@@ -323,7 +349,6 @@
                     <div class="detail-row"><label>Hekim Notu (Kısa)</label><textarea id="editNote">${currentApp.doctor_note || ''}</textarea></div>
                     <div class="detail-row"><label>Hekim Değerlendirmesi</label><textarea id="editEvaluation">${currentApp.evaluation || ''}</textarea></div>
                     
-                    <!-- İŞTE O DEĞİŞİKLİK ÖNERİSİ KUTUSU -->
                     <div class="detail-row" style="background:#eff6ff; padding:15px; border-radius:8px; border:1px solid #bfdbfe; margin-top:20px;">
                         <label style="color:#1e40af; font-size:13px; font-weight:bold;">➕ Hekimin Önerdiği Tetkikler (Kendi Önerisi)</label>
                         <p style="font-size:11px; color:#3b82f6; margin-bottom:8px;">Hastanın talebinden bağımsız olarak, uygun gördüğünüz tetkikleri buraya ekleyin.</p>
@@ -345,6 +370,39 @@
             
             window.tempDoctorTests = currentPrescription ? currentPrescription.split('\n').filter(t => t.trim() !== '') : [];
             renderDoctorSelectedList();
+
+            // --- 7. VE 8. MODÜL İÇİN ÖZEL FORM MANTIĞI ---
+            const specialFormDiv = document.getElementById('specialMedicalForm');
+            const form7 = document.getElementById('form_7_modul');
+            const form8 = document.getElementById('form_8_modul');
+
+            // Varsayılan olarak gizle
+            specialFormDiv.style.display = 'none';
+            form7.style.display = 'none';
+            form8.style.display = 'none';
+
+            // Tıbbi detay verisi varsa (jsonb) buraya yükle
+            const medDetails = currentApp.medical_details || {};
+
+            if (currentApp.service_type === 'Gebelik Takibi' || currentApp.service_type === 'Anne ve Bebek Sağlığı / Gebelik') {
+                specialFormDiv.style.display = 'block';
+                form7.style.display = 'grid';
+                
+                // Verileri doldur
+                document.getElementById('med_week').value = medDetails.week || '';
+                document.getElementById('med_gravida').value = medDetails.gravida || '';
+                document.getElementById('med_pregnancy_note').value = medDetails.pregnancy_note || '';
+            } 
+            else if (currentApp.service_type === 'Kurumsal Sağlık' || currentApp.service_type === 'Kurumsal Sağlık ve Çalışan Takibi') {
+                specialFormDiv.style.display = 'block';
+                form8.style.display = 'grid';
+                
+                // Verileri doldur
+                document.getElementById('med_corp_code').value = medDetails.corp_code || currentApp.corporate_code || '';
+                document.getElementById('med_emp_no').value = medDetails.emp_no || currentApp.employee_number || '';
+                document.getElementById('med_corporate_note').value = medDetails.corporate_note || '';
+            }
+            // Diğer modüllerde form gizli kalır.
 
             document.getElementById('modalOverlay').classList.add('active');
         };
@@ -390,11 +448,22 @@
             if (!currentApp) return;
             const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.textContent = 'Kaydediliyor...';
             
+            // Tıbbi detayları topla
+            const medicalDetails = {
+                week: document.getElementById('med_week') ? document.getElementById('med_week').value : null,
+                gravida: document.getElementById('med_gravida') ? document.getElementById('med_gravida').value : null,
+                pregnancy_note: document.getElementById('med_pregnancy_note') ? document.getElementById('med_pregnancy_note').value : null,
+                corp_code: document.getElementById('med_corp_code') ? document.getElementById('med_corp_code').value : null,
+                emp_no: document.getElementById('med_emp_no') ? document.getElementById('med_emp_no').value : null,
+                corporate_note: document.getElementById('med_corporate_note') ? document.getElementById('med_corporate_note').value : null
+            };
+
             const { error } = await _supabase.from('applications').update({
                 status: document.getElementById('editStatus').value,
                 doctor_note: document.getElementById('editNote').value,
                 evaluation: document.getElementById('editEvaluation').value,
-                prescription: document.getElementById('editPrescription').value
+                prescription: document.getElementById('editPrescription').value,
+                medical_details: medicalDetails // YENİ EKLENEN ALAN
             }).eq('id', currentApp.id);
             
             if (error) alert('Hata: ' + error.message);
