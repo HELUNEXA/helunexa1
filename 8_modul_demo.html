@@ -1,152 +1,118 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>HELUNEXA · Kurumsal Sağlık ve Çalışan Takibi</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELUNEXA · Kurumsal Sağlık İncelemesi</title>
+    <link rel="icon" href="favicon.ico">
     <style>
-        :root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;--teal:#10b981;--teal-dark:#059669;--light:#ecfdf5;--warm:#fef3c7;--danger:#ef4444}
-        *{box-sizing:border-box}
-        body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,sans-serif}
-        header{height:80px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5%}
-        .brand{font-size:24px;font-weight:800;letter-spacing:1px;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
-        .brand img{height:50px}
-        main{max-width:800px;margin:auto;padding:40px 20px;min-height:70vh}
-        .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.02)}
-        h1{font-size:28px;margin:0 0 10px 0; letter-spacing:-0.5px;}
-        h2{font-size:20px;margin:0 0 15px 0}
-        p.sub{color:var(--muted);margin:0 0 25px 0;font-size:14px}
-        .form-group{margin-bottom:20px}
-        label{display:block;font-weight:600;margin-bottom:8px;font-size:13px}
-        input,select,textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font-family:inherit;font-size:14px; background: #fff;}
-        input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--light)}
-        textarea{resize:vertical;min-height:80px}
-        .btn{background:var(--teal);color:white;border:none;padding:14px 24px;border-radius:8px;font-weight:600;cursor:pointer;font-size:15px;width:100%; transition: 0.2s;}
-        .btn:hover{background:var(--teal-dark)}
-        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-        .notice{background:var(--light);color:var(--teal-dark);padding:15px;border-radius:8px;font-size:13px;margin-bottom:20px;border:1px solid #a7f3d0}
+        :root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;--teal:#10b981;--teal-dark:#059669;--light:#ecfdf5}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:-apple-system,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+        .header{background:#fff;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:100}
+        .logo-img{height:60px}
+        .nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;margin-left:20px}
+        .nav a:hover{color:var(--teal)}
+        .hero{max-width:1000px;margin:0 auto;padding:60px 20px;text-align:center}
+        .hero h1{font-size:clamp(32px,4vw,48px);color:var(--ink);margin-bottom:20px;letter-spacing:-1px}
+        .hero p{font-size:18px;color:var(--muted);max-width:700px;margin:0 auto 40px}
         
-        @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+        .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px;max-width:1000px;margin:0 auto 60px;padding:0 20px}
+        .feature-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px;text-align:left}
+        .feature-card h3{font-size:18px;margin-bottom:10px;color:var(--ink)}
+        .feature-card p{font-size:14px;color:var(--muted)}
+        .feature-icon{font-size:32px;margin-bottom:15px}
+        
+        .cta-section{background:var(--light);border-top:1px solid #a7f3d0;border-bottom:1px solid #a7f3d0;padding:60px 20px;text-align:center;margin-bottom:60px}
+        .cta-section h2{font-size:28px;margin-bottom:15px;color:var(--teal-dark)}
+        .cta-section p{color:#065f46;margin-bottom:30px;font-size:16px}
+        .cta-buttons{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+        
+        .btn{display:inline-block;padding:14px 32px;border-radius:8px;font-weight:bold;font-size:16px;text-decoration:none;transition:0.2s;border:none;cursor:pointer}
+        .btn-primary{background:var(--teal);color:white}
+        .btn-primary:hover{background:var(--teal-dark)}
+        .btn-secondary{background:#fff;color:var(--ink);border:2px solid var(--line)}
+        .btn-secondary:hover{background:#f1f5f9;border-color:#cbd5e1}
+        
+        .workflow{max-width:800px;margin:0 auto 60px;padding:0 20px}
+        .workflow h2{text-align:center;font-size:24px;margin-bottom:30px}
+        .step{display:flex;align-items:flex-start;gap:20px;margin-bottom:25px;background:#fff;padding:20px;border-radius:12px;border:1px solid var(--line)}
+        .step-num{background:var(--teal);color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;flex-shrink:0}
+        .step-content h4{font-size:16px;margin-bottom:5px}
+        .step-content p{font-size:14px;color:var(--muted)}
+        
+        footer{text-align:center;padding:40px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
     </style>
 </head>
 <body>
-    <header>
-        <a href="hasta-panel.html" class="brand"><img src="logo.png" alt="HELUNEXA">HELUNEXA</a>
-        <a href="hasta-panel.html" style="color:var(--muted); text-decoration:none; font-size:14px; font-weight:600;">← Panele Dön</a>
+    <header class="header">
+        <a href="index.html"><img src="logo.png" alt="HELUNEXA" class="logo-img"></a>
+        <nav class="nav">
+            <a href="index.html">Ana Sayfa</a>
+            <a href="giris.html" style="color:var(--teal);">Sisteme Giriş</a>
+        </nav>
     </header>
 
-    <main>
-        <div id="formContainer">
-            <h1>Kurumsal Sağlık Başvurusu</h1>
-            <p class="sub">Şirket bilgilerinizi girin ve randevu talebinizi oluşturun. Detaylı tıbbi değerlendirme iş yeri hekiminiz tarafından yapılacaktır.</p>
-            
-            <div class="card">
-                <form id="corporateForm" onsubmit="submitCorporate(event)">
-                    <div class="grid-2">
-                        <div class="form-group">
-                            <label>Şirket Kodu *</label>
-                            <input type="text" id="corp_code" required placeholder="Örn: PILOT01">
-                        </div>
-                        <div class="form-group">
-                            <label>Çalışan / Sicil No *</label>
-                            <input type="text" id="emp_no" required placeholder="Örn: EMP-1001">
-                        </div>
-                    </div>
+    <section class="hero">
+        <div style="color:var(--teal);font-weight:bold;font-size:12px;letter-spacing:2px;margin-bottom:10px;">MODÜL 08 · KURUMSAL SAĞLIK VE ÇALIŞAN TAKİBİ</div>
+        <h1>Çalışan sağlığında dijital dönüşüm.</h1>
+        <p>Şirket çalışanlarının sağlık taramalarını, check-up süreçlerini ve iş yeri hekimliği değerlendirmelerini tek bir platformda yönetin.</p>
+    </section>
 
-                    <div class="form-group">
-                        <label>Hizmet Seçimi *</label>
-                        <select id="corp_service" required>
-                            <option value="Kurumsal Check-up">Kurumsal Check-up (Genel)</option>
-                            <option value="Kardiyoloji Taraması">Kardiyoloji Taraması</option>
-                            <option value="Ergonomi ve Fiziksel Sağlık">Ergonomi ve Fiziksel Sağlık</option>
-                            <option value="Psikolojik Destek (Kurumsal)">Psikolojik Destek (Kurumsal)</option>
-                        </select>
-                    </div>
+    <div class="features">
+        <div class="feature-card">
+            <div class="feature-icon">🏢</div>
+            <h3>Çalışan Sağlığı Takibi</h3>
+            <p>Şirket kodunuz ve sicil numaranız ile kurumsal sağlık taramalarınıza katılın.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">👨‍⚕️</div>
+            <h3>İş Yeri Hekimliği</h3>
+            <p>İş yeri hekimlerinin çalışanlara özel tıbbi değerlendirmeleri ve ergonomi notları.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Kurumsal Raporlama</h3>
+            <p>Şirket yöneticileri için anonimleştirilmiş toplu katılım ve sağlık trend raporları.</p>
+        </div>
+    </div>
 
-                    <div class="form-group">
-                        <label>Görüşme Tercihi *</label>
-                        <select id="appt_type" required>
-                            <option value="Online">Online Görüşme (Görüntülü)</option>
-                            <option value="Yüz Yüze">Yüz Yüze (İş Yeri Hekimliği / Klinik)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Kısa Notunuz (Talep veya Şikayet) *</label>
-                        <textarea id="corp_note" required placeholder="Örn: Masa başı çalışıyorum, sırt ağrılarım için ergonomi değerlendirmesi istiyorum."></textarea>
-                    </div>
+    <section class="cta-section">
+        <h2>Sistemi Deneyimleyin</h2>
+        <p>Hasta veya hekim girişi yaparak Kurumsal Sağlık modülünün arka planını inceleyebilirsiniz.</p>
+        <div class="cta-buttons">
+            <a href="giris.html" class="btn btn-primary">Hasta Girişi Yap →</a>
+            <a href="giris.html" class="btn btn-secondary">Hekim Paneli →</a>
+        </div>
+    </section>
 
-                    <div class="notice">
-                        ℹ️ Sağlık bilgileriniz KVKK kapsamında korunmaktadır ve sadece iş yeri hekiminiz tarafından görüntülenebilir.
-                    </div>
-
-                    <button type="submit" class="btn" id="submitBtn">Başvuruyu Gönder</button>
-                </form>
+    <section class="workflow">
+        <h2>Süreç Nasıl İşliyor?</h2>
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+                <h4>Kısa Başvuru</h4>
+                <p>Çalışan, şirket kodu ve sicil numarası ile online veya yüz yüze randevu talebi oluşturur.</p>
             </div>
         </div>
-
-        <div class="card" id="corpStatus" style="display:none; text-align:center;">
-            <h2 style="color:var(--teal); margin-bottom:10px;">✅ Başvurunuz Alındı</h2>
-            <p class="sub">İş yeri hekiminiz değerlendirdikten sonra randevu ve plan bilgileriniz hasta panelinizde görünecektir.</p>
-            <a href="hasta-panel.html" class="btn" style="display:inline-block; width:auto; margin-top:15px;">Panele Git</a>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+                <h4>Hekim Değerlendirmesi</h4>
+                <p>İş yeri hekimi, çalışanın talebini inceler ve gerekli tıbbi notları (ergonomi, geçmiş vs.) kendi paneline girer.</p>
+            </div>
         </div>
-    </main>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+                <h4>Kurumsal Takip</h4>
+                <p>Çalışan kendi panelinden sonuçları görürken, şirket yöneticisi sadece anonim toplu verileri görüntüler.</p>
+            </div>
+        </div>
+    </section>
 
-    <script>
-        const SUPABASE_URL = 'https://grbjmhknmlheoyknmyhd.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p';
-        const { createClient } = supabase;
-        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'helunexa-hasta-auth' } });
-
-        let currentUser = null;
-
-        async function checkSession() {
-            const { data: { session } } = await _supabase.auth.getSession();
-            if (session) { 
-                currentUser = session.user; 
-            } else { 
-                window.location.href = 'giris.html'; 
-            }
-        }
-
-        async function submitCorporate(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.textContent = 'Gönderiliyor...';
-
-            const corpCode = document.getElementById('corp_code').value.trim();
-            const empNo = document.getElementById('emp_no').value.trim();
-            const service = document.getElementById('corp_service').value;
-            const apptType = document.getElementById('appt_type').value;
-            const note = document.getElementById('corp_note').value.trim();
-
-            const email = currentUser.email;
-            
-            const { error } = await _supabase.from('applications').insert([{
-                user_id: currentUser.id,
-                email: email,
-                fullname: email.split('@')[0], 
-                service_type: 'Kurumsal Sağlık', // admin.html'deki 8. modül formunu tetikler
-                test_notes: `Hizmet: ${service} | Şirket: ${corpCode} (Sicil: ${empNo}) | Not: ${note}`,
-                appointment_type: apptType,
-                corporate_code: corpCode,
-                employee_number: empNo,
-                status: 'pending'
-            }]);
-
-            if (error) {
-                alert('Başvuru sırasında hata oluştu: ' + error.message);
-                btn.disabled = false;
-                btn.textContent = 'Başvuruyu Gönder';
-            } else {
-                document.getElementById('formContainer').style.display = 'none';
-                document.getElementById('corpStatus').style.display = 'block';
-            }
-        }
-
-        checkSession();
-    </script>
+    <footer>
+        © 2026 HELUNEXA. Tüm hakları saklıdır. Bu sayfa bir bilgilendirme ve yönlendirme ekranıdır.
+    </footer>
 </body>
 </html>
