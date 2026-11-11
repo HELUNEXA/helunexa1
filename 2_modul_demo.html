@@ -1,42 +1,103 @@
-<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HELUNEXA · Kronik Hastalık Takibi</title><style>
-:root{--ink:#0f172a;--muted:#64748b;--teal:#10b981;--teal-dark:#059669;--soft:#ecfdf5;--line:#e2e8f0;--bg:#f8fafc}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,-apple-system,sans-serif}header{height:94px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5vw}.brand{color:var(--teal);font-size:25px;font-weight:750;letter-spacing:2px;text-decoration:none;display:flex;align-items:center;gap:10px;}.brand img{height:50px;width:auto;}.brand span{display:block;font-size:10px;font-weight:400;letter-spacing:.4px;color:var(--muted)}.badge,.pill{border-radius:30px;background:var(--soft);color:var(--teal);font-size:10px;letter-spacing:1px;padding:7px 12px;display:inline-block}.shell{max-width:1280px;margin:auto;display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 94px)}aside{padding:42px 26px;border-right:1px solid var(--line)}.side-title,.eyebrow{font-size:10px;letter-spacing:1.5px;color:var(--teal);font-weight:650}nav{margin-top:24px;display:grid;gap:8px}button{font:inherit;cursor:pointer}nav button{background:none;border:0;text-align:left;padding:13px;border-radius:9px;color:var(--muted);display:flex;gap:18px}nav button.active{background:#e4eee6;color:var(--teal)}nav button span{font-weight:600}.side-note{border-top:1px solid var(--line);padding-top:24px;margin-top:50px;font-size:12px}.side-note p,.tiny{color:var(--muted)}.tiny{font-size:10px;line-height:1.7}.text-btn{display:block;background:transparent;border:0;padding:8px 0;color:var(--teal);font-size:12px}main{padding:40px 46px;max-width:960px;width:100%}h1{font-size:34px;font-weight:550;line-height:1.18;letter-spacing:-1.2px;margin:13px 0}h2{font-size:20px;font-weight:600;margin:0 0 6px}h3{font-size:15px;margin:0 0 10px}p{margin:8px 0 18px}.lead{color:var(--muted);max-width:580px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:25px;margin:20px 0}.card p{color:var(--muted);font-size:13px}.section-no{color:var(--teal);font-size:11px;margin-bottom:8px}.grid,.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.disease{border:1px solid var(--line);border-radius:11px;padding:17px;cursor:pointer;display:flex;align-items:center;gap:13px;margin:0}.disease:has(input:checked){border-color:var(--teal);background:#f0f6f1}.disease span{display:block}.disease small{display:block;color:var(--muted);font-size:11px;margin-top:3px}input[type=checkbox],input[type=radio]{accent-color:var(--teal);width:18px;height:18px;flex-shrink:0}label{display:block;font-size:12px;font-weight:500;margin:12px 0}input:not([type=radio]):not([type=checkbox]),select,textarea{font:inherit;display:block;width:100%;padding:11px 12px;border:1px solid #d3dfd6;border-radius:8px;background:white;color:var(--ink);margin-top:6px}textarea{min-height:80px;resize:vertical}input,select,textarea{max-width:100%}.radio{display:flex;align-items:center;gap:8px}.radio-group{display:flex;gap:24px}.primary,.secondary{border-radius:8px;padding:11px 18px;border:1px solid var(--teal);background:var(--teal);color:white;font-size:13px}.secondary{background:white;color:var(--teal);border-color:var(--line)}.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}.note{background:var(--soft);padding:15px 18px;border-radius:9px;color:#47685b;font-size:12px}.warning{background:#fbf2e6;color:#886028}.error{color:#a1382b;font-size:13px}.line{border-top:1px solid var(--line);padding:18px 0 0;margin-top:18px}.status{display:flex;justify-content:space-between;align-items:center;gap:15px}.small{font-size:12px;color:var(--muted)}.preserve{white-space:pre-wrap;overflow-wrap:anywhere}.row{display:flex;gap:10px;align-items:center;justify-content:space-between}.timeline{border-left:2px solid var(--line);padding-left:18px;margin:16px 0}.timeline p{font-size:12px}.empty{padding:40px 15px;text-align:center}#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 22px;background:var(--ink);color:white;border-radius:9px;display:none;z-index:10}button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #8ebdaf;outline-offset:3px}details summary{cursor:pointer;color:var(--teal)}button:disabled{opacity:.45;cursor:not-allowed}footer{font-size:10px;color:var(--muted);margin-top:24px}ul{padding-left:20px}@media(max-width:760px){header{height:80px;padding:0 20px}.brand{font-size:21px}.badge{font-size:8px}.shell{display:block}aside{padding:15px 20px;border-right:0;border-bottom:1px solid var(--line)}.side-title,.side-note,aside>.tiny{display:none}nav{display:flex;margin:0;gap:3px}nav button{padding:10px;font-size:12px;gap:7px}aside .text-btn{display:inline-block;margin:8px 15px 0 0;font-size:11px}main{padding:26px 20px}h1{font-size:29px}.card{padding:20px}.grid,.two{grid-template-columns:1fr}input:not([type=radio]):not([type=checkbox]),textarea,select{font-size:16px}.status{align-items:flex-start}.actions button{flex:1}.radio-group{flex-wrap:wrap;gap:10px 24px}}.wizard{display:flex;gap:14px;margin:25px 0 5px;color:var(--muted);font-size:12px}.wizard>span{flex:1;border-bottom:2px solid var(--line);padding-bottom:12px}.wizard b{font-size:11px;margin-right:6px}.wizard .current{border-color:var(--teal);color:var(--teal)}.helper{background:#f5f8f4;border:1px solid var(--line);border-radius:10px;padding:14px;margin:18px 0}.helper>summary{font-size:13px}.helper [role=status]{margin-top:12px}.helper p{font-size:12px}a{color:var(--teal)}.small a{overflow-wrap:anywhere}@media(max-width:760px){.wizard{gap:8px;font-size:11px}.wizard b{display:block;margin-bottom:3px}details>summary{min-height:40px;align-content:center}.helper{padding:12px}}.enabiz-box{display:flex;align-items:center;justify-content:space-between;gap:20px;background:var(--soft);padding:20px;border-radius:12px;margin:22px 0 10px}.enabiz-box p{margin-bottom:0;max-width:440px}.external-link{text-decoration:none;white-space:nowrap;display:inline-block}.result-choices{display:flex;gap:12px;flex-wrap:wrap;margin:23px 0}.report-row{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.report-row>a{flex:1;overflow-wrap:anywhere;font-size:13px}.report-row button{flex-shrink:0}@media(max-width:760px){.enabiz-box{display:block;padding:17px}.enabiz-box>a{margin-top:15px}.result-choices>button{flex:1}.report-row{gap:8px}}
-</style></head><body><header><a class="brand" href="./"><img src="logo.png" alt="HELUNEXA"><span>Sağlığınızın devamını düşünür.</span></a><span class="badge">MODÜL 02 · KRONİK TAKİP</span></header><div class="shell"><aside><div class="side-title">KRONİK HASTALIK TAKİBİ</div><nav aria-label="Ekranlar"><button data-view="patient" class="active">01 <span>Başvuru</span></button><button data-view="doctor">02 <span>Hekim paneli</span></button><button data-view="track">03 <span>Takibim</span></button></nav><div class="side-note"><b>Birlikte, düzenli takip.</b><p>Dört hastalık, tek başvuru.<br>Her hastalık için ayrı takip planı.</p></div><button class="text-btn" id="example">Örnek başvuru yükle ↗</button><button class="text-btn" id="reset">Sistemi sıfırla</button><p class="tiny">Girilen bilgiler bu açık sekmede tutulur; gerçek hekim hizmeti ve bildirim gönderimi yoktur.</p></aside><main id="main" tabindex="-1"></main></div><div id="toast" role="status" aria-live="polite"></div><script>
-(function(root){
-'use strict';
-const rules={dm:{stable:{months:6,text:'HbA1c; hedefte ve stabil hastada.'},uncontrolled:{months:3,text:'HbA1c; hedefte olmayan hastada.'},changed:{months:3,text:'HbA1c; tedavi değişikliğinden yaklaşık 3 ay sonra.'}},lip:{stable:{months:12,text:'Lipid profili; stabil tedavide yıllık.'},changed:{months:3,text:'Lipid profili ve transaminazlar.'}},ht:{stable:{months:12,text:'Kreatinin/eGFR, Na, K; stabil.'},changed:{days:14,text:'ACE inhibitörü/ARB başlangıcı sonrası.'}},thy:{stable:{months:12,text:'TSH; stabil hastada.'},changed:{days:56,text:'TSH; doz değişikliğinden sonra.'},pregnant:{days:28,text:'TSH; gebeliğin ilk yarısında.'}}};function valid(s){if(!/^\d{4}-\d{2}-\d{2}$/.test(s||''))return false;const d=new Date(s+'T12:00:00Z');return !Number.isNaN(+d)&&d.toISOString().slice(0,10)===s}function add(s,r){const d=new Date(s+'T12:00:00Z');if(r.months){const day=d.getUTCDate();d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()+r.months);const last=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate();d.setUTCDate(Math.min(day,last))}else d.setUTCDate(d.getUTCDate()+r.days);return d.toISOString().slice(0,10)}function calculate(k,scenario,base,today){const r=rules[k]?.[scenario];if(!r)return {error:'Önce klinik durumu belirleyin.'};if(!valid(base)||base>today)return {error:'Geçerli bir tarih girin.'};const due=add(base,r);return {due,date:due<today?today:due,overdue:due<today,text:r.text}}function recent(base,today){return valid(base)&&base<=today&&add(base,{months:3})>=today}const api={rules,valid,add,calculate,recent};if(typeof module!=='undefined')module.exports=api;else root.Followup=api;})(typeof window!=='undefined'?window:globalThis);
-</script><script>
-'use strict';
-const diseases={ht:{name:'Hipertansiyon',sub:'Ev tansiyon ölçümleri'},dm:{name:'Tip 2 diyabet',sub:'HbA1c ve tedavi takibi'},lip:{name:'Dislipidemi',sub:'Kolesterol takibi'},thy:{name:'Hipotiroidi',sub:'Tiroid tedavisi takibi'}};
-const labels={meds:'Kullanılan ilaçlar',satisfaction:'İlaç memnuniyeti',bp:'Ev tansiyon ölçümleri',thyDuration:'Tiroid ilacı süresi',thySurgery:'Tiroid operasyon öyküsü',pregnancy:'Gebelik durumu',glucose:'Ev şeker kayıtları',reportChoice:'Mevcut sonuçlar',results:'Sonuç notları'};
-const blank=()=>({step:1,selected:[],symptom:'',complaint:'',common:{},files:[],hba:{},status:'draft',plans:{},drafts:{},events:[],updates:[]});
-let state=blank(),view='patient';
-const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const today=()=>new Date().toLocaleDateString('en-CA',{timeZone:'Europe/Istanbul'});
-const dateTR=d=>Followup.valid(d)?new Date(d+'T12:00:00').toLocaleDateString('tr-TR'):'Belirlenmedi';
-const statusName={draft:'Taslak',awaiting:'Hekim değerlendirmesi bekliyor',exam:'Muayeneye yönlendirildi',info:'Ek bilgi bekleniyor',tests:'Tetkik sonucu bekleniyor',active:'Takip planı hazır',review:'Yeni bilgiler değerlendirme bekliyor'};
-function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';setTimeout(()=>$('#toast').style.display='none',3000)}
-function event(t){state.events.unshift({t,date:new Date().toLocaleString('tr-TR')})}
-function field(label,key,value='',type='text',group='common'){return `<label>${label}${type==='textarea'?`<textarea aria-label="${esc(label)}" data-group="${group}" data-key="${key}">${esc(value)}</textarea>`:`<input aria-label="${esc(label)}" type="${type}" ${type==='date'&&group==='common'?'max="'+today()+'"':''} data-group="${group}" data-key="${key}" value="${esc(value)}">`}</label>`}
-function common(label,key,type='text'){return field(label,key,state.common[key],type)}
-function select(label,key,options,group='common',value=state.common[key]){return `<label>${label}<select aria-label="${esc(label)}" data-group="${group}" data-key="${key}"><option value="">Seçiniz</option>${options.map(([v,t])=>`<option value="${v}" ${value===v?'selected':''}>${t}</option>`).join('')}</select></label>`}
-function heading(tag,title,desc){return `<div class="eyebrow">${tag}</div><h1>${title}</h1><p class="lead">${desc}</p>`}
-function pills(){return state.selected.map(k=>`<span class="pill">${diseases[k].name}</span>`).join(' ')}
-function render(){document.querySelectorAll('[data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===view);b.setAttribute('aria-current',b.dataset.view===view?'page':'false')});$('#main').innerHTML=view==='patient'?patient():view==='doctor'?doctor():track();bind()}
-function symptomSection(){return `<h2>Şu anda şikâyetiniz var mı?</h2><div class="radio-group">${[['no','Hayır, rutin kontrol'],['yes','Evet, şikâyetim var']].map(([v,t])=>`<label class="radio"><input type="radio" name="symptom" value="${v}" ${state.symptom===v?'checked':''}>${t}</label>`).join('')}</div>${state.symptom==='yes'?`<label>Şikâyetinizi kısaca yazın<textarea id="complaint">${esc(state.complaint)}</textarea></label><div class="note warning"><b>Muayeneye yönlendirelim.</b><br>Şikâyetiniz olduğunda muayene ile değerlendirme gerekir.</div>`:''}`}
-function patient(){const step=state.step;return heading('BAŞVURU · 01','Az soru, düzenli takip.','Yalnızca gerekli bilgileri paylaşın.')+`<div class="note">Veriler bu sekmede tutulur, sayfa yenilenince silinir. 18 yaş ve üzeri içindir.</div><div class="wizard" aria-label="Başvuru adımları">${['Takip alanı','İlaçlarım','Mevcut sonuçlar'].map((t,i)=>`<span class="${step===i+1?'current':''}"><b>${i+1}</b> ${t}</span>`).join('')}</div><form id="application">${step===1?`<section class="card"><h2>Hangi hastalıklar için takip istiyorsunuz?</h2><p>Birden fazla seçim yapabilirsiniz.</p><div class="grid">${Object.entries(diseases).map(([k,d])=>`<label class="disease"><input type="checkbox" name="disease" value="${k}" ${state.selected.includes(k)?'checked':''}><span>${d.name}<small>${d.sub}</small></span></label>`).join('')}</div><div class="line">${symptomSection()}</div></section>`:step===2?`<section class="card"><h2>Hangi ilaçları kullanıyorsunuz?</h2><p>İsimlerini yazmanız yeterli.</p>${common('Kullandığınız ilaçlar','meds','textarea')}${select('İlaçlarınızdan memnun musunuz?','satisfaction',[['Evet','Evet'],['Kısmen','Kısmen'],['Hayır','Hayır']])}${state.selected.includes('thy')?`<div class="line"><h3>Tiroid tedaviniz</h3>${common('Tiroid ilacınızı ne kadar süredir kullanıyorsunuz?','thyDuration')}${select('Tiroid ameliyatı geçirdiniz mi?','thySurgery',[['Evet','Evet'],['Hayır','Hayır']])}${select('Gebelik durumunuz','pregnancy',[['Yok','Gebelik yok'],['Var','Gebelik var'],['Bilmiyorum','Bilmiyorum']])}</div>`:''}</section>`:resultsStep()}<div id="formError" role="alert" class="error"></div><div class="actions">${step>1?'<button type="button" class="secondary" id="backStep">← Geri</button>':''}<button type="submit" class="primary">${step===1&&state.symptom==='yes'?'Muayeneye yönlendir →':step<3?'Devam et →':'Başvuruyu hekim paneline ilet →'}</button></div></form>${state.status!=='draft'?`<div class="card status"><div><span class="small">Başvuru durumu</span><h3>${statusName[state.status]}</h3></div><button class="secondary" data-go="track">Takibimi gör</button></div>`:''}<footer>HELUNEXA · Modül 2</footer>`}
-function reportList(removable){return state.files.map((f,i)=>`<div class="report-row"><a href="${esc(f.url)}" target="_blank" rel="noopener">${esc(f.name)} ↗</a><span class="small">${Math.max(1,Math.round(f.size/1024))} KB</span>${removable?`<button type="button" class="text-btn" data-remove-file="${i}" aria-label="Kaldır">Kaldır</button>`:''}</div>`).join('')}
-function resultsStep(){const hints={ht:'Hipertansiyon: böbrek/elektrolit',dm:'Diyabet: HbA1c',lip:'Dislipidemi: lipid',thy:'Hipotiroidi: TSH'};return `<section class="card"><h2>Son tahlilleriniz var mı?</h2><p>Raporları ekleyebilirsiniz.</p><div class="enabiz-box"><div><h3>Sonuçlarınıza e-Nabız’dan ulaşın</h3><p>Raporu PDF olarak indirin; ardından buraya dönüp ekleyin.</p></div><a class="secondary external-link" href="https://enabiz.gov.tr/" target="_blank" rel="noopener noreferrer">e-Nabız’ı aç ↗</a></div><div class="result-choices">${['Sonuçlarımı ekle','Şimdi yanımda değil'].map(t=>`<button type="button" class="${state.common.reportChoice===t?'primary':'secondary'}" data-report-choice="${t}" aria-pressed="${state.common.reportChoice===t}">${t}</button>`).join('')}</div>${state.common.reportChoice==='Sonuçlarımı ekle'?`<div class="line"><label>Rapor ekleyin<input type="file" id="files" multiple accept="application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png"></label>${reportList(true)}<div id="fileError" class="error" role="alert"></div></div>`:''}</section>`}
-function releaseFiles(){state.files.forEach(f=>URL.revokeObjectURL(f.url))}
-function attachFiles(files){const errors=[];for(const file of files){if(state.files.length>=10){errors.push('En çok 10 dosya.');break}if(!/\.(pdf|png|jpe?g)$/i.test(file.name)){errors.push('PDF, JPG veya PNG seçin.');continue}if(file.size>20*1024*1024||file.size===0){errors.push('Dosya 20 MB sınırını aşıyor.');continue}state.files.push({name:file.name,size:file.size,url:URL.createObjectURL(file)})}render();if($('#fileError'))$('#fileError').textContent=errors.join(' ')}
-function summary(){return `<section class="card"><div class="status"><h2>Başvuru özeti</h2><span class="pill">${statusName[state.status]}</span></div><p>${pills()}</p>${Object.entries(state.common).filter(([k,v])=>v&&labels[k]).map(([k,v])=>`<div class="line"><b>${labels[k]}</b><div class="preserve">${esc(v)}</div></div>`).join('')}${state.files.length?`<div class="line"><h3>Eklenen raporlar</h3>${reportList(false)}</div>`:''}</section>`}
-function empty(){return `<div class="card empty"><h2>Henüz başvuru yok.</h2><button class="primary" data-go="patient">Başvuruya git</button></div>`}
-const scenarios={dm:[['stable','Hedefte (6 ay)'],['uncontrolled','Hedefte değil (3 ay)'],['changed','Tedavi değişti (3 ay)']],lip:[['stable','Stabil (yıllık)'],['changed','Değişti (3 ay)']],ht:[['stable','Stabil (yıllık)'],['changed','Değişti (14 gün)']],thy:[['stable','Stabil (yıllık)'],['changed','Değişti (8 hafta)']]};
-function planCard(k){const d=state.drafts[k]||{},p=state.plans[k]||{};return `<section class="card"><h2>${diseases[k].name}</h2><details class="helper" ${d.scenario?'open':''}><summary>Kontrol tarihi kuralları</summary>${select('Klinik durum',k+'Scenario',scenarios[k],'draft',d.scenario)}${field('Dayanak tarihi',k+'Base',d.base||'', 'date','draft')}<button type="button" class="secondary" data-calculate="${k}">Tarih oluştur</button><div id="hint-${k}" class="small preserve" role="status">${esc(d.hint||'')}</div></details><div class="two">${field('Kontrol tarihi',k+'Date',d.date??p.date,'date','draft')}${field('Tetkikler',k+'Text',d.text??p.text,'textarea','draft')}</div></section>`}
-function doctor(){return heading('HEKİM PANELİ · 02','Kısa başvuru, kişisel takip.','Bilgileri değerlendirin.')+(state.status==='draft'?empty():state.status==='exam'?`<section class="card"><h2>Muayeneye yönlendirme</h2><p>${pills()}</p></section>`:summary()+`<form id="planForm">${state.selected.map(planCard).join('')}<section class="card"><div id="planError" class="error" role="alert"></div><div class="actions"><button class="primary" type="submit">Takip planını onayla ve hastaya ilet →</button></div></section></form>`)}
-function track(){return heading('TAKİBİM · 03','Takibiniz tek bir yerde.','Hekiminizin onayladığı planı görün.')+(state.status==='draft'?empty():`<div class="note status"><b>${statusName[state.status]}</b></div><div class="grid">${state.selected.map(k=>{const p=state.plans[k];return `<section class="card"><span class="section-no">${diseases[k].name.toLocaleUpperCase('tr-TR')}</span><h2>${p?dateTR(p.date):'Plan bekleniyor'}</h2><p>${p?esc(p.text):''}</p></section>`}).join('')}</div>`)}
-function error(t){$('#formError').textContent=t;$('#formError').scrollIntoView({block:'center'})}
-function captureDrafts(){document.querySelectorAll('[data-group="draft"]').forEach(el=>{const key=el.dataset.key,k=key.replace(/(Date|Text|Scenario|Base)$/,'');state.drafts[k]??={};state.drafts[k][key.slice(k.length).toLowerCase()]=el.value})}
-function bind(){document.querySelectorAll('[data-report-choice]').forEach(b=>b.onclick=()=>{state.common.reportChoice=b.dataset.reportChoice;render()});document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));document.querySelectorAll('[data-group="common"]').forEach(el=>el.oninput=()=>{state.common[el.dataset.key]=el.value});document.querySelectorAll('[data-group="draft"]').forEach(el=>el.oninput=()=>{captureDrafts()});document.querySelectorAll('[name=disease]').forEach(el=>el.onchange=()=>{state.selected=Array.from(document.querySelectorAll('[name=disease]:checked')).map(e=>e.value);render()});document.querySelectorAll('[name=symptom]').forEach(el=>el.onchange=()=>{state.symptom=el.value;render()});if($('#files'))$('#files').onchange=e=>attachFiles(Array.from(e.target.files));if($('#backStep'))$('#backStep').onclick=()=>{state.step--;render()};if($('#application'))$('#application').onsubmit=e=>{e.preventDefault();if(state.step===1){if(!state.selected.length)return error('Hastalık seçin.');if(!state.symptom)return error('Şikâyet durumu seçin.');if(state.symptom==='yes'){state.status='exam';go('track');return}state.step=2;render();return}if(state.step===2){state.step=3;render();return}state.status='awaiting';go('track')};document.querySelectorAll('[data-calculate]').forEach(b=>b.onclick=()=>{captureDrafts();const k=b.dataset.calculate,d=state.drafts[k]||{};const r=Followup.calculate(k,d.scenario,d.base,today());if(r.error){d.hint=r.error;render();return}d.date=r.date;d.text=r.text;state.drafts[k]=d;render()});if($('#planForm'))$('#planForm').onsubmit=e=>{e.preventDefault();captureDrafts();const plans={};for(const k of state.selected){const d=state.drafts[k]||{};if(!d.date||!d.text){$('#planError').textContent='Tarih ve tetkik girin.';return}plans[k]={date:d.date,text:d.text}}state.plans=plans;state.status='active';go('track')}}
-function go(v){if(view==='doctor')captureDrafts();view=v;render();window.scrollTo({top:0})}
-document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>go(b.dataset.view));$('#reset').onclick=()=>{releaseFiles();state=blank();go('patient')};$('#example').onclick=()=>{releaseFiles();state=blank();state.selected=Object.keys(diseases);state.symptom='no';state.common={meds:'Örnek ilaç listesi',satisfaction:'Evet',pregnancy:'Yok',reportChoice:'Şimdi yanımda değil'};state.status='awaiting';go('doctor')};render();
-</script></body></html>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELUNEXA · Kronik Hastalık Takibi İncelemesi</title>
+    <style>
+        :root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;--teal:#10b981;--teal-dark:#059669;--light:#ecfdf5}
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:-apple-system,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+        .header{background:#fff;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+        .logo-img{height:60px}
+        .nav a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;margin-left:20px}
+        .nav a:hover{color:var(--teal)}
+        .container{max-width:800px;margin:40px auto;padding:0 20px}
+        .title{text-align:center;margin-bottom:30px}
+        .title h1{font-size:32px;color:var(--ink)}
+        .title p{color:var(--muted);font-size:16px}
+        .step-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px;margin-bottom:20px;display:none; box-shadow: 0 4px 6px rgba(0,0,0,0.02); animation: fadeIn 0.5s ease-in-out;}
+        .step-card.active{display:block}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .step-badge{background:var(--light);color:var(--teal-dark);display:inline-block;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:15px}
+        .step-card h2{font-size:22px;margin-bottom:10px}
+        .step-card p.desc{color:var(--muted);font-size:14px;margin-bottom:20px}
+        .form-group{margin-bottom:15px}
+        label{display:block;font-weight:600;font-size:13px;margin-bottom:5px;color:#334155}
+        input,select,textarea{width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;font-family:inherit;font-size:14px;color:#64748b;cursor:not-allowed}
+        .nav-buttons{display:flex;justify-content:space-between;margin-top:30px;border-top:1px solid var(--line);padding-top:20px}
+        .btn{padding:12px 24px;border-radius:8px;font-weight:bold;font-size:14px;text-decoration:none;border:none;cursor:pointer;transition:0.2s}
+        .btn-next{background:var(--teal);color:white}
+        .btn-next:hover{background:var(--teal-dark)}
+        .btn-prev{background:#e2e8f0;color:#475569}
+        .btn-login{background:var(--ink);color:white;display:block;text-align:center;margin-top:20px}
+        .arrow { font-size: 18px; margin-left: 8px; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html"><img src="logo.png" alt="HELUNEXA" class="logo-img"></a>
+        <nav class="nav">
+            <a href="index.html">Ana Sayfa</a>
+            <a href="giris.html" style="color:var(--teal);">Sisteme Giriş</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="title">
+            <h1>2. Modül İncelemesi</h1>
+            <p>Kronik Hastalık Takibi süreci nasıl işliyor? (Adımları ilerleyerek görün)</p>
+        </div>
+
+        <div class="step-card active" id="step-1">
+            <span class="step-badge">ADIM 1 / HASTA BAŞVURUSU</span>
+            <h2>Hasta Ekranı</h2>
+            <p class="desc">Hasta takip edilmek istenen hastalıkları ve kullandığı ilaçları seçer.</p>
+            <div class="form-group"><label>Takip Edilecek Hastalıklar</label><input type="text" value="Tip 2 Diyabet, Hipertansiyon" disabled></div>
+            <div class="form-group"><label>Kullanılan İlaçlar</label><textarea disabled>Metformin 1000mg, Ramipril 5mg</textarea></div>
+            <div class="form-group"><label>Şikayet Durumu</label><input type="text" value="Hayır, rutin kontrol" disabled></div>
+            <div class="nav-buttons">
+                <span></span>
+                <button class="btn btn-next" onclick="nextStep(2)">Hekim Ekranını Gör <span class="arrow">→</span></button>
+            </div>
+        </div>
+
+        <div class="step-card" id="step-2">
+            <span class="step-badge">ADIM 2 / HEKİM DEĞERLENDİRMESİ</span>
+            <h2>Hekim Paneli (Takip Planı)</h2>
+            <p class="desc">Hekim, hastanın klinik durumuna göre kontrol tarihini ve istenecek tetkikleri belirler.</p>
+            <div class="form-group"><label>Diyabet Takibi (HbA1c)</label><input type="text" value="3 Ay Sonra (Kontrol)" disabled></div>
+            <div class="form-group"><label>Hipertansiyon Takibi (Böbrek/Elektrolit)</label><input type="text" value="1 Yıl Sonra (Stabil)" disabled></div>
+            <div class="form-group"><label>Hekim Notu</label><textarea disabled>Mevcut ilaçlara devam edilmesi uygun görüldü. 3 ay sonra HbA1c kontrolü planlandı.</textarea></div>
+            <div class="nav-buttons">
+                <button class="btn btn-prev" onclick="nextStep(1)">← Geri</button>
+                <button class="btn btn-next" onclick="nextStep(3)">Hasta Planını Gör <span class="arrow">→</span></button>
+            </div>
+        </div>
+
+        <div class="step-card" id="step-3">
+            <span class="step-badge">ADIM 3 / SONUÇ VE TAKİP</span>
+            <h2>Hasta Takip Planı</h2>
+            <p class="desc">Hekim onayladıktan sonra hasta kendi panelinde planını görür.</p>
+            <div style="background:var(--light); border-left:4px solid var(--teal); padding:15px; border-radius:8px; margin-bottom:15px;">
+                <h4 style="color:var(--teal-dark); margin-bottom:5px;">Hekim Planı Onaylandı</h4>
+                <p style="font-size:14px; margin:0;">Diyabet Kontrolü: <strong>3 Ay Sonra</strong></p>
+                <p style="font-size:14px; margin:5px 0 0 0;">Hipertansiyon Kontrolü: <strong>1 Yıl Sonra</strong></p>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-prev" onclick="nextStep(2)">← Geri</button>
+                <span></span>
+            </div>
+            <a href="giris.html" class="btn btn-login">Gerçek Sisteme Giriş Yap (Hasta / Hekim) →</a>
+        </div>
+    </div>
+
+    <script>
+        function nextStep(step) {
+            document.querySelectorAll('.step-card').forEach(card => card.classList.remove('active'));
+            document.getElementById('step-' + step).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
