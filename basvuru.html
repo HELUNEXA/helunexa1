@@ -25,6 +25,11 @@
         .dynamic-box { display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6; margin-bottom: 15px; }
         .dynamic-box h4 { color: #1e40af; font-size: 14px; margin-bottom: 12px; }
         
+        /* DOSYA YÜKLEME STİLLERİ */
+        .file-upload-box { background: #fef3c7; padding: 15px; border-radius: 8px; margin-top: 10px; border-left: 4px solid #f59e0b; }
+        .file-upload-box label { color: #92400e; font-size: 13px; }
+        .file-preview { margin-top: 10px; padding: 10px; background: white; border-radius: 6px; font-size: 13px; color: #475569; display: none; }
+
         .payment-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .payment-overlay.active { display: flex; }
         .payment-modal { background: white; border-radius: 12px; max-width: 450px; width: 100%; padding: 30px; max-height: 90vh; overflow-y: auto; }
@@ -98,7 +103,32 @@
                 </div>
             </div>
 
-            <!-- RANDEVU TARİHİ VE SAATİ (Tüm modüller için) -->
+            <!-- TAHLİL DURUMU VE YERİ -->
+            <div class="form-group" style="background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:15px;">
+                <label for="test_status" style="color:#0f172a;">🔬 Tahlil Durumu *</label>
+                <select id="test_status" required style="margin-bottom:12px;">
+                    <option value="">Seçiniz</option>
+                    <option value="have_results">📄 Mevcut sonuçlarım var (yükleyeceğim)</option>
+                    <option value="need_test">🔬 Yeni tahlil yaptıracağım</option>
+                </select>
+
+                <div id="testLocationGroup" style="display:none;">
+                    <label for="test_location" style="color:#0f172a;">📍 Tahlil Yeri *</label>
+                    <select id="test_location">
+                        <option value="">Seçiniz</option>
+                        <option value="vitalab">🏥 VitaLab Sağlık Laboratuvarı (Anlaşmalı)</option>
+                        <option value="own_lab">🔬 Kendi laboratuvarım</option>
+                    </select>
+                </div>
+
+                <div class="file-upload-box" id="fileUploadBox" style="display:none;">
+                    <label>📎 Mevcut Sonuçlarınızı Yükleyin</label>
+                    <input type="file" id="test_file" accept=".pdf,.jpg,.jpeg,.png" style="margin-top: 8px; background: white;">
+                    <div class="file-preview" id="filePreview"></div>
+                </div>
+            </div>
+
+            <!-- RANDEVU TARİHİ VE SAATİ -->
             <div id="appointmentBox" style="display:none; background:#ecfdf5; padding:15px; border-radius:8px; border-left:4px solid #10b981; margin-bottom:15px;">
                 <h4 style="color:#065f46; font-size:14px; margin-bottom:12px;">📅 Tercih Ettiğiniz Randevu (İsteğe Bağlı)</h4>
                 <div class="form-group"><label for="appointmentDate">Randevu Tarihi</label><input type="date" id="appointmentDate" min=""></div>
@@ -203,6 +233,17 @@
             if (val) document.getElementById('appointmentBox').style.display = 'block';
         });
 
+        document.getElementById('test_status').addEventListener('change', function() {
+            const value = this.value;
+            document.getElementById('fileUploadBox').style.display = (value === 'have_results') ? 'block' : 'none';
+            document.getElementById('testLocationGroup').style.display = (value === 'need_test') ? 'block' : 'none';
+        });
+
+        document.getElementById('test_file').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) { document.getElementById('filePreview').textContent = '✅ ' + file.name; document.getElementById('filePreview').style.display = 'block'; }
+        });
+
         async function checkSession() {
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) { 
@@ -231,7 +272,7 @@
             // 7 ve 8. modül için randevu tipini al
             const apptType = document.getElementById('appointment_type').value;
             
-            // ✅ Saat bilgisini al (Butonun çalışması için kritik)
+            // ✅ Saat bilgisini al
             const apptTime = document.getElementById('appointmentTime').value;
 
             // FORMU DOLDUR VE VERİTABANINA GÖNDER
@@ -243,6 +284,9 @@
                 service_type: service,
                 appointment_type: (service === 'Gebelik Takibi' || service === 'Kurumsal Sağlık') ? apptType : 'Belirtilmedi',
                 appointment_time: apptTime, // ✅ Saat kaydediliyor
+                appointment_date: document.getElementById('appointmentDate').value || null,
+                test_status: document.getElementById('test_status').value,
+                test_location: document.getElementById('test_location') ? document.getElementById('test_location').value : null,
                 medical_history: document.getElementById('medical_history').value.trim(),
                 test_notes: document.getElementById('test_notes').value.trim(),
                 status: 'pending',
@@ -250,6 +294,10 @@
                 corporate_code: document.getElementById('corporate_code').value.trim(),
                 employee_number: document.getElementById('employee_number').value.trim()
             };
+
+            // Modül özel notlarını test_notes'a ekle
+            if (service === 'İlaç Raporu Yenileme') pendingFormData.test_notes = "İlaç: " + document.getElementById('rx_meds').value;
+            if (service === 'Longevity Takibi') pendingFormData.test_notes = "Hedef: " + document.getElementById('long_goals').value;
 
             document.getElementById('paymentPatient').textContent = pendingFormData.fullname;
             document.getElementById('paymentService').textContent = service;
