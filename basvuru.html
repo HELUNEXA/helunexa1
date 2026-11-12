@@ -80,8 +80,7 @@
                 </select>
             </div>
 
-            <!-- box_chronic SİLİNDİ - artık kronik-takip.html'e yönlendiriliyor -->
-
+            <!-- DİĞER MODÜLLER İÇİN UZUN FORMLAR -->
             <div id="box_prescription" class="dynamic-box"><h4>📄 İlaç Raporu Yenileme</h4><div class="form-group"><label for="rx_disease">Hastalık *</label><input type="text" id="rx_disease" placeholder="Örn: Astım"></div><div class="form-group"><label for="rx_meds">Kullanılan İlaçlar *</label><textarea id="rx_meds" rows="2" placeholder="İlaç adları..."></textarea></div><div class="form-group"><label for="rx_end_date">Rapor Bitiş Tarihi *</label><input type="date" id="rx_end_date"></div></div>
             <div id="box_longevity" class="dynamic-box"><h4>🧬 Longevity / Sağlıklı Yaş Alma</h4><div class="form-group"><label for="long_goals">Sağlık hedefleriniz nelerdir? *</label><textarea id="long_goals" rows="2" placeholder="Örn: Daha enerjik hissetmek..."></textarea></div></div>
             <div id="box_cancer" class="dynamic-box" style="border-left-color: #8b5cf6;"><h4 style="color: #6b21a8;">🔬 Kanser Tarama Anketi</h4><div class="form-group"><label for="cs_gender">Cinsiyetiniz *</label><select id="cs_gender"><option value="">Seçiniz</option><option value="female">Kadın</option><option value="male">Erkek</option></select></div><div class="form-group"><label for="cs_smoking">Sigara kullanımınız? *</label><select id="cs_smoking"><option value="">Seçiniz</option><option value="none">Hiç kullanmadım</option><option value="current">Kullanıyorum</option><option value="former">Bıraktım</option></select></div><div class="form-group"><label for="cs_family">Ailenizde kanser var mı? *</label><select id="cs_family"><option value="">Seçiniz</option><option value="no">Hayır</option><option value="yes">Evet</option></select></div></div>
@@ -99,10 +98,30 @@
                 </div>
             </div>
 
+            <!-- RANDEVU TARİHİ VE SAATİ (Tüm modüller için) -->
             <div id="appointmentBox" style="display:none; background:#ecfdf5; padding:15px; border-radius:8px; border-left:4px solid #10b981; margin-bottom:15px;">
-                <h4 style="color:#065f46; font-size:14px; margin-bottom:12px;">📅 Tercih Ettiğiniz Randevu Tarihi (İsteğe Bağlı)</h4>
+                <h4 style="color:#065f46; font-size:14px; margin-bottom:12px;">📅 Tercih Ettiğiniz Randevu (İsteğe Bağlı)</h4>
                 <div class="form-group"><label for="appointmentDate">Randevu Tarihi</label><input type="date" id="appointmentDate" min=""></div>
-<div class="form-group"><label for="appointmentTime">Tercih Ettiğiniz Saat</label><input type="time" id="appointmentTime"></div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="appointmentTime">Randevu Saati</label>
+                    <select id="appointmentTime" style="cursor:pointer;">
+                        <option value="">Saat Seçiniz</option>
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:30">13:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group"><label for="medical_history">Tıbbi Geçmiş</label><textarea id="medical_history" rows="3" placeholder="Mevcut hastalıklar, kullanılan ilaçlar..."></textarea></div>
@@ -118,6 +137,7 @@
         </form>
     </div>
 
+    <!-- HASTANE YÖNLENDİRME MODALI -->
     <div class="payment-overlay" id="paymentModal">
         <div class="payment-modal">
             <div class="step-indicator"><div class="step done"><span class="step-num">✓</span> Bilgiler</div><div class="divider"></div><div class="step active"><span class="step-num">2</span> Yönlendirme</div></div>
@@ -158,7 +178,7 @@
         document.getElementById('service_type').addEventListener('change', function() {
             const val = this.value;
 
-            // ✅ YENİ: Kronik Hastalık Takibi → özel forma yönlendir
+            // ✅ Kronik Hastalık Takibi seçilirse özel forma yönlendir
             if (val === 'Kronik Hastalık Takibi') {
                 window.location.href = 'kronik-takip.html';
                 return;
@@ -179,7 +199,7 @@
                 document.getElementById('box_appointment_b2b').style.display = 'block';
             }
 
-            // Randevu tarihi kutusu
+            // Randevu tarihi ve saat kutusunu göster
             if (val) document.getElementById('appointmentBox').style.display = 'block';
         });
 
@@ -208,8 +228,13 @@
             const service = document.getElementById('service_type').value;
             if (!service) return alert('Lütfen hizmet seçin.');
 
-           const apptTime = document.getElementById('appointmentTime').value;
+            // 7 ve 8. modül için randevu tipini al
+            const apptType = document.getElementById('appointment_type').value;
+            
+            // ✅ Saat bilgisini al (Butonun çalışması için kritik)
+            const apptTime = document.getElementById('appointmentTime').value;
 
+            // FORMU DOLDUR VE VERİTABANINA GÖNDER
             pendingFormData = {
                 user_id: currentUser.id, email: currentUser.email,
                 fullname: document.getElementById('fullname').value.trim(),
@@ -217,7 +242,7 @@
                 phone: document.getElementById('phone').value.trim(),
                 service_type: service,
                 appointment_type: (service === 'Gebelik Takibi' || service === 'Kurumsal Sağlık') ? apptType : 'Belirtilmedi',
-                appointment_time: apptTime, // ✅ YENİ: Saat bilgisi eklendi
+                appointment_time: apptTime, // ✅ Saat kaydediliyor
                 medical_history: document.getElementById('medical_history').value.trim(),
                 test_notes: document.getElementById('test_notes').value.trim(),
                 status: 'pending',
