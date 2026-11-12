@@ -2,23 +2,15 @@
 <html lang="tr" translate="no">
 <head>
     <meta charset="UTF-8">
-    <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HELUNEXA - Hasta Paneli</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, Arial, sans-serif; background: #f1f5f9; color: #0f172a; }
         .header { background: white; padding: 15px 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-        .header-left { display: flex; align-items: center; gap: 15px; }
         .header-left img { height: 100px; width: auto; }
-        .user-info { display: flex; align-items: center; gap: 15px; }
-        
-        .user-name { font-size: 15px; color: #0f172a; font-weight: bold; }
-        
-        .logout-btn { background: #ef4444; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
-        .logout-btn:hover { background: #dc2626; }
+        .logout-btn { background: #ef4444; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .container { max-width: 1000px; margin: 0 auto; padding: 30px; }
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
@@ -27,62 +19,35 @@
         .section-title { font-size: 18px; margin-bottom: 15px; color: #0f172a; }
         .table-container { background: white; border-radius: 10px; overflow-x: auto; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; }
-        th { background: #f8fafc; padding: 14px 15px; text-align: left; font-size: 12px; color: #64748b; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f8fafc; padding: 14px 15px; text-align: left; font-size: 12px; color: #64748b; border-bottom: 1px solid #e2e8f0; }
         td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-        tr:hover { background: #f8fafc; }
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
         .badge.pending { background: #fef3c7; color: #92400e; }
-        .badge.paid { background: #dbeafe; color: #1e40af; }
         .badge.in_progress { background: #dbeafe; color: #1e40af; }
         .badge.completed { background: #d1fae5; color: #065f46; }
-        .badge.cancelled { background: #fee2e2; color: #991b1b; }
-        .empty-state { padding: 60px 20px; text-align: center; color: #94a3b8; }
-        .btn { display: inline-block; background: #10b981; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; }
-        .btn:hover { background: #059669; }
         .action-btn { padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 13px; }
-        .action-btn:hover { background: #059669; }
+        .empty-state { padding: 60px 20px; text-align: center; color: #94a3b8; }
+        .btn { display: inline-block; background: #10b981; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px; border: none; cursor: pointer; }
+        
+        /* DURUM TAKİP ÇUBUĞU */
+        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 25px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .progress-step { flex: 1; text-align: center; position: relative; font-size: 12px; color: #94a3b8; font-weight: bold; }
+        .progress-step::before { content: ''; display: block; width: 20px; height: 20px; background: #e2e8f0; border-radius: 50%; margin: 0 auto 8px; }
+        .progress-step.active { color: #10b981; }
+        .progress-step.active::before { background: #10b981; box-shadow: 0 0 0 4px #d1fae5; }
+
+        /* MODAL */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal { background: white; border-radius: 12px; max-width: 650px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 25px; }
-        
-        /* YENİ EKLENEN AÇIKLAMA KUTULARI */
-        .prescribed-test-item { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 15px; margin-bottom: 10px; }
-        .prescribed-test-item .test-name { font-weight: bold; font-size: 14px; color: #0f172a; display: block; }
-        .edu-box { margin-top: 5px; }
         .edu-box summary { font-size: 11px; color: #3b82f6; cursor: pointer; font-weight: bold; display: inline-block; }
-        .edu-box p { font-size: 12px; color: #64748b; line-height: 1.6; margin-top: 6px; padding: 10px; background: white; border-left: 3px solid #3b82f6; border-radius: 4px; }
-        .edu-box a { font-size: 10px; text-decoration: underline; text-underline-offset: 3px; color: #3b82f6; font-weight: bold; display: inline-block; margin-top: 5px; }
-        
-        @media (max-width: 768px) {
-            .header { padding: 10px 15px; flex-wrap: wrap; gap: 10px; }
-            .header-left { gap: 10px; }
-            .header-left img { height: 70px; }
-            .user-info { flex-wrap: wrap; gap: 8px; }
-            .container { padding: 15px; }
-            .stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-            .stat-card { padding: 15px; }
-            .stat-card .num { font-size: 22px; }
-            .stat-card .label { font-size: 11px; }
-            .section-title { font-size: 16px; }
-            .btn { padding: 10px 16px; font-size: 13px; }
-            table { min-width: 700px; }
-            th, td { padding: 10px 8px; font-size: 12px; white-space: nowrap; }
-            .modal { max-width: 100%; padding: 20px; }
-        }
-        
-        @media print {
-            body * { visibility: hidden; }
-            .modal, .modal * { visibility: visible; }
-            .modal { position: absolute; left: 0; top: 0; width: 100%; max-width: 100%; box-shadow: none; border: none; }
-            .no-print { display: none !important; }
-        }
+        .edu-box p { font-size: 12px; color: #64748b; margin-top: 6px; padding: 10px; background: white; border-left: 3px solid #3b82f6; border-radius: 4px; }
+        @media (max-width: 768px) { .header { padding: 10px 15px; flex-wrap: wrap; } .container { padding: 15px; } .progress-bar { flex-direction: column; gap: 15px; } .progress-step::before { margin: 0 auto 5px; } }
     </style>
 </head>
-<body class="notranslate">
+<body>
     <div class="header">
-        <div class="header-left">
-            <img src="logo.png" alt="HELUNEXA">
-        </div>
+        <div class="header-left"><img src="logo.png" alt="HELUNEXA"></div>
         <div class="user-info">
             <span id="userNameDisplay" class="user-name">Yükleniyor...</span>
             <button class="logout-btn" id="logoutBtn">Çıkış</button>
@@ -99,11 +64,7 @@
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
             <h3 class="section-title">Başvurularım</h3>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <a href="basvuru.html" class="btn">+ Yeni Başvuru</a>
-                <a href="longevity.html" class="btn" style="background:#8b5cf6;">🧬 Longevity</a>
-                <a href="psikolojik.html" class="btn" style="background:#3b82f6;">🧠 Psikolojik Destek</a>
-            </div>
+            <a href="basvuru.html" class="btn">+ Yeni Başvuru</a>
         </div>
 
         <div class="table-container">
@@ -115,9 +76,9 @@
 
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;" class="no-print">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h3 id="modalTitle" style="font-size:18px;">Başvuru Detayı</h3>
-                <button onclick="closeModal()" style="background:none; border:none; font-size:24px; cursor:pointer; color:#64748b;">×</button>
+                <button onclick="closeModal()" style="background:none; border:none; font-size:24px; cursor:pointer;">×</button>
             </div>
             <div id="modalBody"></div>
         </div>
@@ -126,48 +87,16 @@
     <script>
         const supabaseUrl = 'https://grbjmhknmlheoyknmyhd.supabase.co';
         const supabaseKey = 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p';
-        const _supabase = supabase.createClient(supabaseUrl, supabaseKey, {
-            auth: { persistSession: true, storageKey: 'helunexa-hasta-auth' }
-        });
+        const _supabase = supabase.createClient(supabaseUrl, supabaseKey, { auth: { persistSession: true, storageKey: 'helunexa-hasta-auth' } });
 
         let allApps = [];
         let currentUserEmail = '';
 
-        // HASTANIN TETKİKLERİN AÇIKLAMASINI GÖREBİLMESİ İÇİN KÜTÜPHANE
-        const TEST_DESCRIPTIONS = {
-            "Hepatit B · HBsAg / anti-HBs / total anti-HBc": { desc: "Hepatit B virüsüyle mevcut veya geçmiş karşılaşmayı ve bağışıklık durumunu değerlendirir.", url: "https://www.cdc.gov/hepatitis-b/hcp/diagnosis-testing/index.html" },
-            "Anti-HCV": { desc: "Hepatit C virüsüne karşı oluşan antikorları araştırarak virüsle karşılaşma hakkında bilgi verir.", url: "https://www.cdc.gov/hepatitis-c/hcp/diagnosis-testing/index.html" },
-            "Hemogram": { desc: "Alyuvarları, akyuvarları ve trombositleri inceler. Kansızlık ve bağışıklık hücrelerindeki değişiklikler hakkında bilgi sağlar.", url: "https://medlineplus.gov/lab-tests/complete-blood-count-cbc/" },
-            "Ferritin": { desc: "Vücudun demir depoları hakkında bilgi verir. Demir eksikliğinin değerlendirilmesinde kullanılır.", url: "https://medlineplus.gov/lab-tests/ferritin-blood-test/" },
-            "Transferrin satürasyonu / demir bağlama kapasitesi": { desc: "Demirin kanda taşınmasını ve taşıyıcı proteinlerin demirle doluluk oranını değerlendirir.", url: "https://medlineplus.gov/lab-tests/iron-tests/" },
-            "Açlık plazma glukozu ve HbA1c": { desc: "Açlık glukozu anlık kan şekerini, HbA1c ise son 2-3 aylık ortalama kan şekerini yansıtır.", url: "https://medlineplus.gov/lab-tests/diabetes-tests/" },
-            "Ürik asit": { desc: "Pürin maddelerinin yıkımıyla oluşan ürik asidin kandaki düzeyini ölçer. Gut hastalığı için önemlidir.", url: "https://medlineplus.gov/lab-tests/uric-acid-test/" },
-            "Lipid profili": { desc: "Total kolesterol, LDL, HDL ve trigliserid düzeylerini değerlendirir. Kalp ve damar hastalığı riskini gösterir.", url: "https://medlineplus.gov/lab-tests/cholesterol-levels/" },
-            "Kreatinin / eGFR": { desc: "Kreatinin üzerinden hesaplanan eGFR, böbreklerin kanı süzme kapasitesini tahmin etmeye yardımcı olur.", url: "https://medlineplus.gov/lab-tests/creatinine-test/" },
-            "TSH": { desc: "Hipofiz bezinden salgılanan ve tiroid bezini uyaran TSH hormonunu ölçer. Tiroidin çalışma düzenini gösterir.", url: "https://medlineplus.gov/lab-tests/tsh-thyroid-stimulating-hormone-test/" },
-            "D vitamini · 25-OH D": { desc: "D vitamini, kalsiyum emilimi ve kemik sağlığında görev alır. Vücuttaki D vitamini durumunu gösterir.", url: "https://medlineplus.gov/lab-tests/vitamin-d-test/" },
-            "Vitamin B12": { desc: "Kan hücresi yapımı ve sinir sistemi işlevlerinde görevli B12 vitamininin düzeyini değerlendirir.", url: "https://medlineplus.gov/lab-tests/vitamin-b-test/" },
-            "CRP": { desc: "İltihabi süreçlerde karaciğerin ürettiği CRP proteinini ölçer. Vücuttaki iltihabi etkinlik hakkında bilgi verir.", url: "https://medlineplus.gov/lab-tests/c-reactive-protein-crp-test/" },
-            "Tam idrar tahlili": { desc: "İdrarın fiziksel ve kimyasal özelliklerini inceler. Kan, protein, glukoz gibi bulgular hakkında bilgi sağlar.", url: "https://medlineplus.gov/ency/article/003579.htm" },
-            "Açlık insülini / HOMA-IR": { desc: "Açlık insülini ve glukozu kullanılarak hesaplanan HOMA-IR, insülin direnci hakkında bilgi verir.", url: "https://medlineplus.gov/lab-tests/insulin-in-blood-test/" },
-            "Serbest T4": { desc: "Tiroidin ürettiği tiroksin hormonunun kanda serbest dolaşan kısmını ölçer.", url: "https://medlineplus.gov/lab-tests/thyroxine-t4-test/" },
-            "ALT": { desc: "Karaciğer hücrelerinde bulunan bir enzimdir. Karaciğer hasarının değerlendirilmesinde kullanılır.", url: "https://medlineplus.gov/lab-tests/alt-blood-test/" },
-            "AST": { desc: "Karaciğer, kas ve diğer dokularda bulunur. Hücre hasarının değerlendirilmesine yardımcı olur.", url: "https://medlineplus.gov/lab-tests/ast-test/" },
-            "Magnezyum": { desc: "Kas, sinir ve enzim sistemlerinde görev alır. Mineral dengesinin değerlendirilmesinde kullanılır.", url: "https://medlineplus.gov/lab-tests/magnesium-blood-test/" },
-            "Çinko": { desc: "Bağışıklık ve yara iyileşmesinde rol oynar. Çinko seviyesinin değerlendirilmesinde kullanılır.", url: "https://ods.od.nih.gov/factsheets/Zinc-HealthProfessional/" }
-        };
-
         async function checkSession() {
-            await new Promise(r => setTimeout(r, 1000)); 
-            
             const { data: { session } } = await _supabase.auth.getSession();
             if (session) {
                 currentUserEmail = session.user.email;
-                
-                const { data: roleData } = await _supabase.from('user_roles').select('display_name').eq('user_id', session.user.id).maybeSingle();
-                const name = roleData?.display_name || currentUserEmail.split('@')[0];
-                
-                document.getElementById('userNameDisplay').textContent = '👤 ' + name;
+                document.getElementById('userNameDisplay').textContent = '👤 ' + currentUserEmail.split('@')[0];
                 loadApplications(currentUserEmail);
             } else {
                 window.location.replace('giris.html');
@@ -175,58 +104,31 @@
         }
 
         async function loadApplications(email) {
-            const { data, error } = await _supabase
-                .from('applications').select('*').eq('email', email).order('created_at', { ascending: false });
+            const { data, error } = await _supabase.from('applications').select('*').eq('email', email).order('created_at', { ascending: false });
             const container = document.getElementById('tableContent');
-            if (error) { container.innerHTML = '<div class="empty-state">Hata: ' + error.message + '</div>'; return; }
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div class="empty-state">Henüz başvurunuz yok. Yukarıdan yeni başvuru yapabilirsiniz.</div>';
-                updateStats([]); return;
+            if (error || !data || data.length === 0) {
+                container.innerHTML = '<div class="empty-state">Henüz başvurunuz yok.</div>';
+                return;
             }
             allApps = data; updateStats(data); renderTable(data);
         }
 
         function updateStats(data) {
             document.getElementById('statTotal').textContent = data.length;
-            document.getElementById('statPending').textContent = data.filter(a => a.status === 'pending' || !a.status || a.status === 'paid').length;
+            document.getElementById('statPending').textContent = data.filter(a => a.status === 'pending' || !a.status).length;
             document.getElementById('statProgress').textContent = data.filter(a => a.status === 'in_progress').length;
             document.getElementById('statCompleted').textContent = data.filter(a => a.status === 'completed').length;
         }
 
-        function formatAppointment(app) {
-            if (!app.appointment_date) return '—';
-            const d = new Date(app.appointment_date);
-            const formatted = d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', year: 'numeric' });
-            return formatted + ' · ' + (app.appointment_time || '—');
-        }
-
-        function aptStatusBadge(status) {
-            const map = {
-                'pending': ['⏳ Onay Bekliyor', 'pending'],
-                'confirmed': ['✅ Onaylandı', 'completed'],
-                'changed': ['🔄 Değiştirildi', 'in_progress'],
-                'cancelled': ['❌ İptal Edildi', 'cancelled']
-            };
-            if (!status) return '';
-            const [text, cls] = map[status] || [status, ''];
-            return `<span class="badge ${cls}">${text}</span>`;
-        }
-
         function renderTable(data) {
-            let html = `<table><thead><tr><th>Tarih</th><th>Hizmet</th><th>Randevu</th><th>Durum</th><th>İşlemler</th></tr></thead><tbody>`;
+            let html = `<table><thead><tr><th>Tarih</th><th>Hizmet</th><th>Durum</th><th>İşlemler</th></tr></thead><tbody>`;
             data.forEach(app => {
-                const date = new Date(app.created_at).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' });
+                const date = new Date(app.created_at).toLocaleDateString('tr-TR');
                 const status = app.status || 'pending';
-                const statusText = { pending: 'Bekliyor', paid: 'Ödendi', in_progress: 'İşlemde', completed: 'Tamamlandı', cancelled: 'İptal' }[status] || status;
-
-                const aptInfo = app.appointment_date
-                    ? `<div style="font-size:13px;">📅 ${formatAppointment(app)}<br><small>${aptStatusBadge(app.appointment_status)}</small></div>`
-                    : '<span style="color:#94a3b8;">—</span>';
-
+                const statusText = { pending: 'Başvuru Alındı', in_progress: 'Hekim İnceliyor', completed: 'Tamamlandı' }[status] || status;
                 html += `<tr>
                     <td>${date}</td>
                     <td>${app.service_type || '-'}</td>
-                    <td>${aptInfo}</td>
                     <td><span class="badge ${status}">${statusText}</span></td>
                     <td><button class="action-btn" onclick="openDetail(${app.id})">Detay</button></td>
                 </tr>`;
@@ -238,96 +140,57 @@
         window.openDetail = function(id) {
             const app = allApps.find(a => a.id === id);
             if (!app) return;
-            const date = new Date(app.created_at).toLocaleString('tr-TR');
-            const status = app.status || 'pending';
-            const statusText = { pending: 'Bekliyor', paid: 'Ödendi', in_progress: 'İşlemde', completed: 'Tamamlandı', cancelled: 'İptal' }[status] || status;
             document.getElementById('modalTitle').textContent = app.service_type || 'Başvuru Detayı';
 
-            // Hekimin onayladığı tetkikleri bul (Nihai reçete kısmından)
-            let prescribedTests = [];
-            let testsHtml = '';
-            
-            if (app.prescription) {
-                prescribedTests = app.prescription.split('\n').map(t => t.trim()).filter(t => t !== '');
-                if (prescribedTests.length === 0) prescribedTests = app.prescription.split(',').map(t => t.trim()).filter(t => t !== '');
-            }
+            const status = app.status || 'pending';
+            let progressHtml = `
+                <div class="progress-bar">
+                    <div class="progress-step active">1. Başvuru Alındı</div>
+                    <div class="progress-step ${status !== 'pending' ? 'active' : ''}">2. Hekim İnceliyor</div>
+                    <div class="progress-step ${status === 'completed' ? 'active' : ''}">3. Plan Hazır</div>
+                </div>
+            `;
 
-            if (prescribedTests.length > 0) {
-                testsHtml = `
-                    <div style="background:#eff6ff; padding:15px; border-radius:8px; border-left:4px solid #3b82f6; margin-bottom:15px;">
-                        <label style="font-size:12px; color:#1e40af; text-transform:uppercase; font-weight:bold;">🧪 Hekimin İstediği Tetkikler</label>
-                        <div style="margin-top:10px;">
-                            ${prescribedTests.map(testName => {
-                                const info = TEST_DESCRIPTIONS[testName];
-                                const descHtml = info ? `
-                                    <details class="edu-box">
-                                        <summary>Neyi değerlendirir?</summary>
-                                        <p>${info.desc} ${info.url ? `<br><a href="${info.url}" target="_blank" rel="noopener noreferrer">Tıbbi Kaynak ↗</a>` : ''}</p>
-                                    </details>
-                                ` : '';
-                                return `<div class="prescribed-test-item"><span class="test-name">${testName}</span>${descHtml}</div>`;
-                            }).join('')}
-                        </div>
-                    </div>
-                `;
-            } else {
-                testsHtml = `<div style="background:#f8fafc; padding:15px; border-radius:8px; border-left:4px solid #cbd5e1; margin-bottom:15px; font-size:13px; color:#64748b;">Hekiminiz henüz bir tetkik istemedi veya not olarak ekledi.</div>`;
-            }
+            let evalHtml = app.evaluation ? `
+                <div style="background:#eff6ff; padding:15px; border-radius:8px; border-left:4px solid #3b82f6; margin-bottom:15px;">
+                    <label style="font-size:12px; color:#1e40af; font-weight:bold;">🩺 Hekim Değerlendirmesi</label>
+                    <div style="font-size:14px; margin-top:8px;">${app.evaluation}</div>
+                </div>` : '';
 
-            let appointmentHtml = '';
-            if (app.appointment_date) {
-                const d = new Date(app.appointment_date);
-                const formattedDate = d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric', weekday: 'long' });
-                appointmentHtml = `
-                    <div style="background:#ecfdf5; padding:15px; border-radius:8px; border-left:4px solid #10b981; margin-bottom:15px;">
-                        <label style="font-size:12px; color:#065f46; text-transform:uppercase; font-weight:bold;">📅 Randevunuz</label>
-                        <div style="font-size:15px; margin-top:10px; line-height:1.8;">
-                            <strong>Tarih:</strong> ${formattedDate}<br>
-                            <strong>Saat:</strong> ${app.appointment_time || '-'}<br>
-                            <strong>Tür:</strong> 💻 Online Görüşme<br>
-                            <strong>Durum:</strong> ${aptStatusBadge(app.appointment_status)}
-                        </div>
-                    </div>
-                `;
+            let medDetailsHtml = '';
+            if (app.medical_details) {
+                try {
+                    const d = typeof app.medical_details === 'string' ? JSON.parse(app.medical_details) : app.medical_details;
+                    let detailsStr = '';
+                    if (d.week) detailsStr += `<strong>Gebelik Haftası:</strong> ${d.week}<br>`;
+                    if (d.gravida) detailsStr += `<strong>Gravida/Parite:</strong> ${d.gravida}<br>`;
+                    if (d.pregnancy_note) detailsStr += `<strong>Risk Durumu:</strong> ${d.pregnancy_note}<br>`;
+                    if (d.corp_code) detailsStr += `<strong>Şirket Kodu:</strong> ${d.corp_code}<br>`;
+                    if (d.corporate_note) detailsStr += `<strong>İş Yeri Hekimi Notu:</strong> ${d.corporate_note}<br>`;
+
+                    if (detailsStr) {
+                        medDetailsHtml = `
+                        <div style="background:#ecfdf5; padding:15px; border-radius:8px; border-left:4px solid #10b981; margin-bottom:15px;">
+                            <label style="font-size:12px; color:#065f46; font-weight:bold;">📋 Hekim Tıbbi Değerlendirmesi</label>
+                            <div style="font-size:14px; margin-top:8px;">${detailsStr}</div>
+                        </div>`;
+                    }
+                } catch(e) {}
             }
 
             document.getElementById('modalBody').innerHTML = `
-                ${appointmentHtml}
-                ${testsHtml}
-                
-                <div style="margin-bottom:15px;">
-                    <label style="font-size:12px; color:#64748b; text-transform:uppercase; display:block; margin-bottom:4px;">Başvuru Tarihi</label>
-                    <div style="font-size:15px;">${date}</div>
+                ${progressHtml}
+                ${evalHtml}
+                ${medDetailsHtml}
+                <div style="background:#f8fafc; padding:15px; border-radius:8px; font-size:13px; color:#64748b;">
+                    <strong>Durum:</strong> ${status === 'pending' ? 'Başvurunuz alındı. Hasta danışmanımız/ilgili hekimimiz en kısa sürede sizinle iletişime geçecektir.' : status === 'completed' ? 'Değerlendirme tamamlandı. Planınız yukarıda görünmektedir.' : 'Hekiminiz başvurunuzu inceliyor.'}
                 </div>
-                <div style="margin-bottom:15px;">
-                    <label style="font-size:12px; color:#64748b; text-transform:uppercase; display:block; margin-bottom:4px;">Durum</label>
-                    <div><span class="badge ${status}">${statusText}</span></div>
-                </div>
-                ${app.evaluation ? `
-                <div style="background:#eff6ff; padding:15px; border-radius:8px; border-left:4px solid #3b82f6; margin-bottom:15px;">
-                    <label style="font-size:12px; color:#1e40af; text-transform:uppercase; font-weight:bold;">🩺 Hekim Değerlendirmesi</label>
-                    <div style="font-size:14px; margin-top:8px; line-height:1.5;">${app.evaluation}</div>
-                </div>` : ''}
-                
-                ${!app.evaluation && !app.prescription && !app.appointment_date ? `
-                <div style="padding:30px; text-align:center; color:#94a3b8; font-size:14px;">⏳ Hekiminiz henüz değerlendirme yapmadı.</div>` : ''}
-                
-                <button onclick="closeModal()" class="no-print" style="width:100%; padding:12px; background:#e2e8f0; color:#475569; border:none; border-radius:6px; font-weight:bold; cursor:pointer; margin-top:15px;">Kapat</button>
             `;
-            
             document.getElementById('modalOverlay').classList.add('active');
         };
 
         window.closeModal = function() { document.getElementById('modalOverlay').classList.remove('active'); };
-
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await _supabase.auth.signOut();
-            localStorage.removeItem('helunexa_email');
-            localStorage.removeItem('helunexa_password');
-            localStorage.removeItem('helunexa_role');
-            window.location.replace('giris.html');
-        });
-
+        document.getElementById('logoutBtn').addEventListener('click', async () => { await _supabase.auth.signOut(); window.location.replace('giris.html'); });
         checkSession();
     </script>
 </body>

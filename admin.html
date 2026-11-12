@@ -39,7 +39,6 @@
         .badge.appointment { background: #ecfdf5; color: #047857; border: 1px solid #10b981; margin-top: 5px; }
         .action-btn { padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         
-        /* MODAL STİLLERİ */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
         .modal { background: white; border-radius: 12px; max-width: 850px; width: 100%; max-height: 95vh; overflow-y: auto; padding: 30px; }
@@ -60,7 +59,6 @@
         
         .eval-box { background: #f8fafc; border-left: 4px solid #3b82f6; padding: 20px; border-radius: 8px; margin-top: 20px; }
 
-        /* 7 VE 8. MODÜL ÖZEL FORM STİLLERİ */
         .special-medical-form { display: none; margin-top: 20px; background: #ecfdf5; padding: 20px; border-radius: 12px; border: 2px dashed #10b981; }
         .special-medical-form h3 { color: #059669; margin-bottom: 15px; font-size: 16px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -131,24 +129,20 @@
         </div>
     </div>
 
-    <!-- DETAY MODALI -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <div class="modal-header"><h2 id="modalTitle">Hasta Detayı</h2><button class="close-btn" onclick="closeModal()">×</button></div>
             <div class="modal-body" id="modalBody"></div>
             
-            <!-- 7. VE 8. MODÜL İÇİN ÖZEL TIBBİ FORM -->
             <div id="specialMedicalForm" class="special-medical-form">
                 <h3>🩺 Hekim Tıbbi Değerlendirmesi (Özel Modül)</h3>
                 
-                <!-- 7. Modül: Anne ve Bebek -->
                 <div id="form_7_modul" class="grid-2" style="display:none;">
                     <div><label>Gebelik Haftası</label><input type="number" id="med_week" placeholder="Örn: 24"></div>
                     <div><label>Gravida / Parite</label><input type="text" id="med_gravida" placeholder="Örn: G2 P1"></div>
                     <div class="grid-full"><label>Tıbbi Not / Risk Durumu</label><textarea id="med_pregnancy_note" placeholder="Kanama, tansiyon, şeker, bebek hareketleri vb..."></textarea></div>
                 </div>
 
-                <!-- 8. Modül: Kurumsal Sağlık -->
                 <div id="form_8_modul" class="grid-2" style="display:none;">
                     <div><label>Şirket Kodu</label><input type="text" id="med_corp_code" placeholder="Örn: PILOT01"></div>
                     <div><label>Sicil No</label><input type="text" id="med_emp_no" placeholder="Örn: EMP-1001"></div>
@@ -173,7 +167,6 @@
         let currentStatusFilter = 'all';
         let currentDateFilter = 'all';
 
-        // HEKİMİN KENDİ EKLEYEBİLECEĞİ TETKİK LİSTESİ
         const DOCTOR_CATALOG = [
             "Hemogram", "Ferritin", "Açlık glukozu ve HbA1c", "Lipid profili", 
             "TSH", "Serbest T4", "D vitamini · 25-OH D", "Vitamin B12", 
@@ -328,6 +321,15 @@
 
             document.getElementById('modalBody').innerHTML = `
                 ${appointmentDetail}
+                
+                <!-- ✅ YENİ: HASTA TELEFONU -->
+                <div class="detail-row" style="background:#ecfdf5; padding:12px; border-radius:6px; border-left:4px solid #10b981; margin-bottom:15px;">
+                    <label style="color:#065f46; font-size:12px; font-weight:bold;">📞 Hasta Telefonu</label>
+                    <div class="value" style="font-weight:bold; color:#047857; font-size:18px; margin-top:4px;">
+                        <a href="tel:${currentApp.phone || ''}" style="color:#047857; text-decoration:none;">${currentApp.phone || 'Belirtilmedi'}</a>
+                    </div>
+                </div>
+                
                 ${patientSelectedHtml}
                 
                 <div class="detail-row"><label>Hizmet Türü</label><div class="value">${currentApp.service_type}</div></div>
@@ -359,8 +361,7 @@
                             </select>
                             <button type="button" class="btn btn-primary" onclick="addDoctorTest()" style="padding: 8px 15px; font-size:13px;">Ekle</button>
                         </div>
-                        <div id="doctorSelectedList" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px;">
-                        </div>
+                        <div id="doctorSelectedList" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px;"></div>
                         
                         <label style="margin-top:10px; display:block; font-size:13px; font-weight:bold;">Nihai Reçete / Panel (Düzenlenebilir)</label>
                         <textarea id="editPrescription" style="min-height:100px; background:white; border-color:#93c5fd; margin-top:5px;">${currentPrescription}</textarea>
@@ -371,24 +372,19 @@
             window.tempDoctorTests = currentPrescription ? currentPrescription.split('\n').filter(t => t.trim() !== '') : [];
             renderDoctorSelectedList();
 
-            // --- 7. VE 8. MODÜL İÇİN ÖZEL FORM MANTIĞI ---
             const specialFormDiv = document.getElementById('specialMedicalForm');
             const form7 = document.getElementById('form_7_modul');
             const form8 = document.getElementById('form_8_modul');
 
-            // Varsayılan olarak gizle
             specialFormDiv.style.display = 'none';
             form7.style.display = 'none';
             form8.style.display = 'none';
 
-            // Tıbbi detay verisi varsa (jsonb) buraya yükle
             const medDetails = currentApp.medical_details || {};
 
             if (currentApp.service_type === 'Gebelik Takibi' || currentApp.service_type === 'Anne ve Bebek Sağlığı / Gebelik') {
                 specialFormDiv.style.display = 'block';
                 form7.style.display = 'grid';
-                
-                // Verileri doldur
                 document.getElementById('med_week').value = medDetails.week || '';
                 document.getElementById('med_gravida').value = medDetails.gravida || '';
                 document.getElementById('med_pregnancy_note').value = medDetails.pregnancy_note || '';
@@ -396,13 +392,10 @@
             else if (currentApp.service_type === 'Kurumsal Sağlık' || currentApp.service_type === 'Kurumsal Sağlık ve Çalışan Takibi') {
                 specialFormDiv.style.display = 'block';
                 form8.style.display = 'grid';
-                
-                // Verileri doldur
                 document.getElementById('med_corp_code').value = medDetails.corp_code || currentApp.corporate_code || '';
                 document.getElementById('med_emp_no').value = medDetails.emp_no || currentApp.employee_number || '';
                 document.getElementById('med_corporate_note').value = medDetails.corporate_note || '';
             }
-            // Diğer modüllerde form gizli kalır.
 
             document.getElementById('modalOverlay').classList.add('active');
         };
@@ -448,7 +441,6 @@
             if (!currentApp) return;
             const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.textContent = 'Kaydediliyor...';
             
-            // Tıbbi detayları topla
             const medicalDetails = {
                 week: document.getElementById('med_week') ? document.getElementById('med_week').value : null,
                 gravida: document.getElementById('med_gravida') ? document.getElementById('med_gravida').value : null,
@@ -463,7 +455,7 @@
                 doctor_note: document.getElementById('editNote').value,
                 evaluation: document.getElementById('editEvaluation').value,
                 prescription: document.getElementById('editPrescription').value,
-                medical_details: medicalDetails // YENİ EKLENEN ALAN
+                medical_details: medicalDetails
             }).eq('id', currentApp.id);
             
             if (error) alert('Hata: ' + error.message);
