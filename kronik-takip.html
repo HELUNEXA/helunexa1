@@ -76,10 +76,11 @@
                 <div style="display:flex; justify-content:space-between;"><span>Hizmet:</span><strong>Kronik Hastalık Takibi</strong></div>
             </div>
             <div class="payment-total"><span>Ödenecek Tutar</span><strong>₺1.500</strong></div>
-            <div style="margin-bottom:15px;"><label>Kart Numarası</label><input type="text" placeholder="0000 0000 0000 0000"></div>
+            <!-- ID'ler EKLENDİ -->
+            <div style="margin-bottom:15px;"><label>Kart Numarası</label><input type="text" id="card_number" placeholder="0000 0000 0000 0000" maxlength="19"></div>
             <div style="display:flex; gap:10px;">
-                <div style="flex:1;"><label>SKT</label><input type="text" placeholder="AA/YY"></div>
-                <div style="flex:1;"><label>CVV</label><input type="text" placeholder="123"></div>
+                <div style="flex:1;"><label>SKT</label><input type="text" id="card_expiry" placeholder="AA/YY" maxlength="5"></div>
+                <div style="flex:1;"><label>CVV</label><input type="text" id="card_cvv" placeholder="123" maxlength="4"></div>
             </div>
             <div class="payment-buttons">
                 <button type="button" class="btn-cancel" id="cancelPaymentBtn">İptal</button>
@@ -157,6 +158,22 @@
         if (error) { alert('Hata: ' + error.message); this.disabled = false; this.textContent = 'Ödemeyi Tamamla'; }
         else { alert('✅ Ödeme Başarılı!'); window.location.href = 'hasta-panel.html'; }
     }
+
+    // ✅ KART FORMATLAMA KODU BURAYA EKLENDİ
+    document.getElementById('card_number').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '').substring(0, 16);
+        e.target.value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+    });
+    
+    document.getElementById('card_expiry').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        e.target.value = value;
+    });
+
+    document.getElementById('card_cvv').addEventListener('input', function (e) {
+        e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+    });
 
     checkSession();
     </script>
