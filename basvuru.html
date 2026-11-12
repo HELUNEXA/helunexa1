@@ -102,6 +102,7 @@
             <div id="appointmentBox" style="display:none; background:#ecfdf5; padding:15px; border-radius:8px; border-left:4px solid #10b981; margin-bottom:15px;">
                 <h4 style="color:#065f46; font-size:14px; margin-bottom:12px;">📅 Tercih Ettiğiniz Randevu Tarihi (İsteğe Bağlı)</h4>
                 <div class="form-group"><label for="appointmentDate">Randevu Tarihi</label><input type="date" id="appointmentDate" min=""></div>
+<div class="form-group"><label for="appointmentTime">Tercih Ettiğiniz Saat</label><input type="time" id="appointmentTime"></div>
             </div>
 
             <div class="form-group"><label for="medical_history">Tıbbi Geçmiş</label><textarea id="medical_history" rows="3" placeholder="Mevcut hastalıklar, kullanılan ilaçlar..."></textarea></div>
@@ -207,7 +208,7 @@
             const service = document.getElementById('service_type').value;
             if (!service) return alert('Lütfen hizmet seçin.');
 
-            const apptType = document.getElementById('appointment_type').value;
+           const apptTime = document.getElementById('appointmentTime').value;
 
             pendingFormData = {
                 user_id: currentUser.id, email: currentUser.email,
@@ -216,6 +217,7 @@
                 phone: document.getElementById('phone').value.trim(),
                 service_type: service,
                 appointment_type: (service === 'Gebelik Takibi' || service === 'Kurumsal Sağlık') ? apptType : 'Belirtilmedi',
+                appointment_time: apptTime, // ✅ YENİ: Saat bilgisi eklendi
                 medical_history: document.getElementById('medical_history').value.trim(),
                 test_notes: document.getElementById('test_notes').value.trim(),
                 status: 'pending',
