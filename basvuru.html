@@ -25,7 +25,6 @@
         .dynamic-box { display: none; background: #f8fafc; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6; margin-bottom: 15px; }
         .dynamic-box h4 { color: #1e40af; font-size: 14px; margin-bottom: 12px; }
         
-        /* YENİ HASTANE YÖNLENDİRME MODALI */
         .payment-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .payment-overlay.active { display: flex; }
         .payment-modal { background: white; border-radius: 12px; max-width: 450px; width: 100%; padding: 30px; max-height: 90vh; overflow-y: auto; }
@@ -81,14 +80,13 @@
                 </select>
             </div>
 
-            <!-- DİĞER MODÜLLER İÇİN UZUN FORMLAR (SADECE 1-6 ARASI GÖRÜNÜR) -->
-            <div id="box_chronic" class="dynamic-box"><h4>🩺 Kronik Hastalık Takibi</h4><div class="form-group"><label for="chronic_diseases">Takip edilmesini istediğiniz kronik hastalıklarınız nelerdir? *</label><textarea id="chronic_diseases" rows="2" placeholder="Örn: Diyabet, Hipertansiyon, Tiroid..."></textarea></div></div>
+            <!-- box_chronic SİLİNDİ - artık kronik-takip.html'e yönlendiriliyor -->
+
             <div id="box_prescription" class="dynamic-box"><h4>📄 İlaç Raporu Yenileme</h4><div class="form-group"><label for="rx_disease">Hastalık *</label><input type="text" id="rx_disease" placeholder="Örn: Astım"></div><div class="form-group"><label for="rx_meds">Kullanılan İlaçlar *</label><textarea id="rx_meds" rows="2" placeholder="İlaç adları..."></textarea></div><div class="form-group"><label for="rx_end_date">Rapor Bitiş Tarihi *</label><input type="date" id="rx_end_date"></div></div>
             <div id="box_longevity" class="dynamic-box"><h4>🧬 Longevity / Sağlıklı Yaş Alma</h4><div class="form-group"><label for="long_goals">Sağlık hedefleriniz nelerdir? *</label><textarea id="long_goals" rows="2" placeholder="Örn: Daha enerjik hissetmek..."></textarea></div></div>
             <div id="box_cancer" class="dynamic-box" style="border-left-color: #8b5cf6;"><h4 style="color: #6b21a8;">🔬 Kanser Tarama Anketi</h4><div class="form-group"><label for="cs_gender">Cinsiyetiniz *</label><select id="cs_gender"><option value="">Seçiniz</option><option value="female">Kadın</option><option value="male">Erkek</option></select></div><div class="form-group"><label for="cs_smoking">Sigara kullanımınız? *</label><select id="cs_smoking"><option value="">Seçiniz</option><option value="none">Hiç kullanmadım</option><option value="current">Kullanıyorum</option><option value="former">Bıraktım</option></select></div><div class="form-group"><label for="cs_family">Ailenizde kanser var mı? *</label><select id="cs_family"><option value="">Seçiniz</option><option value="no">Hayır</option><option value="yes">Evet</option></select></div></div>
             <div id="box_homecare" class="dynamic-box" style="border-left-color: #f59e0b;"><h4 style="color: #92400e;">🏠 Evde Bakım Hizmetleri</h4><div class="form-group"><label for="home_care_need">Bakım İhtiyacı *</label><textarea id="home_care_need" rows="2" placeholder="Kısaca durumu..."></textarea></div><div class="form-group"><label for="home_contact">İletişim Bilgileri *</label><textarea id="home_contact" rows="2" placeholder="Adres..."></textarea></div></div>
 
-            <!-- YENİ B2B MANTIĞI: SADECE 7 VE 8. MODÜL İÇİN RANDEVU SEÇİMİ -->
             <div id="box_appointment_b2b" class="dynamic-box" style="border-left-color: #10b981; display:none;">
                 <h4 style="color: #065f46;">📅 Randevu ve Görüşme Talebi</h4>
                 <p style="font-size:12px; color:#64748b; margin-bottom:15px;">Tıbbi detaylar (gebelik haftası vb.) hekiminiz tarafından görüşme sırasında alınacaktır.</p>
@@ -101,7 +99,6 @@
                 </div>
             </div>
 
-            <!-- RANDEVU TARİHİ (Tüm modüller için) -->
             <div id="appointmentBox" style="display:none; background:#ecfdf5; padding:15px; border-radius:8px; border-left:4px solid #10b981; margin-bottom:15px;">
                 <h4 style="color:#065f46; font-size:14px; margin-bottom:12px;">📅 Tercih Ettiğiniz Randevu Tarihi (İsteğe Bağlı)</h4>
                 <div class="form-group"><label for="appointmentDate">Randevu Tarihi</label><input type="date" id="appointmentDate" min=""></div>
@@ -120,7 +117,6 @@
         </form>
     </div>
 
-    <!-- HASTANE YÖNLENDİRME MODALI -->
     <div class="payment-overlay" id="paymentModal">
         <div class="payment-modal">
             <div class="step-indicator"><div class="step done"><span class="step-num">✓</span> Bilgiler</div><div class="divider"></div><div class="step active"><span class="step-num">2</span> Yönlendirme</div></div>
@@ -160,23 +156,29 @@
 
         document.getElementById('service_type').addEventListener('change', function() {
             const val = this.value;
+
+            // ✅ YENİ: Kronik Hastalık Takibi → özel forma yönlendir
+            if (val === 'Kronik Hastalık Takibi') {
+                window.location.href = 'kronik-takip.html';
+                return;
+            }
+
             // Tüm dinamik kutuları gizle
             document.querySelectorAll('.dynamic-box').forEach(box => box.style.display = 'none');
             document.getElementById('appointmentBox').style.display = 'none';
 
-            // Eski modüller için özel kutuları göster
-            if (val === 'Kronik Hastalık Takibi') document.getElementById('box_chronic').style.display = 'block';
+            // Diğer modüller için özel kutuları göster
             if (val === 'İlaç Raporu Yenileme') document.getElementById('box_prescription').style.display = 'block';
             if (val === 'Longevity Takibi') document.getElementById('box_longevity').style.display = 'block';
             if (val === 'Kanser Taraması') document.getElementById('box_cancer').style.display = 'block';
             if (val === 'Evde Bakım') document.getElementById('box_homecare').style.display = 'block';
 
-            // YENİ B2B MANTIĞI: Sadece 7 ve 8. modül için randevu talebi kutusunu göster
+            // B2B modülleri (7 ve 8)
             if (val === 'Gebelik Takibi' || val === 'Kurumsal Sağlık') {
                 document.getElementById('box_appointment_b2b').style.display = 'block';
             }
 
-            // Herhangi bir hizmet seçildiyse Randevu Tarihi kutusunu göster
+            // Randevu tarihi kutusu
             if (val) document.getElementById('appointmentBox').style.display = 'block';
         });
 
@@ -205,17 +207,15 @@
             const service = document.getElementById('service_type').value;
             if (!service) return alert('Lütfen hizmet seçin.');
 
-            // 7 ve 8. modül için randevu tipini al
             const apptType = document.getElementById('appointment_type').value;
 
-            // FORMU DOLDUR VE VERİTABANINA GÖNDER
             pendingFormData = {
                 user_id: currentUser.id, email: currentUser.email,
                 fullname: document.getElementById('fullname').value.trim(),
                 age: parseInt(document.getElementById('age').value),
                 phone: document.getElementById('phone').value.trim(),
                 service_type: service,
-                appointment_type: (service === 'Gebelik Takibi' || service === 'Kurumsal Sağlık') ? apptType : 'Belirtilmedi', // Yeni alan
+                appointment_type: (service === 'Gebelik Takibi' || service === 'Kurumsal Sağlık') ? apptType : 'Belirtilmedi',
                 medical_history: document.getElementById('medical_history').value.trim(),
                 test_notes: document.getElementById('test_notes').value.trim(),
                 status: 'pending',
