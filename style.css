@@ -1,55 +1,71 @@
 :root {
     --ink: #0f172a;
-    --green: #10b981; 
-    --green-dark: #059669;
+    --green: #10b981;       /* Parlak Zümrüt Yeşili */
+    --green-dark: #059669;  /* Koyu Yeşil (Hover için) */
     --muted: #64748b;
     --line: #e2e8f0;
-    --paper: #e8f8f0; /* BURASI: Göz alıcı, canlı açık yeşil arka plan */
+    --paper: #ecfdf5;       /* Sayfanın genel açık yeşil arka planı */
     --white: #ffffff;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Tüm sayfa arka planı açık yeşil */
 body { 
     margin: 0;
-    background-color: var(--paper); /* Arka planı yeşil yaptık */
+    background-color: var(--paper); 
     color: var(--ink); 
     font: 16px/1.6 system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+    -webkit-font-smoothing: antialiased;
 }
 
 button, select, input { font: inherit; }
 button { cursor: pointer; }
 a { color: var(--green); text-decoration: none; }
 
-h1, h2, h3 { margin: 0 0 14px; color: var(--ink); font-weight: 600; }
-h1 { font-size: 32px; } 
-p { margin: 0 0 16px; color: #475569; }
+h1, h2, h3 { margin: 0 0 14px; color: var(--ink); font-weight: 700; letter-spacing: -0.02em; }
+h1 { font-size: 34px; } 
+p { margin: 0 0 16px; color: #475569; font-size: 16px; }
 
-/* ÜST MENÜ */
+/* ÜST MENÜ (Header) - Beyaz */
 header { 
-    border-bottom: 1px solid #d1fae5; 
-    background: #ffffff; /* Menü beyaz kalsın ki yeşil zeminde şık dursun */
+    border-bottom: 1px solid var(--line); 
+    background: #ffffff; 
     position: sticky; 
     top: 0; 
     z-index: 100; 
-    box-shadow: 0 4px 15px rgba(16,185,129,0.05); 
+    box-shadow: 0 2px 10px rgba(16,185,129,0.05); 
 }
 header .header-inner { max-width: 1200px; display: flex; justify-content: space-between; align-items: center; margin: auto; padding: 10px 20px; }
-.brand img { height: 65px; margin-left: -10px; }
+.brand img { height: 60px; margin-left: -10px; }
 nav { display: flex; gap: 10px; }
 
 /* BUTONLAR */
-.button { border-radius: 10px; padding: 10px 16px; font-size: 14px; font-weight: 600; transition: 0.2s; cursor: pointer; text-decoration: none; border: 1px solid var(--line); background: #fff; color: var(--ink); }
-.button:hover { border-color: var(--green); background: #ecfdf5; color: var(--green); }
-.button.primary { background: var(--green); color: white; border-color: var(--green); }
-.button.primary:hover { background: var(--green-dark); color: white; }
+.button { border-radius: 10px; padding: 10px 20px; font-size: 14px; font-weight: 600; transition: 0.2s; cursor: pointer; text-decoration: none; border: 1px solid var(--line); background: #fff; color: var(--ink); display:inline-flex; justify-content:center; align-items:center;}
+.button:hover { border-color: var(--green); background: var(--mint); color: var(--green); }
+.button.primary { background: var(--green); color: white; border: 2px solid var(--green); }
+.button.primary:hover { background: var(--green-dark); border-color: var(--green-dark); }
 .button.nav { background: transparent; border: 0; color: #475569; }
-.button.nav.active { background: #ecfdf5; color: var(--green); font-weight: bold; }
-.button.nav.secondary { border: 1px solid var(--green); background: #fff; color: var(--green); }
+.button.nav.active { background: var(--mint); color: var(--green); font-weight: bold; }
+.button.nav.secondary { border: 2px solid var(--green); background: #fff; color: var(--green); }
 
-/* ANA SAYFA */
-main { max-width: 1200px; padding: 30px 20px; margin: auto; min-height: 70vh; text-align: center; }
-.service-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 30px; text-align: left; }
+/* ANA SAYFA - HERO ALANI (Ekran görüntüsündeki gibi) */
+.home-intro {
+    background: linear-gradient(180deg, #d1fae5 0%, #ecfdf5 100%);
+    padding: 50px 20px;
+    text-align: center;
+    border-bottom: 1px solid #a7f3d0;
+}
+.home-intro h1 { color: var(--ink); margin-bottom: 10px; }
+.home-intro h1 span { color: var(--green); }
+.home-intro p { max-width: 600px; margin: 0 auto 30px auto; }
+
+/* HİZMET KUTULARI */
+main { max-width: 1200px; padding: 40px 20px; margin: auto; min-height: 60vh;}
+.section-title { text-align: center; margin-bottom: 10px; font-size: 28px; }
+.section-desc { text-align: center; margin-bottom: 30px; color: var(--muted); }
+
+.service-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
 .service-tile { 
     background: #ffffff; 
     border: 1px solid #a7f3d0; 
@@ -61,16 +77,17 @@ main { max-width: 1200px; padding: 30px 20px; margin: auto; min-height: 70vh; te
     align-items: center; 
     font-weight: 600; 
     transition: 0.2s; 
-    box-shadow: 0 4px 15px rgba(16,185,129,0.08); 
+    box-shadow: 0 4px 10px rgba(16,185,129,0.05); 
     font-size: 15px; 
     color: var(--ink); 
     cursor: pointer;
+    text-align: left;
 }
-.service-tile:hover { border-color: var(--green); background: #ecfdf5; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(16,185,129,0.15); }
+.service-tile:hover { border-color: var(--green); background: #f0fdf4; transform: translateY(-3px); }
 .service-icon { font-size: 24px; color: var(--green); }
 .arrow { width: 8px; height: 8px; border-top: 2px solid var(--green); border-right: 2px solid var(--green); transform: rotate(45deg); }
 
-/* FORMLAR VE PANELLER */
+/* FORMLAR VE PANELLER (Yine açık yeşil/beyaz) */
 .panel { background: white; border: 1px solid #a7f3d0; border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(16,185,129,0.05); margin-bottom: 20px; text-align: left;}
 .panel.soft { background: #ecfdf5; }
 .steps { display: flex; list-style: none; padding: 0; margin: 20px 0; gap: 10px; justify-content: center;}
@@ -86,8 +103,9 @@ main { max-width: 1200px; padding: 30px 20px; margin: auto; min-height: 70vh; te
 .contact-fields input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
 
 .bottom-actions { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
-footer { text-align: center; padding: 25px; color: var(--muted); font-size: 13px; border-top: 1px solid #d1fae5; margin-top: 40px; }
+footer { text-align: center; padding: 25px; color: var(--muted); font-size: 13px; border-top: 1px solid #a7f3d0; margin-top: 40px; }
 
+/* MOBİL UYUMLULUK */
 @media(max-width: 900px) {
     .service-grid { grid-template-columns: repeat(2, 1fr); }
     .two-col { grid-template-columns: 1fr; }
@@ -97,4 +115,6 @@ footer { text-align: center; padding: 25px; color: var(--muted); font-size: 13px
     header .header-inner { flex-direction: column; gap: 15px; }
     .bottom-actions { flex-direction: column; }
     .button.primary { width: 100%; }
+    .home-intro { padding: 30px 15px; }
+    .home-intro h1 { font-size: 26px; }
 }
