@@ -16,12 +16,13 @@ function chips(label,items,value,key){return `<div class="choice"><span class="l
 function toast(text){$('#toast').textContent=text;$('#toast').classList.add('show');clearTimeout(state.timer);state.timer=setTimeout(()=>$('#toast').classList.remove('show'),4500)}
 function go(view){state.view=view;render();window.scrollTo({top:0,behavior:'instant'})}
 
-// LOGO
-function brand(){return '<img src="logo.png" alt="HELUNEXA" style="height: 80px; width: auto;">'}
+// ✅ SOL ÜSTTEKİ LOGO (Tam köşeye yaslandı)
+function brand(){return '<img src="logo.png" alt="HELUNEXA" style="height: 70px; width: auto; margin-left: -15px;">'}
+
 function header(){return `<header><div class="header-inner"><a href="#" class="brand" data-action="home">${brand()}</a><nav aria-label="Ana menü">${button('Hizmetler','home',state.view==='home'?'nav active':'nav')}${button('Hekim Paneli','institution','nav secondary')}</nav></div></header>`}
 
-// ANA SAYFA
-function home(){return `<section class="home-intro"><div style="text-align: center; margin-bottom: 20px;"><img src="logo.png" alt="HELUNEXA" style="height: 100px;"></div><div class="eyebrow" style="text-align: center; color: var(--green);">SAĞLIK HİZMETİNE DAHA KOLAY ERİŞİN.</div><h1 style="text-align: center;">Hangi konuda destek arıyorsunuz?</h1><p style="text-align: center;">Hizmetinizi seçin, size uygun kurumu bulun, talebinizi iletin.</p><div class="service-grid">${C.modules.map(m=>`<button class="service-tile" data-action="start" data-id="${m.id}"><span class="service-icon" aria-hidden="true">${icons[m.id-1]}</span><span>${esc(m.shortTitle)}</span><span class="arrow" aria-hidden="true"></span></button>`).join('')}</div></section><section class="home-feature" style="background: #ecfdf5; border-color: #d1fae5;"><div><div class="eyebrow" style="color: var(--green);">SAĞLIĞINIZA ZAMAN AYIRIN.</div><h2>Size uygun hizmet,<br>tercih ettiğiniz yerde.</h2><p>Klinikte hizmet almayı veya uygun tetkikler için evde numune vermeyi tercih edin. Kurumsal programlarda iş yerinde numune alma seçeneğini de keşfedin.</p></div><div class="journey"><div><b>01</b><span>Hizmeti keşfedin</span></div><div><b>02</b><span>Kurumu ve yeri seçin</span></div><div><b>03</b><span>Randevunuzu takip edin</span></div></div></section>`}
+// ✅ ORTADAKİ BÜYÜK LOGO (Geri eklendi)
+function home(){return `<section class="home-intro"><div style="text-align: center; margin-bottom: 20px;"><img src="logo.png" alt="HELUNEXA" style="height: 110px; background: transparent;"></div><div class="eyebrow" style="text-align: center; color: var(--green);">SAĞLIK HİZMETİNE DAHA KOLAY ERİŞİN.</div><h1 style="text-align: center;">Hangi konuda destek arıyorsunuz?</h1><p style="text-align: center;">Hizmetinizi seçin, size uygun kurumu bulun, talebinizi iletin.</p><div class="service-grid">${C.modules.map(m=>`<button class="service-tile" data-action="start" data-id="${m.id}"><span class="service-icon" aria-hidden="true">${icons[m.id-1]}</span><span>${esc(m.shortTitle)}</span><span class="arrow" aria-hidden="true"></span></button>`).join('')}</div></section><section class="home-feature" style="background: #ecfdf5; border-color: #d1fae5;"><div><div class="eyebrow" style="color: var(--green);">SAĞLIĞINIZA ZAMAN AYIRIN.</div><h2>Size uygun hizmet,<br>tercih ettiğiniz yerde.</h2><p>Klinikte hizmet almayı veya uygun tetkikler için evde numune vermeyi tercih edin. Kurumsal programlarda iş yerinde numune alma seçeneğini de keşfedin.</p></div><div class="journey"><div><b>01</b><span>Hizmeti keşfedin</span></div><div><b>02</b><span>Kurumu ve yeri seçin</span></div><div><b>03</b><span>Randevunuzu takip edin</span></div></div></section>`}
 
 function info(x){return x.education?`<details class="education"><summary>Neyi değerlendirir?</summary><p>${esc(x.education)}</p>${x.context?`<p class="context"><b>Kimler için görüşülebilir?</b><br>${esc(x.context)}</p>`:x.clinicalNote?`<p class="context">${esc(x.clinicalNote)}</p>`:''}${x.educationSource?`<a href="${esc(x.educationSource.url)}" target="_blank" rel="noopener noreferrer">${esc(x.educationSource.name)} ↗</a>`:''}</details>`:''}
 function options(items){return items.map(x=>`<article class="option"><label class="check"><input type="checkbox" data-option="${esc(x.id)}" ${draft().selected.includes(x.id)?'checked':''}><span>${esc(x.name)}</span></label>${info(x)}</article>`).join('')}
@@ -50,7 +51,7 @@ document.addEventListener('click',e=>{
     const el=e.target.closest('[data-action]');if(!el)return;e.preventDefault();const a=el.dataset.action;
     try{
         if(a==='home')go('home');
-        else if(a==='institution') window.location.href = './admin.html'; // ✅ GÖRECELİ YOL İLE GARANTİLİ YÖNLENDİRME
+        else if(a==='institution') window.location.href = 'admin.html';
         else if(a==='start')start(el.dataset.id);
         else if(a==='back'){if(state.step===0)go('home');else{state.step--;go('booking')}}
         else if(a==='next'){
