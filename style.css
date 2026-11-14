@@ -5,8 +5,6 @@ button,select,input{font:inherit} button{cursor:pointer} a{color:var(--green);te
 h1,h2,h3{margin:0 0 14px;color:var(--ink);font-weight:600;letter-spacing:-0.03em}
 h1{font-size:32px} h2{font-size:24px} h3{font-size:18px} p{margin:0 0 16px;color:#475569}
 .eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700;color:var(--green);margin-bottom:12px}
-
-/* HEADER & MENÜ */
 header{border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.02)}
 header .header-inner{max-width:1220px;display:flex;justify-content:space-between;align-items:center;margin:auto;padding:10px 20px}
 .brand img{height:60px;margin-left:-10px}
@@ -18,16 +16,12 @@ nav{display:flex;gap:10px}
 .button.nav{background:transparent;border:0;color:#475569;padding:8px 12px}
 .button.nav.active{background:var(--mint);color:var(--green);font-weight:bold}
 .button.nav.secondary{border:1px solid var(--green);background:white;color:var(--green)}
-
-/* ANA SAYFA VE KUTULAR */
 main{max-width:1220px;padding:30px 20px;margin:auto;min-height:70vh}
 .service-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
 .service-tile{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;grid-template-columns:30px 1fr 10px;gap:12px;align-items:center;text-align:left;font-weight:600;transition:0.2s;box-shadow:0 4px 15px rgba(0,0,0,0.03);font-size:15px;color:var(--ink);cursor:pointer}
 .service-tile:hover{border-color:var(--green);background:var(--mint);transform:translateY(-2px)}
 .service-icon{font-size:24px;color:var(--green)}
 .arrow{width:8px;height:8px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg)}
-
-/* PANELLER & FORMLAR */
 .panel{background:white;border:1px solid var(--line);border-radius:16px;padding:25px;box-shadow:0 4px 15px rgba(0,0,0,0.03);margin-bottom:20px}
 .panel.soft{background:var(--mint);border-color:#a7f3d0}
 .two-col{display:grid;grid-template-columns:1.6fr 1fr;gap:20px}
@@ -36,7 +30,6 @@ main{max-width:1220px;padding:30px 20px;margin:auto;min-height:70vh}
 .steps li.active{border-color:var(--green);color:var(--green)}
 .steps li span{border:1px solid var(--line);border-radius:50%;width:24px;height:24px;display:grid;place-items:center;font-size:12px;background:white;flex-shrink:0}
 .steps li.active span{border-color:var(--green);background:var(--green);color:white}
-
 .check{display:flex;align-items:center;gap:12px;font-weight:600;cursor:pointer;padding:12px 0;border-bottom:1px solid #f1f5f9;font-size:15px}
 .check:last-child{border-bottom:none}
 .check input{width:22px;height:22px;accent-color:var(--green);cursor:pointer;border-radius:6px;flex-shrink:0}
@@ -49,15 +42,12 @@ main{max-width:1220px;padding:30px 20px;margin:auto;min-height:70vh}
 .contact-fields input:focus{border-color:var(--green);background:white;box-shadow:0 0 0 3px rgba(16,185,129,0.1)}
 .bottom-actions{display:flex;justify-content:space-between;align-items:center;position:sticky;bottom:0;background:rgba(248,250,252,0.95);padding:15px 0;border-top:1px solid var(--line);margin-top:20px;backdrop-filter:blur(10px);gap:15px}
 .bottom-actions .button.primary{flex:1;max-width:300px;margin-left:auto}
-
 footer{text-align:center;padding:25px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:40px}
 
-/* 📱 RESPONSIVE (MOBİL UYUMLULUK) */
 @media(max-width: 900px) {
     .service-grid { grid-template-columns: repeat(2, 1fr); }
     .two-col { grid-template-columns: 1fr; }
 }
-
 @media(max-width: 600px) {
     header .header-inner { padding: 10px 15px; flex-wrap: wrap; justify-content: center; gap: 15px; }
     .brand img { height: 50px; margin-left: 0; }

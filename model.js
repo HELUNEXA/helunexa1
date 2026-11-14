@@ -7,30 +7,16 @@ function assert(ok,message){if(!ok)throw new Error(message)}
 function today(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Istanbul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}
 function day(n){const d=new Date(today()+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
 function formatDate(x){return new Date(x+'T12:00:00Z').toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})}
-
-// KURUM FİLTRELEME MANTIĞI DÜZELTİLDİ
 function modes(moduleId,audience){if(moduleId===6)return ['visit'];if([1,2,4,8].includes(moduleId))return audience==='corporate'?['clinic','work']:audience==='employee'?['clinic','home','work']:['clinic','home'];return ['clinic']}
+function providers(content,d){return content.providers.filter(p=>p.modules.includes(d.moduleId)&&p.modes.includes(d.mode==='visit'?'home':d.mode)&&(d.mode==='clinic'||p.areas.includes(d.area))&&(d.audience!=='corporate'||d.mode!=='work'||groupMinimum(d.groupSize)>=p.minGroup)).sort((a,b)=>a.distances[d.area]-b.distances[d.area])}
 function groupMinimum(size){return ({25:10,50:26,100:51})[size]||0}
-function providers(content,d){
-  return content.providers.filter(p => {
-    if(!p.modules.includes(d.moduleId)) return false;
-    const modeCheck = d.mode === 'visit' ? 'home' : d.mode;
-    if(!p.modes.includes(modeCheck)) return false;
-    if(d.mode !== 'clinic' && !p.areas.includes(d.area)) return false;
-    if(d.audience === 'corporate' && d.mode === 'work' && groupMinimum(d.groupSize) < p.minGroup) return false;
-    return true;
-  }).sort((a,b)=>a.distances[d.area]-b.distances[d.area]);
-}
-
 function contactInfo(value){const name=String(value?.name||'').trim().replace(/\s+/g,' ');let digits=String(value?.phone||'').replace(/[\s()+.-]/g,'');if(digits.startsWith('90')&&digits.length===12)digits=digits.slice(2);if(digits.startsWith('0')&&digits.length===11)digits=digits.slice(1);assert(name.length>=2&&name.length<=80&&/\p{L}/u.test(name),'Ad ve soyadınızı yazın.');assert(/^[2-5]\d{9}$/.test(digits),'Telefonu 05xx xxx xx xx veya +90 biçiminde yazın.');return {name,phone:'0'+digits}}
 function allOptions(c,moduleId){if(moduleId===5)return c.cancerOptions;if(moduleId===4)return [...c.longevityOptions,...c.catalog];if(moduleId===2)return [...c.quickOptions[2],...c.catalog];if([1,8].includes(moduleId))return c.catalog;return c.quickOptions[moduleId]||[]}
 function draft(moduleId,audience='individual'){assert(Number.isInteger(moduleId)&&moduleId>=1&&moduleId<=8,'Hizmet seçin.');if(moduleId!==8)audience='individual';return {moduleId,audience,selected:[],area:'Merkez',mode:moduleId===6?'visit':'clinic',providerId:null,period:'Sabah',groupSize:25,day:day(2),contact:{name:'',phone:''}}}
 function option(c,d,id){assert(allOptions(c,d.moduleId).some(x=>x.id===id),'Bu seçenek seçili hizmete ait değil.');const n=clone(d);n.selected=n.selected.includes(id)?n.selected.filter(x=>x!==id):[...n.selected,id];return n}
 function filter(c,d,patch){const n={...clone(d),...patch};if(!modes(n.moduleId,n.audience).includes(n.mode))n.mode=modes(n.moduleId,n.audience)[0];if(!providers(c,n).some(p=>p.id===n.providerId))n.providerId=null;return n}
 function validDate(x){return typeof x==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x)&&!isNaN(Date.parse(x+'T12:00:00Z'))&&new Date(x+'T12:00:00Z').toISOString().slice(0,10)===x}
-
 function request(c,d,records){assert(d.moduleId===8?['employee','corporate'].includes(d.audience):d.audience==='individual','Başvuru türü hizmete uygun değil.');assert(modes(d.moduleId,d.audience).includes(d.mode),'Hizmet yeri uygun değil.');assert(['Merkez','Kuzey','Güney'].includes(d.area),'Bölge seçin.');assert(validDate(d.day)&&d.day>=today(),'Geçerli bir gün seçin.');assert(['Sabah','Öğleden sonra'].includes(d.period),'Zaman tercihi seçin.');const p=providers(c,d).find(p=>p.id===d.providerId);assert(p,'Hizmeti sunan bir kurum seçin.');assert(d.selected.every(id=>allOptions(c,d.moduleId).some(x=>x.id===id)),'Seçenekler bu hizmete ait olmalı.');assert(!records.some(r=>r.status!=='cancelled'&&r.status!=='done'&&r.moduleId===d.moduleId&&r.audience===d.audience),'Bu hizmet için açık talebiniz var.');assert(d.audience!=='corporate'||[25,50,100].includes(d.groupSize),'Katılım aralığı seçin.');const contact=contactInfo(d.contact);return {...clone(d),contact,id:'HX-'+String(records.length+1).padStart(3,'0'),person:{name:d.audience==='corporate'?c.company.name:contact.name,contactName:contact.name,phone:contact.phone},providerName:p.name,status:'new',offer:null,history:[{label:'Talep alındı',at:new Date().toISOString()}]}}
-
 function change(r,label,fn){const n=clone(r);fn(n);n.history.push({label,at:new Date().toISOString()});return n}
 function contact(r){return change(r,'Kurum iletişim adımını kaydetti',n=>{assert(n.status==='new','Bu adım zaten kaydedildi.');n.status='contacted'})}
 function offer(r,data){return change(r,'Randevu önerisi paylaşıldı',n=>{assert(['new','contacted','offered'].includes(n.status),'Bu aşamada yeni öneri paylaşılamaz.');assert(validDate(data.day)&&data.day>=today(),'Geçerli bir randevu günü seçin.');assert(['09:00','11:00','14:00','16:00'].includes(data.time),'Randevu saati seçin.');n.offer={day:data.day,time:data.time,isDemo:true};n.status='offered'})}
