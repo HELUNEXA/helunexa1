@@ -15,7 +15,7 @@ function chips(label,items,value,key){return `<div style="margin:15px 0;"><span 
 function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';setTimeout(()=>$('#toast').style.display='none',3000)}
 function go(v){state.view=v;render();window.scrollTo(0,0)}
 
-// SADECE SOLDaki LOGO VE SAĞDAKİ HEKİM GİRİŞİ (Hizmetler yazısı silindi)
+// SADECE SOLDaki LOGO VE SAĞDAKİ HEKİM GİRİŞİ
 function header(){return `<header style="display:flex; justify-content:space-between; align-items:center; padding:15px 30px; background:#ffffff; border-bottom:1px solid #e2e8f0;"><a href="#" data-action="home"><img src="logo.png" alt="HELUNEXA" style="height:55px;"></a><nav>${button('Hekim Girişi','institution','button nav secondary')}</nav></header>`}
 
 function home(){return `<main><section class="home-intro"><div style="text-align:center;margin-bottom:20px;"><img src="logo.png" alt="HELUNEXA" style="height:100px;"></div><div class="eyebrow" style="text-align:center; color:var(--green-dark); font-weight:700;">Sağlık hizmetine daha kolay erişin.</div><h1 style="text-align:center; color:var(--green-dark); font-size:32px;">Hangi konuda destek arıyorsunuz?</h1><p style="text-align:center;margin-bottom:30px;">Hizmetinizi seçin, size uygun kurumu bulun, talebinizi iletin.</p><div class="service-grid">${C.modules.map(m=>`<button class="service-tile" data-action="start" data-id="${m.id}"><span class="service-icon">${icons[m.id-1]}</span><span>${esc(m.shortTitle)}</span><span class="arrow"></span></button>`).join('')}</div></section></main>`}
@@ -53,7 +53,12 @@ document.addEventListener('click',e=>{
             if (!draft().providerId) { alert('Lütfen bir kurum seçin.'); return; }
 
             el.disabled = true; el.textContent = 'Gönderiliyor...';
-            const r=M.request(C,draft(),[]);
+            
+            // 8. MODÜL HATASINI ÇÖZEN KISIM: Eğer Kurumsal seçildiyse otomatik 'employee' yap
+            let finalDraft = {...draft()};
+            if(finalDraft.moduleId === 8) { finalDraft.audience = 'employee'; }
+            
+            const r=M.request(C,finalDraft,[]);
             
             // SUPABASE KAYIT
             _supabase.from('applications').insert([{
