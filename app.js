@@ -2,7 +2,7 @@
 'use strict';
 const C=window.HELUNEXA_CONTENT,M=window.AccessModel;
 
-// SUPABASE BAĞLANTISI (En üstte ve doğru)
+// SUPABASE BAĞLANTISI
 const _supabase = supabase.createClient('https://grbjmhknmlheoyknmyhd.supabase.co', 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p');
 
 const $=s=>document.querySelector(s),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -46,7 +46,6 @@ document.addEventListener('click',e=>{
         else if(a==='choice'){state.draft=M.filter(C,draft(),{[el.dataset.key]:el.dataset.value});render()}
         else if(a==='provider'){state.draft={...draft(),providerId:el.dataset.id};render()}
         else if(a==='submit'){
-            // Hata olmaması için kontrol ve kayıt
             try {
                 M.contactInfo(draft().contact);
             } catch (e) { alert(e.message); return; }
@@ -56,14 +55,15 @@ document.addEventListener('click',e=>{
             el.disabled = true; el.textContent = 'Gönderiliyor...';
             const r=M.request(C,draft(),[]);
             
-            // SUPABASE KAYIT
+            // SUPABASE KAYIT (email eklendi)
             _supabase.from('applications').insert([{
                 fullname: r.person.name, 
                 phone: r.person.phone, 
                 service_type: module(draft().moduleId).title,
                 test_notes: draft().selected.join(', '), 
                 status: 'pending', 
-                age: 30
+                age: 30,
+                email: 'anonim@helunexa.com' // Zorunlu e-posta alanı dolduruldu
             }]).then(({error})=>{
                 if(error){ alert('Veritabanı Hatası: ' + error.message); el.disabled = false; el.textContent = 'Talebimi İlet →'; return; }
                 alert('✅ Talebiniz Alındı! Hekimimiz sizi arayacak.'); go('home');
