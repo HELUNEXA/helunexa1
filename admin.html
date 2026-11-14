@@ -3,114 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HELUNEXA - Hekim Paneli</title>
+    <title>HELUNEXA - Hekim & Yönetim Paneli</title>
+    <link rel="icon" href="favicon.ico">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, Arial, sans-serif; }
-        body { background: #f8fafc; color: #0f172a; padding: 20px; }
-        .header { background: white; padding: 15px 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; border-radius: 10px; margin-bottom: 20px; }
-        .header img { height: 60px; }
-        .role-badge { background: #dbeafe; color: #1e40af; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
-        .btn-ana { background: #64748b; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-weight: bold; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        h1 { font-size: 24px; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th { background: #f1f5f9; padding: 12px; text-align: left; font-size: 13px; color: #475569; border-bottom: 2px solid #e2e8f0; }
-        td { padding: 15px 12px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
-        .status { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #fef3c7; color: #92400e; }
-        .status.done { background: #d1fae5; color: #065f46; }
-        .action-btn { padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; }
-        #loading { text-align: center; color: #64748b; padding: 40px; font-size: 16px; }
+        :root {
+            --ink: #0f172a;
+            --green: #10b981;
+            --green-dark: #059669;
+            --muted: #64748b;
+            --line: #e2e8f0;
+            --paper: #f8fafc;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, Arial, sans-serif; background: var(--paper); color: var(--ink); }
+        
+        /* HEADER */
+        .header { background: white; padding: 15px 30px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .header-left img { height: 60px; }
+        .role-badge { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: bold; background: #ecfdf5; color: var(--green-dark); border: 1px solid #a7f3d0; }
+        .btn-home { background: #f1f5f9; color: #475569; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-decoration: none; font-size: 14px; transition: 0.2s; border: 1px solid #cbd5e1;}
+        .btn-home:hover { background: #e2e8f0; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px; }
+        
+        /* İSTATİSTİKLER */
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid var(--line); }
+        .stat-card .num { font-size: 32px; font-weight: bold; color: var(--green); }
+        .stat-card .label { font-size: 14px; color: var(--muted); margin-top: 5px; font-weight: 600; }
+        
+        /* FİLTRELER */
+        .filters { background: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; border: 1px solid var(--line); }
+        .filters span { font-weight: bold; color: var(--ink); font-size: 14px; margin-right: 10px; }
+        .filters button { padding: 8px 16px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; cursor: pointer; font-weight: bold; color: #475569; transition: 0.2s;}
+        .filters button.active { background: var(--green); color: white; border-color: var(--green); box-shadow: 0 2px 4px rgba(16,185,129,0.2); }
+        
+        /* TABLO */
+        .table-container { background: white; border-radius: 12px; overflow-x: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid var(--line); }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f1f5f9; padding: 16px 20px; text-align: left; font-size: 14px; color: var(--ink); border-bottom: 2px solid var(--line); font-weight: 700; }
+        td { padding: 16px 20px; border-bottom: 1px solid var(--line); font-size: 15px; color: #1e293b; font-weight: 500; }
+        tr:hover { background: #f8fafc; }
+        
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; }
+        .badge.pending { background: #fef3c7; color: #92400e; }
+        .badge.completed { background: #d1fae5; color: #065f46; }
+        .action-btn { padding: 8px 16px; background: var(--green); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s;}
+        .action-btn:hover { background: var(--green-dark); }
+        
+        /* MODAL */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);}
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: 16px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 30px; box-shadow: 0 20px 25px rgba(0,0,0,0.1);}
+        .modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid var(--line); padding-bottom: 15px; }
+        .close-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--muted); }
+        .detail-row { margin-bottom: 15px; }
+        .detail-row label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; font-weight: bold; }
+        .detail-row .value { font-size: 16px; font-weight: 500; color: var(--ink); }
+        textarea, select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; margin-top:5px; background: var(--paper);}
+        textarea:focus, select:focus { outline: none; border-color: var(--green); background: white; }
+        .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px;}
+        .btn-primary { background: var(--green); color: white; }
+        .btn-primary:hover { background: var(--green-dark); }
+        .btn-secondary { background: #e2e8f0; color: #475569; }
+        
+        .empty-state { padding: 50px; text-align: center; color: var(--muted); font-size: 16px; font-weight: 500; }
+        
+        @media (max-width: 768px) {
+            .header { padding: 15px 20px; }
+            .container { padding: 15px; }
+            .filters { flex-direction: column; align-items: stretch; }
+            .filters button { width: 100%; }
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <img src="logo.png" alt="HELUNEXA">
-        <div style="display:flex; gap:15px; align-items:center;">
-            <span class="role-badge">🩺 Hekim / Yönetici</span>
-            <a href="index.html" class="btn-ana">Ana Sayfa</a>
+        <div class="header-left"><img src="logo.png" alt="HELUNEXA"></div>
+        <div style="display:flex; align-items:center; gap:15px;">
+            <span class="role-badge">🩺 Hekim Paneli</span>
+            <a href="index.html" class="btn-home">Ana Sayfaya Dön</a>
         </div>
     </div>
 
     <div class="container">
-        <h1>Gelen Başvurular</h1>
-        <div id="loading">Veritabanına bağlanılıyor...</div>
-        <table id="appsTable" style="display:none;">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tarih</th>
-                    <th>Hasta Adı</th>
-                    <th>Telefon</th>
-                    <th>Hizmet</th>
-                    <th>Seçilen Tetkikler</th>
-                    <th>Durum</th>
-                    <th>İşlem</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
+        <div class="stats">
+            <div class="stat-card"><div class="num" id="statTotal">-</div><div class="label">Toplam Başvuru</div></div>
+            <div class="stat-card"><div class="num" id="statPending">-</div><div class="label">Bekleyen</div></div>
+            <div class="stat-card"><div class="num" id="statCompleted">-</div><div class="label">Tamamlanan</div></div>
+        </div>
+
+        <div class="filters">
+            <span>Filtrele:</span>
+            <button class="filter-btn active" data-filter="all">Tümü</button>
+            <button class="filter-btn" data-filter="pending">Bekleyenler</button>
+            <button class="filter-btn" data-filter="completed">Tamamlananlar</button>
+        </div>
+
+        <div class="table-container">
+            <div id="tableContent" class="empty-state">Başvurular Yükleniyor...</div>
+        </div>
+    </div>
+
+    <!-- DETAY MODALI -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header"><h2 id="modalTitle" style="color:var(--ink);">Hasta Detayı</h2><button class="close-btn" onclick="closeModal()">×</button></div>
+            <div id="modalBody"></div>
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:25px;">
+                <button class="btn btn-secondary" onclick="closeModal()">Kapat</button>
+                <button class="btn btn-primary" id="saveBtn">Durumu Güncelle</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        const supabaseUrl = 'https://grbjmhknmlheoyknmyhd.supabase.co';
-        const supabaseKey = 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p';
-        const db = supabase.createClient(supabaseUrl, supabaseKey);
+        const SUPABASE_URL = 'https://grbjmhknmlheoyknmyhd.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let allApps = [];
+        let currentApp = null;
+        let currentFilter = 'all';
 
-        async function getData() {
-            // Veritabanından tüm başvuruları çek
-            const { data, error } = await db.from('applications').select('*').order('id', { ascending: false });
+        async function loadApps() {
+            const container = document.getElementById('tableContent');
+            // Veriyi çek
+            const { data, error } = await _supabase.from('applications').select('*').order('created_at', { ascending: false });
             
-            const loading = document.getElementById('loading');
-            const table = document.getElementById('appsTable');
-            const tbody = document.getElementById('tableBody');
-
             if (error) {
-                loading.textContent = 'HATA: ' + error.message;
-                loading.style.color = 'red';
+                container.innerHTML = '<div style="color:red; padding:20px; font-weight:bold;">Veritabanı Hatası: ' + error.message + '</div>';
                 return;
             }
+            allApps = data || [];
+            updateStats();
+            renderTable();
+        }
 
-            loading.style.display = 'none';
-            table.style.display = 'table';
+        function updateStats() {
+            document.getElementById('statTotal').textContent = allApps.length;
+            document.getElementById('statPending').textContent = allApps.filter(a => a.status === 'pending' || !a.status).length;
+            document.getElementById('statCompleted').textContent = allApps.filter(a => a.status === 'completed').length;
+        }
 
-            if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Hiç başvuru bulunamadı.</td></tr>';
-                return;
-            }
+        function renderTable() {
+            let filtered = allApps;
+            if (currentFilter === 'pending') filtered = allApps.filter(a => a.status === 'pending' || !a.status);
+            if (currentFilter === 'completed') filtered = allApps.filter(a => a.status === 'completed');
 
-            // Tabloyu Doldur
-            let html = '';
-            data.forEach(app => {
-                const date = new Date(app.created_at || Date.now()).toLocaleDateString('tr-TR');
-                const statusClass = app.status === 'completed' ? 'status done' : 'status';
-                const statusText = app.status === 'completed' ? 'Tamamlandı' : 'Bekliyor';
-                
-                html += `
-                    <tr>
-                        <td>#${app.id}</td>
+            let html = `<table><thead><tr><th>Tarih</th><th>Hasta Adı</th><th>Telefon</th><th>Hizmet</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>`;
+            
+            if (filtered.length === 0) {
+                html += `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:40px;">Henüz başvuru bulunmuyor.</td></tr>`;
+            } else {
+                filtered.forEach(app => {
+                    const statusCls = app.status === 'completed' ? 'completed' : 'pending';
+                    const statusText = app.status === 'completed' ? 'Tamamlandı' : 'Bekliyor';
+                    const date = new Date(app.created_at).toLocaleDateString('tr-TR');
+                    
+                    html += `<tr>
                         <td>${date}</td>
                         <td><strong>${app.fullname}</strong></td>
-                        <td><a href="tel:${app.phone}">${app.phone || '-'}</a></td>
+                        <td>${app.phone || '-'}</td>
                         <td>${app.service_type}</td>
-                        <td>${app.test_notes || '-'}</td>
-                        <td><span class="${statusClass}">${statusText}</span></td>
-                        <td><button class="action-btn" onclick="tamamla(${app.id})">Tamamla</button></td>
-                    </tr>
-                `;
-            });
-            tbody.innerHTML = html;
+                        <td><span class="badge ${statusCls}">${statusText}</span></td>
+                        <td><button class="action-btn" onclick="openDetail(${app.id})">Detayı Gör</button></td>
+                    </tr>`;
+                });
+            }
+            html += '</tbody></table>';
+            document.getElementById('tableContent').innerHTML = html;
         }
 
-        // Durumu güncelle
-        async function tamamla(id) {
-            const { error } = await db.from('applications').update({ status: 'completed' }).eq('id', id);
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active'); 
+                currentFilter = btn.dataset.filter; 
+                renderTable();
+            }
+        });
+
+        window.openDetail = function(id) {
+            currentApp = allApps.find(a => a.id === id);
+            if (!currentApp) return;
+            
+            document.getElementById('modalTitle').textContent = currentApp.fullname;
+            document.getElementById('modalBody').innerHTML = `
+                <div class="detail-row"><label>Hizmet Türü</label><div class="value">${currentApp.service_type}</div></div>
+                <div class="detail-row"><label>Telefon</label><div class="value"><a href="tel:${currentApp.phone}" style="color:var(--green); font-weight:bold;">${currentApp.phone || 'Belirtilmedi'}</a></div></div>
+                <div class="detail-row"><label>Hasta Notu / Seçtiği Tetkikler</label><div class="value" style="background:var(--paper); padding:15px; border-radius:8px; font-size:14px; border:1px solid var(--line);">${currentApp.test_notes || 'Not girilmemiş.'}</div></div>
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--line);">
+                <div class="detail-row">
+                    <label>İşlem Durumu</label>
+                    <select id="editStatus">
+                        <option value="pending" ${currentApp.status === 'pending' || !currentApp.status ? 'selected' : ''}>Bekliyor</option>
+                        <option value="completed" ${currentApp.status === 'completed' ? 'selected' : ''}>Tamamlandı</option>
+                    </select>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+        };
+
+        window.closeModal = () => document.getElementById('modalOverlay').classList.remove('active');
+
+        document.getElementById('saveBtn').onclick = async () => {
+            if (!currentApp) return;
+            const btn = document.getElementById('saveBtn'); 
+            btn.disabled = true; btn.textContent = 'Kaydediliyor...';
+            
+            const { error } = await _supabase.from('applications').update({
+                status: document.getElementById('editStatus').value
+            }).eq('id', currentApp.id);
+            
             if (error) alert('Hata: ' + error.message);
-            else getData(); // Yeniden yükle
-        }
+            else { closeModal(); loadApps(); }
+            btn.disabled = false; btn.textContent = 'Durumu Güncelle';
+        };
 
-        // Sayfa açılır açılmaz çalıştır
-        getData();
+        loadApps();
     </script>
 </body>
 </html>
