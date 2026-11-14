@@ -136,3 +136,40 @@ footer { text-align: center; padding: 15px; color: #94a3b8; font-size: 12px; }
     .home-intro h1 { font-size: 20px; }
     .bottom-actions { flex-direction: column; } 
 }
+/* HELUNEXA giriş ekranı: açık mint + koyu zümrüt.
+   Yalnızca ana ekranı etkiler; logo, JS ve iç sayfalar değişmez. */
+body:has(.home-intro) {
+    background-color: #E5F5EE;
+}
+body:has(.home-intro) header {
+    background-color: #E5F5EE !important;
+    border-bottom-color: #D0EDE0 !important;
+}
+body:has(.home-intro) .home-intro .eyebrow,
+body:has(.home-intro) .home-intro h1 {
+    color: #087453 !important;
+}
+body:has(.home-intro) .home-intro p {
+    color: #3C6255;
+}
+body:has(.home-intro) .service-tile {
+    background: #FFFFFF;
+    border: 1px solid #B7DACB;
+    color: #174C3B;
+    box-shadow: 0 3px 12px rgba(8, 116, 83, .07);
+}
+body:has(.home-intro) .service-icon {
+    color: #087453;
+}
+body:has(.home-intro) .service-tile:hover,
+body:has(.home-intro) .service-tile:focus-visible {
+    background: #D0EDE0;
+    border-color: #087453;
+}
+body:has(.home-intro) .button.nav.secondary {
+    border-color: #087453;
+    color: #087453;
+}
+body:has(.home-intro) .button.nav.secondary:hover {
+    background: #D0EDE0;
+}
