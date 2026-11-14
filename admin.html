@@ -3,198 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HELUNEXA - Hekim & Yönetim Paneli</title>
-    <link rel="icon" href="favicon.ico">
+    <title>HELUNEXA - Hekim Paneli</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, Arial, sans-serif; background: #f8fafc; color: #0f172a; }
-        .header { background: white; padding: 15px 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .header-left img { height: 80px; }
-        .role-badge { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; background: #dbeafe; color: #1e40af; }
-        .logout-btn { background: #ef4444; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-decoration: none; font-size:14px; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
-        
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .stat-card .num { font-size: 28px; font-weight: bold; color: #10b981; }
-        .stat-card .label { font-size: 14px; color: #64748b; margin-top: 5px; }
-        
-        .filters { background: white; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-        .filters button { padding: 8px 16px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; font-weight:bold; color:#475569;}
-        .filters button.active { background: #10b981; color: white; border-color: #10b981; }
-        
-        .table-container { background: white; border-radius: 10px; overflow-x: auto; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: #f8fafc; padding: 14px 15px; text-align: left; font-size: 13px; color: #64748b; border-bottom: 1px solid #e2e8f0; }
-        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 15px; }
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; }
-        .badge.pending { background: #fef3c7; color: #92400e; }
-        .badge.completed { background: #d1fae5; color: #065f46; }
-        .action-btn { padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-overlay.active { display: flex; }
-        .modal { background: white; border-radius: 12px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 30px; }
-        .modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; }
-        .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; }
-        .detail-row { margin-bottom: 15px; }
-        .detail-row label { display: block; font-size: 12px; color: #64748b; margin-bottom: 4px; font-weight: bold; }
-        .detail-row .value { font-size: 16px; font-weight: 500; }
-        textarea, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; margin-top:5px; }
-        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        .btn-primary { background: #10b981; color: white; }
-        .btn-secondary { background: #e2e8f0; color: #475569; }
-        
-        .empty-state { padding: 40px; text-align: center; color: #94a3b8; font-size: 16px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, Arial, sans-serif; }
+        body { background: #f8fafc; color: #0f172a; padding: 20px; }
+        .header { background: white; padding: 15px 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; border-radius: 10px; margin-bottom: 20px; }
+        .header img { height: 60px; }
+        .role-badge { background: #dbeafe; color: #1e40af; padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+        .btn-ana { background: #64748b; color: white; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-weight: bold; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        h1 { font-size: 24px; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #f1f5f9; padding: 12px; text-align: left; font-size: 13px; color: #475569; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 15px 12px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        .status { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #fef3c7; color: #92400e; }
+        .status.done { background: #d1fae5; color: #065f46; }
+        .action-btn { padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; }
+        #loading { text-align: center; color: #64748b; padding: 40px; font-size: 16px; }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="header-left"><img src="logo.png" alt="HELUNEXA"></div>
-        <div style="display:flex; align-items:center; gap:15px;">
+        <img src="logo.png" alt="HELUNEXA">
+        <div style="display:flex; gap:15px; align-items:center;">
             <span class="role-badge">🩺 Hekim / Yönetici</span>
-            <a href="index.html" class="logout-btn" style="background:#64748b;">Ana Sayfaya Dön</a>
+            <a href="index.html" class="btn-ana">Ana Sayfa</a>
         </div>
     </div>
 
     <div class="container">
-        <div class="stats">
-            <div class="stat-card"><div class="num" id="statTotal">-</div><div class="label">Toplam Başvuru</div></div>
-            <div class="stat-card"><div class="num" id="statPending">-</div><div class="label">Bekleyen</div></div>
-            <div class="stat-card"><div class="num" id="statCompleted">-</div><div class="label">Tamamlanan</div></div>
-        </div>
-
-        <div class="filters">
-            <span style="font-weight:bold; color:#64748b; font-size:14px;">Filtrele:</span>
-            <button class="filter-btn active" data-filter="all">Tümü</button>
-            <button class="filter-btn" data-filter="pending">Bekleyen</button>
-            <button class="filter-btn" data-filter="completed">Tamamlanan</button>
-        </div>
-
-        <div class="table-container">
-            <div id="tableContent" class="empty-state">Başvurular Yükleniyor...</div>
-        </div>
-    </div>
-
-    <!-- DETAY MODALI -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
-            <div class="modal-header"><h2 id="modalTitle">Hasta Detayı</h2><button class="close-btn" onclick="closeModal()">×</button></div>
-            <div id="modalBody"></div>
-            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
-                <button class="btn btn-secondary" onclick="closeModal()">Kapat</button>
-                <button class="btn btn-primary" id="saveBtn">Durumu Güncelle</button>
-            </div>
-        </div>
+        <h1>Gelen Başvurular</h1>
+        <div id="loading">Veritabanına bağlanılıyor...</div>
+        <table id="appsTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tarih</th>
+                    <th>Hasta Adı</th>
+                    <th>Telefon</th>
+                    <th>Hizmet</th>
+                    <th>Seçilen Tetkikler</th>
+                    <th>Durum</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://grbjmhknmlheoyknmyhd.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        let allApps = [];
-        let currentApp = null;
-        let currentFilter = 'all';
+        const supabaseUrl = 'https://grbjmhknmlheoyknmyhd.supabase.co';
+        const supabaseKey = 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p';
+        const db = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Sayfa yüklendiğinde başvuruları getir
-        async function loadApps() {
-            const container = document.getElementById('tableContent');
-            const { data, error } = await _supabase.from('applications').select('*').order('created_at', { ascending: false });
+        async function getData() {
+            // Veritabanından tüm başvuruları çek
+            const { data, error } = await db.from('applications').select('*').order('id', { ascending: false });
             
+            const loading = document.getElementById('loading');
+            const table = document.getElementById('appsTable');
+            const tbody = document.getElementById('tableBody');
+
             if (error) {
-                container.innerHTML = '<div style="color:red; padding:20px;">Veritabanı hatası: ' + error.message + '</div>';
+                loading.textContent = 'HATA: ' + error.message;
+                loading.style.color = 'red';
                 return;
             }
-            allApps = data || [];
-            updateStats();
-            renderTable();
-        }
 
-        function updateStats() {
-            document.getElementById('statTotal').textContent = allApps.length;
-            document.getElementById('statPending').textContent = allApps.filter(a => a.status === 'pending' || !a.status).length;
-            document.getElementById('statCompleted').textContent = allApps.filter(a => a.status === 'completed').length;
-        }
+            loading.style.display = 'none';
+            table.style.display = 'table';
 
-        function renderTable() {
-            let filtered = allApps;
-            if (currentFilter === 'pending') filtered = allApps.filter(a => a.status === 'pending' || !a.status);
-            if (currentFilter === 'completed') filtered = allApps.filter(a => a.status === 'completed');
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Hiç başvuru bulunamadı.</td></tr>';
+                return;
+            }
 
-            let html = `<table><thead><tr><th>Tarih</th><th>Hasta Adı</th><th>Telefon</th><th>Hizmet</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>`;
-            
-            if (filtered.length === 0) {
-                html += `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:30px;">Bu kriterlere uygun başvuru bulunamadı.</td></tr>`;
-            } else {
-                filtered.forEach(app => {
-                    const statusCls = app.status === 'completed' ? 'completed' : 'pending';
-                    const statusText = app.status === 'completed' ? 'Tamamlandı' : 'Bekliyor';
-                    const date = new Date(app.created_at).toLocaleDateString('tr-TR');
-                    
-                    html += `<tr>
+            // Tabloyu Doldur
+            let html = '';
+            data.forEach(app => {
+                const date = new Date(app.created_at || Date.now()).toLocaleDateString('tr-TR');
+                const statusClass = app.status === 'completed' ? 'status done' : 'status';
+                const statusText = app.status === 'completed' ? 'Tamamlandı' : 'Bekliyor';
+                
+                html += `
+                    <tr>
+                        <td>#${app.id}</td>
                         <td>${date}</td>
                         <td><strong>${app.fullname}</strong></td>
-                        <td>${app.phone || '-'}</td>
+                        <td><a href="tel:${app.phone}">${app.phone || '-'}</a></td>
                         <td>${app.service_type}</td>
-                        <td><span class="badge ${statusCls}">${statusText}</span></td>
-                        <td><button class="action-btn" onclick="openDetail(${app.id})">Detay</button></td>
-                    </tr>`;
-                });
-            }
-            html += '</tbody></table>';
-            document.getElementById('tableContent').innerHTML = html;
+                        <td>${app.test_notes || '-'}</td>
+                        <td><span class="${statusClass}">${statusText}</span></td>
+                        <td><button class="action-btn" onclick="tamamla(${app.id})">Tamamla</button></td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
         }
 
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active'); 
-                currentFilter = btn.dataset.filter; 
-                renderTable();
-            }
-        });
-
-        window.openDetail = function(id) {
-            currentApp = allApps.find(a => a.id === id);
-            if (!currentApp) return;
-            
-            document.getElementById('modalTitle').textContent = currentApp.fullname;
-            document.getElementById('modalBody').innerHTML = `
-                <div class="detail-row"><label>Hizmet Türü</label><div class="value">${currentApp.service_type}</div></div>
-                <div class="detail-row"><label>Telefon</label><div class="value"><a href="tel:${currentApp.phone}">${currentApp.phone || 'Belirtilmedi'}</a></div></div>
-                <div class="detail-row"><label>Hasta Notu / Seçtiği Tetkikler</label><div class="value" style="background:#f8fafc; padding:10px; border-radius:6px; font-size:14px;">${currentApp.test_notes || 'Not girilmemiş.'}</div></div>
-                <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-                <div class="detail-row">
-                    <label>Durum Güncelle</label>
-                    <select id="editStatus">
-                        <option value="pending" ${currentApp.status === 'pending' || !currentApp.status ? 'selected' : ''}>Bekliyor</option>
-                        <option value="completed" ${currentApp.status === 'completed' ? 'selected' : ''}>Tamamlandı</option>
-                    </select>
-                </div>
-            `;
-            document.getElementById('modalOverlay').classList.add('active');
-        };
-
-        window.closeModal = () => document.getElementById('modalOverlay').classList.remove('active');
-
-        document.getElementById('saveBtn').onclick = async () => {
-            if (!currentApp) return;
-            const btn = document.getElementById('saveBtn'); 
-            btn.disabled = true; btn.textContent = 'Kaydediliyor...';
-            
-            const { error } = await _supabase.from('applications').update({
-                status: document.getElementById('editStatus').value
-            }).eq('id', currentApp.id);
-            
+        // Durumu güncelle
+        async function tamamla(id) {
+            const { error } = await db.from('applications').update({ status: 'completed' }).eq('id', id);
             if (error) alert('Hata: ' + error.message);
-            else { closeModal(); loadApps(); }
-            btn.disabled = false; btn.textContent = 'Durumu Güncelle';
-        };
+            else getData(); // Yeniden yükle
+        }
 
-        // İlk yükleme
-        loadApps();
+        // Sayfa açılır açılmaz çalıştır
+        getData();
     </script>
 </body>
 </html>
