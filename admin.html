@@ -2,78 +2,59 @@
 <html lang="tr" translate="no">
 <head>
     <meta charset="UTF-8">
-    <meta name="google" content="notranslate">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HELUNEXA - Yönetim & Hekim Paneli</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELUNEXA - Hekim & Yönetim Paneli</title>
+    <link rel="icon" href="favicon.ico">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, Arial, sans-serif; background: #f1f5f9; color: #0f172a; }
+        body { font-family: -apple-system, Arial, sans-serif; background: #f8fafc; color: #0f172a; }
         .header { background: white; padding: 15px 30px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .header-left img { height: 80px; }
-        .role-badge { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; }
-        .role-badge.admin { background: #fef3c7; color: #92400e; }
-        .role-badge.doctor { background: #dbeafe; color: #1e40af; }
-        .logout-btn { background: #ef4444; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .role-badge { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; background: #dbeafe; color: #1e40af; }
+        .logout-btn { background: #ef4444; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; text-decoration: none; font-size:14px; }
         .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
+        
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .stat-card .num { font-size: 28px; font-weight: bold; color: #10b981; }
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; overflow-x: auto; }
-        .tab-btn { padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: bold; color: #64748b; white-space: nowrap; }
-        .tab-btn.active { color: #10b981; border-bottom-color: #10b981; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .stat-card .label { font-size: 14px; color: #64748b; margin-top: 5px; }
+        
         .filters { background: white; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-        .filters button { padding: 8px 16px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; }
+        .filters button { padding: 8px 16px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; font-weight:bold; color:#475569;}
         .filters button.active { background: #10b981; color: white; border-color: #10b981; }
-        .table-container { background: white; border-radius: 10px; overflow-x: auto; }
+        
+        .table-container { background: white; border-radius: 10px; overflow-x: auto; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         table { width: 100%; border-collapse: collapse; }
-        th { background: #f8fafc; padding: 14px 15px; text-align: left; font-size: 12px; color: #64748b; border-bottom: 1px solid #e2e8f0; }
-        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        th { background: #f8fafc; padding: 14px 15px; text-align: left; font-size: 13px; color: #64748b; border-bottom: 1px solid #e2e8f0; }
+        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 15px; }
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; }
         .badge.pending { background: #fef3c7; color: #92400e; }
         .badge.completed { background: #d1fae5; color: #065f46; }
-        .badge.in_progress { background: #dbeafe; color: #1e40af; }
-        .badge.appointment { background: #ecfdf5; color: #047857; border: 1px solid #10b981; margin-top: 5px; }
-        .action-btn { padding: 6px 12px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .action-btn { padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.active { display: flex; }
-        .modal { background: white; border-radius: 12px; max-width: 850px; width: 100%; max-height: 95vh; overflow-y: auto; padding: 30px; }
+        .modal { background: white; border-radius: 12px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 30px; }
         .modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; }
         .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; }
         .detail-row { margin-bottom: 15px; }
         .detail-row label { display: block; font-size: 12px; color: #64748b; margin-bottom: 4px; font-weight: bold; }
-        .detail-row .value { font-size: 15px; }
-        textarea, select, input[type="text"], input[type="email"], input[type="number"] { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; }
-        textarea { min-height: 80px; resize: vertical; }
+        .detail-row .value { font-size: 16px; font-weight: 500; }
+        textarea, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; margin-top:5px; }
         .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
         .btn-primary { background: #10b981; color: white; }
         .btn-secondary { background: #e2e8f0; color: #475569; }
-
-        .patient-selected-tests { background: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f59e0b; }
-        .patient-selected-tests ul { list-style: none; padding: 0; margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
-        .patient-selected-tests li { background: white; padding: 6px 12px; border-radius: 4px; font-size: 13px; border: 1px solid #fde68a; color: #92400e; font-weight: 600; }
         
-        .eval-box { background: #f8fafc; border-left: 4px solid #3b82f6; padding: 20px; border-radius: 8px; margin-top: 20px; }
-
-        .special-medical-form { display: none; margin-top: 20px; background: #ecfdf5; padding: 20px; border-radius: 12px; border: 2px dashed #10b981; }
-        .special-medical-form h3 { color: #059669; margin-bottom: 15px; font-size: 16px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .grid-full { grid-column: 1 / -1; }
-
-        @media (max-width: 768px) { .container { padding: 15px; } table { min-width: 800px; } .grid-2 { grid-template-columns: 1fr; } }
+        .empty-state { padding: 40px; text-align: center; color: #94a3b8; font-size: 16px; }
     </style>
 </head>
-<body class="notranslate">
+<body>
     <div class="header">
         <div class="header-left"><img src="logo.png" alt="HELUNEXA"></div>
         <div style="display:flex; align-items:center; gap:15px;">
-            <span id="roleBadge" class="role-badge"></span>
-            <span id="userEmail" style="font-size:13px; color:#64748b;"></span>
-            <button class="logout-btn" id="logoutBtn">Çıkış</button>
+            <span class="role-badge">🩺 Hekim / Yönetici</span>
+            <a href="index.html" class="logout-btn" style="background:#64748b;">Ana Sayfaya Dön</a>
         </div>
     </div>
 
@@ -81,78 +62,29 @@
         <div class="stats">
             <div class="stat-card"><div class="num" id="statTotal">-</div><div class="label">Toplam Başvuru</div></div>
             <div class="stat-card"><div class="num" id="statPending">-</div><div class="label">Bekleyen</div></div>
-            <div class="stat-card"><div class="num" id="statProgress">-</div><div class="label">İşlemde</div></div>
             <div class="stat-card"><div class="num" id="statCompleted">-</div><div class="label">Tamamlanan</div></div>
         </div>
 
-        <div class="tabs">
-            <button class="tab-btn active" data-tab="applications">📋 Başvurular ve Randevular</button>
-            
+        <div class="filters">
+            <span style="font-weight:bold; color:#64748b; font-size:14px;">Filtrele:</span>
+            <button class="filter-btn active" data-filter="all">Tümü</button>
+            <button class="filter-btn" data-filter="pending">Bekleyen</button>
+            <button class="filter-btn" data-filter="completed">Tamamlanan</button>
         </div>
 
-        <div class="tab-content active" id="tab-applications">
-            <div class="filters">
-                <span style="font-weight:bold; color:#64748b; margin-right:10px; font-size:14px;">Durum:</span>
-                <button class="filter-btn active" data-filter="all">Tümü</button>
-                <button class="filter-btn" data-filter="pending">Bekleyen</button>
-                <button class="filter-btn" data-filter="completed">Tamamlanan</button>
-                
-                <span style="border-left: 1px solid #cbd5e1; height: 20px; margin: 0 10px;"></span>
-                
-                <span style="font-weight:bold; color:#64748b; margin-right:10px; font-size:14px;">Tarih:</span>
-                <button class="date-filter-btn active" data-date="all">Tüm Zamanlar</button>
-                <button class="date-filter-btn" data-date="today">Bugün</button>
-                <button class="date-filter-btn" data-date="upcoming">Gelecek Randevular</button>
-            </div>
-            <div class="table-container"><div id="tableContent">Yükleniyor...</div></div>
-        </div>
-
-        <div class="tab-content" id="tab-addDoctor">
-            <div style="background:white; padding:25px; border-radius:12px;">
-                <h2>Yeni Doktor Ekle</h2>
-                <div style="margin-top:15px; display:grid; gap:10px; max-width:400px;">
-                    <div><label>Ad Soyad</label><input type="text" id="newDocName"></div>
-                    <div><label>E-posta</label><input type="email" id="newDocEmail"></div>
-                    <div>
-                        <label>Branş</label>
-                        <select id="newDocSpecialty">
-                            <option value="internal">Dahiliye</option>
-                            <option value="psychology">Psikoloji</option>
-                            <option value="gynecology">Kadın Doğum</option>
-                        </select>
-                    </div>
-                    <div><label>Şifre</label><input type="text" id="newDocPassword" value="Helunexa123!"></div>
-                    <button class="btn btn-primary" id="saveDoctorBtn" style="margin-top:10px;">Kaydet</button>
-                    <div id="doctorMessage" style="font-size:13px;"></div>
-                </div>
-            </div>
+        <div class="table-container">
+            <div id="tableContent" class="empty-state">Başvurular Yükleniyor...</div>
         </div>
     </div>
 
+    <!-- DETAY MODALI -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <div class="modal-header"><h2 id="modalTitle">Hasta Detayı</h2><button class="close-btn" onclick="closeModal()">×</button></div>
-            <div class="modal-body" id="modalBody"></div>
-            
-            <div id="specialMedicalForm" class="special-medical-form">
-                <h3>🩺 Hekim Tıbbi Değerlendirmesi (Özel Modül)</h3>
-                
-                <div id="form_7_modul" class="grid-2" style="display:none;">
-                    <div><label>Gebelik Haftası</label><input type="number" id="med_week" placeholder="Örn: 24"></div>
-                    <div><label>Gravida / Parite</label><input type="text" id="med_gravida" placeholder="Örn: G2 P1"></div>
-                    <div class="grid-full"><label>Tıbbi Not / Risk Durumu</label><textarea id="med_pregnancy_note" placeholder="Kanama, tansiyon, şeker, bebek hareketleri vb..."></textarea></div>
-                </div>
-
-                <div id="form_8_modul" class="grid-2" style="display:none;">
-                    <div><label>Şirket Kodu</label><input type="text" id="med_corp_code" placeholder="Örn: PILOT01"></div>
-                    <div><label>Sicil No</label><input type="text" id="med_emp_no" placeholder="Örn: EMP-1001"></div>
-                    <div class="grid-full"><label>İş Yeri Hekimliği Notu / Ergonomi Değerlendirmesi</label><textarea id="med_corporate_note" placeholder="Masa başı çalışma, sırt ağrısı, iş kazası öyküsü vb..."></textarea></div>
-                </div>
-            </div>
-
+            <div id="modalBody"></div>
             <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
                 <button class="btn btn-secondary" onclick="closeModal()">Kapat</button>
-                <button class="btn btn-primary" id="saveBtn">Değişiklikleri Kaydet</button>
+                <button class="btn btn-primary" id="saveBtn">Durumu Güncelle</button>
             </div>
         </div>
     </div>
@@ -160,32 +92,21 @@
     <script>
         const SUPABASE_URL = 'https://grbjmhknmlheoyknmyhd.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p';
-        const { createClient } = supabase;
-        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'helunexa-hasta-auth' } });
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let allApps = [];
+        let currentApp = null;
+        let currentFilter = 'all';
 
-        let currentRole = 'admin', currentSpecialty = null, allApps = [], currentApp = null;
-        let currentStatusFilter = 'all';
-        let currentDateFilter = 'all';
-
-        const DOCTOR_CATALOG = [
-            "Hemogram", "Ferritin", "Açlık glukozu ve HbA1c", "Lipid profili", 
-            "TSH", "Serbest T4", "D vitamini · 25-OH D", "Vitamin B12", 
-            "Kreatinin / eGFR", "ALT", "AST", "Tam idrar tahlili", 
-            "C-Reaktif Protein (CRP)", "Magnezyum", "Çinko", "Demir Bağlama Kapasitesi"
-        ];
-
-        // Giriş kontrolü kaldırıldı, direkt panel açılıyor
-        async function checkSession() {
-            const badge = document.getElementById('roleBadge');
-            badge.textContent = '🩺 Hekim / Yönetici'; 
-            badge.className = 'role-badge admin'; 
-            document.getElementById('tabAddDoctorBtn').style.display = 'block'; 
-            document.getElementById('userEmail').textContent = 'hekim@helunexa.com';
-            loadApps();
-        }
-
+        // Sayfa yüklendiğinde başvuruları getir
         async function loadApps() {
-            const { data } = await _supabase.from('applications').select('*').order('created_at', { ascending: false });
+            const container = document.getElementById('tableContent');
+            const { data, error } = await _supabase.from('applications').select('*').order('created_at', { ascending: false });
+            
+            if (error) {
+                container.innerHTML = '<div style="color:red; padding:20px;">Veritabanı hatası: ' + error.message + '</div>';
+                return;
+            }
             allApps = data || [];
             updateStats();
             renderTable();
@@ -193,50 +114,30 @@
 
         function updateStats() {
             document.getElementById('statTotal').textContent = allApps.length;
-            document.getElementById('statPending').textContent = allApps.filter(a => a.status === 'pending' || !a.status || a.status === 'paid').length;
-            document.getElementById('statProgress').textContent = allApps.filter(a => a.status === 'in_progress').length;
+            document.getElementById('statPending').textContent = allApps.filter(a => a.status === 'pending' || !a.status).length;
             document.getElementById('statCompleted').textContent = allApps.filter(a => a.status === 'completed').length;
         }
 
         function renderTable() {
             let filtered = allApps;
+            if (currentFilter === 'pending') filtered = allApps.filter(a => a.status === 'pending' || !a.status);
+            if (currentFilter === 'completed') filtered = allApps.filter(a => a.status === 'completed');
 
-            if (currentStatusFilter !== 'all') {
-                filtered = filtered.filter(a => a.status === currentStatusFilter);
-            }
-
-            if (currentDateFilter !== 'all') {
-                const todayStr = new Date().toLocaleDateString('en-CA'); 
-                filtered = filtered.filter(app => {
-                    if (!app.appointment_date) return false; 
-                    const appDateStr = new Date(app.appointment_date).toLocaleDateString('en-CA');
-                    if (currentDateFilter === 'today') return appDateStr === todayStr;
-                    if (currentDateFilter === 'upcoming') return appDateStr > todayStr;
-                    return true;
-                });
-            }
-
-            let html = `<table><thead><tr><th>Başvuru Tarihi</th><th>Hasta</th><th>Hizmet</th><th>Randevu Tarihi</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>`;
+            let html = `<table><thead><tr><th>Tarih</th><th>Hasta Adı</th><th>Telefon</th><th>Hizmet</th><th>Durum</th><th>İşlem</th></tr></thead><tbody>`;
             
             if (filtered.length === 0) {
                 html += `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:30px;">Bu kriterlere uygun başvuru bulunamadı.</td></tr>`;
             } else {
                 filtered.forEach(app => {
-                    const statusCls = app.status === 'completed' ? 'completed' : (app.status === 'in_progress' ? 'in_progress' : 'pending');
-                    const statusText = app.status === 'completed' ? 'Tamamlandı' : (app.status === 'in_progress' ? 'İşlemde' : 'Bekliyor');
+                    const statusCls = app.status === 'completed' ? 'completed' : 'pending';
+                    const statusText = app.status === 'completed' ? 'Tamamlandı' : 'Bekliyor';
+                    const date = new Date(app.created_at).toLocaleDateString('tr-TR');
                     
-                    let appointmentHtml = '<span style="color:#94a3b8;">-</span>';
-                    if (app.appointment_date) {
-                        const apptDate = new Date(app.appointment_date);
-                        const formattedDate = apptDate.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short', year: 'numeric' });
-                        appointmentHtml = `<span class="badge appointment">📅 ${formattedDate} ${app.appointment_time ? '· ' + app.appointment_time : ''}</span>`;
-                    }
-
                     html += `<tr>
-                        <td>${new Date(app.created_at).toLocaleDateString('tr-TR')}</td>
+                        <td>${date}</td>
                         <td><strong>${app.fullname}</strong></td>
+                        <td>${app.phone || '-'}</td>
                         <td>${app.service_type}</td>
-                        <td>${appointmentHtml}</td>
                         <td><span class="badge ${statusCls}">${statusText}</span></td>
                         <td><button class="action-btn" onclick="openDetail(${app.id})">Detay</button></td>
                     </tr>`;
@@ -250,16 +151,7 @@
             btn.onclick = () => {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active'); 
-                currentStatusFilter = btn.dataset.filter; 
-                renderTable();
-            }
-        });
-
-        document.querySelectorAll('.date-filter-btn').forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll('.date-filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active'); 
-                currentDateFilter = btn.dataset.date; 
+                currentFilter = btn.dataset.filter; 
                 renderTable();
             }
         });
@@ -269,214 +161,40 @@
             if (!currentApp) return;
             
             document.getElementById('modalTitle').textContent = currentApp.fullname;
-            
-            let patientSelectedHtml = '';
-            if (currentApp.test_notes && currentApp.test_notes.includes('Seçilenler:')) {
-                let selectedTestsString = currentApp.test_notes.replace('Seçilenler: ', '');
-                let testList = selectedTestsString.split(', ');
-                
-                patientSelectedHtml = `
-                    <div class="patient-selected-tests">
-                        <strong style="color:#92400e; font-size:14px;">🧪 Hastanın Seçtiği Tetkikler (Talep):</strong>
-                        <p style="font-size:12px; color:#b45309; margin-top:5px;">Hasta başvurusunda bu tetkikleri yaptırmak istediğini belirtti.</p>
-                        <ul>
-                            ${testList.map(t => `<li>${t}</li>`).join('')}
-                        </ul>
-                    </div>
-                `;
-            }
-
-            let currentPrescription = currentApp.prescription || '';
-            let appointmentDetail = '';
-            
-            if (currentApp.appointment_date) {
-                appointmentDetail = `<div class="detail-row" style="background:#ecfdf5; padding:10px; border-radius:6px; border-left:4px solid #10b981; margin-bottom:15px;">
-                    <label style="color:#065f46;">📅 Randevu Tarihi ve Saati</label>
-                    <div class="value" style="font-weight:bold; color:#047857;">${new Date(currentApp.appointment_date).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })} ${currentApp.appointment_time ? ' - Saat: ' + currentApp.appointment_time : ''}</div>
-                </div>`;
-            }
-
             document.getElementById('modalBody').innerHTML = `
-                ${appointmentDetail}
-                
-                <div class="detail-row" style="background:#ecfdf5; padding:12px; border-radius:6px; border-left:4px solid #10b981; margin-bottom:15px;">
-                    <label style="color:#065f46; font-size:12px; font-weight:bold;">📞 Hasta Telefonu</label>
-                    <div class="value" style="font-weight:bold; color:#047857; font-size:18px; margin-top:4px;">
-                        <a href="tel:${currentApp.phone || ''}" style="color:#047857; text-decoration:none;">${currentApp.phone || 'Belirtilmedi'}</a>
-                    </div>
-                </div>
-                
-                ${patientSelectedHtml}
-                
                 <div class="detail-row"><label>Hizmet Türü</label><div class="value">${currentApp.service_type}</div></div>
-                <div class="detail-row"><label>Hasta Notları</label><div class="value" style="white-space:pre-wrap;">${currentApp.test_notes || '-'}</div></div>
-                
+                <div class="detail-row"><label>Telefon</label><div class="value"><a href="tel:${currentApp.phone}">${currentApp.phone || 'Belirtilmedi'}</a></div></div>
+                <div class="detail-row"><label>Hasta Notu / Seçtiği Tetkikler</label><div class="value" style="background:#f8fafc; padding:10px; border-radius:6px; font-size:14px;">${currentApp.test_notes || 'Not girilmemiş.'}</div></div>
                 <hr style="margin: 20px 0; border: none; border-top: 1px solid #e2e8f0;">
-                
-                <div class="eval-box">
-                    <h3 style="font-size:16px; color:#1e40af; margin-bottom:10px;">🩺 Hekim Değerlendirmesi</h3>
-                    <div class="detail-row">
-                        <label>Genel Durum</label>
-                        <select id="editStatus">
-                            <option value="pending" ${currentApp.status === 'pending' ? 'selected' : ''}>Bekliyor (Onay Bekliyor)</option>
-                            <option value="in_progress" ${currentApp.status === 'in_progress' ? 'selected' : ''}>İşlemde</option>
-                            <option value="completed" ${currentApp.status === 'completed' ? 'selected' : ''}>Tamamlandı (Onaylandı)</option>
-                            <option value="cancelled" ${currentApp.status === 'cancelled' ? 'selected' : ''}>İptal</option>
-                        </select>
-                    </div>
-                    <div class="detail-row"><label>Hekim Notu (Kısa)</label><textarea id="editNote">${currentApp.doctor_note || ''}</textarea></div>
-                    <div class="detail-row"><label>Hekim Değerlendirmesi</label><textarea id="editEvaluation">${currentApp.evaluation || ''}</textarea></div>
-                    
-                    <div class="detail-row" style="background:#eff6ff; padding:15px; border-radius:8px; border:1px solid #bfdbfe; margin-top:20px;">
-                        <label style="color:#1e40af; font-size:13px; font-weight:bold;">➕ Hekimin Önerdiği Tetkikler (Kendi Önerisi)</label>
-                        <p style="font-size:11px; color:#3b82f6; margin-bottom:8px;">Hastanın talebinden bağımsız olarak, uygun gördüğünüz tetkikleri buraya ekleyin.</p>
-                        <div style="display:flex; gap:10px; margin-bottom:10px;">
-                            <select id="doctorTestSelect" style="flex:1; padding:8px; border:1px solid #93c5fd; border-radius:6px;">
-                                <option value="">Tetkik seçin...</option>
-                                ${DOCTOR_CATALOG.map(t => `<option value="${t}">${t}</option>`).join('')}
-                            </select>
-                            <button type="button" class="btn btn-primary" onclick="addDoctorTest()" style="padding: 8px 15px; font-size:13px;">Ekle</button>
-                        </div>
-                        <div id="doctorSelectedList" style="display:flex; flex-wrap:wrap; gap:5px; margin-bottom:10px;"></div>
-                        
-                        <label style="margin-top:10px; display:block; font-size:13px; font-weight:bold;">Nihai Reçete / Panel (Düzenlenebilir)</label>
-                        <textarea id="editPrescription" style="min-height:100px; background:white; border-color:#93c5fd; margin-top:5px;">${currentPrescription}</textarea>
-                    </div>
+                <div class="detail-row">
+                    <label>Durum Güncelle</label>
+                    <select id="editStatus">
+                        <option value="pending" ${currentApp.status === 'pending' || !currentApp.status ? 'selected' : ''}>Bekliyor</option>
+                        <option value="completed" ${currentApp.status === 'completed' ? 'selected' : ''}>Tamamlandı</option>
+                    </select>
                 </div>
             `;
-            
-            window.tempDoctorTests = currentPrescription ? currentPrescription.split('\n').filter(t => t.trim() !== '') : [];
-            renderDoctorSelectedList();
-
-            const specialFormDiv = document.getElementById('specialMedicalForm');
-            const form7 = document.getElementById('form_7_modul');
-            const form8 = document.getElementById('form_8_modul');
-
-            specialFormDiv.style.display = 'none';
-            form7.style.display = 'none';
-            form8.style.display = 'none';
-
-            const medDetails = currentApp.medical_details || {};
-
-            if (currentApp.service_type === 'Gebelik Takibi' || currentApp.service_type === 'Anne ve Bebek Sağlığı / Gebelik') {
-                specialFormDiv.style.display = 'block';
-                form7.style.display = 'grid';
-                document.getElementById('med_week').value = medDetails.week || '';
-                document.getElementById('med_gravida').value = medDetails.gravida || '';
-                document.getElementById('med_pregnancy_note').value = medDetails.pregnancy_note || '';
-            } 
-            else if (currentApp.service_type === 'Kurumsal Sağlık' || currentApp.service_type === 'Kurumsal Sağlık ve Çalışan Takibi') {
-                specialFormDiv.style.display = 'block';
-                form8.style.display = 'grid';
-                document.getElementById('med_corp_code').value = medDetails.corp_code || currentApp.corporate_code || '';
-                document.getElementById('med_emp_no').value = medDetails.emp_no || currentApp.employee_number || '';
-                document.getElementById('med_corporate_note').value = medDetails.corporate_note || '';
-            }
-
             document.getElementById('modalOverlay').classList.add('active');
-        };
-
-        window.addDoctorTest = function() {
-            const select = document.getElementById('doctorTestSelect');
-            const test = select.value;
-            if (!test) return;
-            
-            if (!window.tempDoctorTests.includes(test)) {
-                window.tempDoctorTests.push(test);
-                renderDoctorSelectedList();
-            }
-            select.value = ''; 
-        };
-
-        window.removeDoctorTest = function(test) {
-            window.tempDoctorTests = window.tempDoctorTests.filter(t => t !== test);
-            renderDoctorSelectedList();
-        };
-
-        window.renderDoctorSelectedList = function() {
-            const listContainer = document.getElementById('doctorSelectedList');
-            const presTextarea = document.getElementById('editPrescription');
-            
-            if (window.tempDoctorTests.length === 0) {
-                listContainer.innerHTML = '<span style="font-size:12px; color:#94a3b8;">Henüz öneri eklenmedi.</span>';
-            } else {
-                listContainer.innerHTML = window.tempDoctorTests.map(t => `
-                    <span style="background:#dbeafe; color:#1e40af; padding:4px 8px; border-radius:4px; font-size:12px; display:flex; align-items:center; gap:5px; border:1px solid #bfdbfe;">
-                        ${t}
-                        <button type="button" onclick="removeDoctorTest('${t}')" style="background:none; border:none; color:#1e40af; cursor:pointer; font-size:14px; font-weight:bold; padding:0;">×</button>
-                    </span>
-                `).join('');
-            }
-            
-            presTextarea.value = window.tempDoctorTests.join('\n');
         };
 
         window.closeModal = () => document.getElementById('modalOverlay').classList.remove('active');
 
         document.getElementById('saveBtn').onclick = async () => {
             if (!currentApp) return;
-            const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.textContent = 'Kaydediliyor...';
+            const btn = document.getElementById('saveBtn'); 
+            btn.disabled = true; btn.textContent = 'Kaydediliyor...';
             
-            const medicalDetails = {
-                week: document.getElementById('med_week') ? document.getElementById('med_week').value : null,
-                gravida: document.getElementById('med_gravida') ? document.getElementById('med_gravida').value : null,
-                pregnancy_note: document.getElementById('med_pregnancy_note') ? document.getElementById('med_pregnancy_note').value : null,
-                corp_code: document.getElementById('med_corp_code') ? document.getElementById('med_corp_code').value : null,
-                emp_no: document.getElementById('med_emp_no') ? document.getElementById('med_emp_no').value : null,
-                corporate_note: document.getElementById('med_corporate_note') ? document.getElementById('med_corporate_note').value : null
-            };
-
             const { error } = await _supabase.from('applications').update({
-                status: document.getElementById('editStatus').value,
-                doctor_note: document.getElementById('editNote').value,
-                evaluation: document.getElementById('editEvaluation').value,
-                prescription: document.getElementById('editPrescription').value,
-                medical_details: medicalDetails
+                status: document.getElementById('editStatus').value
             }).eq('id', currentApp.id);
             
             if (error) alert('Hata: ' + error.message);
             else { closeModal(); loadApps(); }
-            btn.disabled = false; btn.textContent = 'Değişiklikleri Kaydet';
+            btn.disabled = false; btn.textContent = 'Durumu Güncelle';
         };
 
-        document.getElementById('saveDoctorBtn').onclick = async () => {
-            const name = document.getElementById('newDocName').value.trim();
-            const email = document.getElementById('newDocEmail').value.trim();
-            const spec = document.getElementById('newDocSpecialty').value;
-            const pass = document.getElementById('newDocPassword').value;
-            const msg = document.getElementById('doctorMessage');
-            if (!name || !email || !pass) { msg.textContent = 'Tüm alanları doldurun.'; msg.style.color='red'; return; }
-            
-            const { createClient } = supabase;
-            const temp = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false } });
-            
-            try {
-                const { data, error } = await temp.auth.signUp({ email, password: pass });
-                if (error) throw error;
-                
-                const { error: roleErr } = await _supabase.from('user_roles').insert([{
-                    user_id: data.user.id, email: email, role: 'doctor', display_name: name, specialty: spec
-                }]);
-                if (roleErr) throw roleErr;
-                
-                msg.textContent = '✅ Doktor eklendi!'; msg.style.color='green';
-                document.getElementById('newDocName').value = ''; document.getElementById('newDocEmail').value = '';
-            } catch (err) {
-                msg.textContent = '❌ Hata: ' + err.message; msg.style.color='red';
-            }
-        };
-
-        document.getElementById('logoutBtn').onclick = async () => { window.location.href = 'index.html'; };
-        
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.onclick = () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                btn.classList.add('active'); document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-            }
-        });
-
-        checkSession();
+        // İlk yükleme
+        loadApps();
     </script>
 </body>
 </html>
