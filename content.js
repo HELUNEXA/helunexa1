@@ -86,7 +86,12 @@ window.HELUNEXA_CONTENT = {
     {"id":"guney","name":"Güney Merkezi","tag":"Örnek","area":"Güney","modules":[1,2,3,6,7,8],"modes":["clinic","home","work"],"areas":["Merkez","Güney"],"distances":{"Merkez":5.5,"Kuzey":12.0,"Güney":1.5},"fee":"Ücret kurumdan","response":"1 iş günü","access":"Evde bakım","minGroup":20}
   ],
   "quickOptions": {
-    "2": [{"id":"chronic:dm","name":"Diyabet"},{"id":"chronic:bp","name":"Tansiyon"}],
+    "2": [
+      {"id":"chronic:dm","name":"Diyabet"},
+      {"id":"chronic:bp","name":"Tansiyon"},
+      {"id":"chronic:lipid","name":"Kolesterol"},
+      {"id":"chronic:thyroid","name":"Tiroid"}
+    ],
     "3": [{"id":"report:review","name":"Rapor değerlendirme"}],
     "6": [{"id":"home:nurse","name":"Hemşirelik"},{"id":"home:doctor","name":"Hekim görüşmesi"}],
     "7": [{"id":"maternal:pregnancy","name":"Gebelik"},{"id":"maternal:baby","name":"Bebek takibi"}]
