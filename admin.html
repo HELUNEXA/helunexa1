@@ -163,7 +163,7 @@
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'helunexa-hasta-auth' } });
 
-        let currentRole = 'doctor', currentSpecialty = null, allApps = [], currentApp = null;
+        let currentRole = 'admin', currentSpecialty = null, allApps = [], currentApp = null;
         let currentStatusFilter = 'all';
         let currentDateFilter = 'all';
 
@@ -174,41 +174,18 @@
             "C-Reaktif Protein (CRP)", "Magnezyum", "Çinko", "Demir Bağlama Kapasitesi"
         ];
 
+        // Giriş kontrolü kaldırıldı, direkt panel açılıyor
         async function checkSession() {
-            const { data: { session } } = await _supabase.auth.getSession();
-            if (!session) { window.location.href = 'giris.html'; return; }
-            
-            const { data: roleData } = await _supabase.from('user_roles').select('*').eq('user_id', session.user.id).single();
-            
-            if (!roleData || (roleData.role !== 'admin' && roleData.role !== 'doctor')) { 
-                await _supabase.auth.signOut();
-                window.location.href = 'giris.html'; 
-                return; 
-            }
-            
-            currentRole = roleData.role;
-            currentSpecialty = roleData.specialty;
-            
             const badge = document.getElementById('roleBadge');
-            if (currentRole === 'admin') { 
-                badge.textContent = '👑 Admin'; 
-                badge.className = 'role-badge admin'; 
-                document.getElementById('tabAddDoctorBtn').style.display = 'block'; 
-            } else { 
-                badge.textContent = '🩺 ' + (roleData.display_name || 'Doktor'); 
-                badge.className = 'role-badge doctor'; 
-            }
-            
-            document.getElementById('userEmail').textContent = session.user.email;
+            badge.textContent = '🩺 Hekim / Yönetici'; 
+            badge.className = 'role-badge admin'; 
+            document.getElementById('tabAddDoctorBtn').style.display = 'block'; 
+            document.getElementById('userEmail').textContent = 'hekim@helunexa.com';
             loadApps();
         }
 
         async function loadApps() {
-            let query = _supabase.from('applications').select('*');
-            if (currentRole !== 'admin' && currentSpecialty) {
-                query = query.eq('specialty', currentSpecialty);
-            }
-            const { data } = await query.order('created_at', { ascending: false });
+            const { data } = await _supabase.from('applications').select('*').order('created_at', { ascending: false });
             allApps = data || [];
             updateStats();
             renderTable();
@@ -294,9 +271,9 @@
             document.getElementById('modalTitle').textContent = currentApp.fullname;
             
             let patientSelectedHtml = '';
-            if (currentApp.test_notes && currentApp.test_notes.includes('Hastanın Hekimle Görüşmek İstediği Tetkikler:')) {
-                let selectedTestsString = currentApp.test_notes.replace('Hastanın Hekimle Görüşmek İstediği Tetkikler: ', '');
-                let testList = selectedTestsString.split(' | ');
+            if (currentApp.test_notes && currentApp.test_notes.includes('Seçilenler:')) {
+                let selectedTestsString = currentApp.test_notes.replace('Seçilenler: ', '');
+                let testList = selectedTestsString.split(', ');
                 
                 patientSelectedHtml = `
                     <div class="patient-selected-tests">
@@ -322,7 +299,6 @@
             document.getElementById('modalBody').innerHTML = `
                 ${appointmentDetail}
                 
-                <!-- ✅ YENİ: HASTA TELEFONU -->
                 <div class="detail-row" style="background:#ecfdf5; padding:12px; border-radius:6px; border-left:4px solid #10b981; margin-bottom:15px;">
                     <label style="color:#065f46; font-size:12px; font-weight:bold;">📞 Hasta Telefonu</label>
                     <div class="value" style="font-weight:bold; color:#047857; font-size:18px; margin-top:4px;">
@@ -490,7 +466,7 @@
             }
         };
 
-        document.getElementById('logoutBtn').onclick = async () => { await _supabase.auth.signOut(); window.location.href = 'giris.html'; };
+        document.getElementById('logoutBtn').onclick = async () => { window.location.href = 'index.html'; };
         
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.onclick = () => {
