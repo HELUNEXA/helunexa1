@@ -1,7 +1,10 @@
 (() => {
 'use strict';
 const C=window.HELUNEXA_CONTENT,M=window.AccessModel;
+
+// SUPABASE BAĞLANTISI (Hata veren kısım burasıydı, düzeltildi)
 const _supabase = supabase.createClient('https://grbjmhknmlheoyknmyhd.supabase.co', 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p');
+
 const $=s=>document.querySelector(s),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const icons=['＋','↻','▤','◌','⌕','⌂','♡','▦'];
 let state={view:'home',step:0,draft:M.draft(1),records:[],active:null,provider:'merkez'};
@@ -12,17 +15,18 @@ function chips(label,items,value,key){return `<div style="margin:15px 0;"><span 
 function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';setTimeout(()=>$('#toast').style.display='none',3000)}
 function go(v){state.view=v;render();window.scrollTo(0,0)}
 
-function brand(){return '<img src="logo.png" alt="HELUNEXA">'}
+function brand(){return '<img src="logo.png" alt="HELUNEXA" style="height: 60px; width: auto; margin-left: -10px;">'}
 function header(){return `<header><div class="header-inner"><a href="#" class="brand" data-action="home">${brand()}</a><nav>${button('Hizmetler','home',state.view==='home'?'button nav active':'button nav')}${button('Hekim Paneli','institution','button nav secondary')}</nav></div></header>`}
 
 function home(){return `<main><section class="home-intro"><div style="text-align:center;margin-bottom:20px;"><img src="logo.png" alt="HELUNEXA" style="height:110px;"></div><div class="eyebrow" style="text-align:center;">Sağlık hizmetine daha kolay erişin.</div><h1 style="text-align:center;">Hangi konuda destek arıyorsunuz?</h1><p style="text-align:center;margin-bottom:30px;">Hizmetinizi seçin, size uygun kurumu bulun, talebinizi iletin.</p><div class="service-grid">${C.modules.map(m=>`<button class="service-tile" data-action="start" data-id="${m.id}"><span class="service-icon">${icons[m.id-1]}</span><span>${esc(m.shortTitle)}</span><span class="arrow"></span></button>`).join('')}</div></section></main>`}
 
 function options(items){return items.map(x=>`<div style="margin-bottom:10px;"><label class="check"><input type="checkbox" data-option="${esc(x.id)}" ${draft().selected.includes(x.id)?'checked':''}><span>${esc(x.name)}</span></label></div>`).join('')}
+
 function selection(){const d=draft(),m=module(d.moduleId);return `<main><div class="eyebrow">${esc(m.shortTitle)}</div><h1>${esc(m.title)}</h1><div class="steps"><li class="active"><span>1</span>Hizmet</li><li><span>2</span>Kurum</li><li><span>3</span>Talep</li></div><div class="panel"><h2>Seçenekler</h2>${d.moduleId===4?options(C.longevityOptions):d.moduleId===5?options(C.cancerOptions):C.quickOptions[d.moduleId]?options(C.quickOptions[d.moduleId]):''}${[1,2,4,8].includes(d.moduleId)?`<details style="margin-top:20px;"><summary>Tetkik kataloğu</summary><div style="margin-top:10px;">${options(C.catalog)}</div></details>`:''}</div><div class="bottom-actions">${button('Geri','back','ghost')}${button('Devam Et →','next','primary')}</div></main>`}
 
 function locationScreen(){const d=draft(),list=M.providers(C,d);return `<main><div class="eyebrow">${esc(module(d.moduleId).shortTitle)}</div><h1>Size uygun kurum ve yer.</h1><div class="steps"><li class="active"><span>1</span>Hizmet</li><li class="active"><span>2</span>Kurum</li><li><span>3</span>Talep</li></div><div class="panel soft">${chips('Bölge',[{id:'Merkez',name:'Merkez'},{id:'Kuzey',name:'Kuzey'},{id:'Güney',name:'Güney'}],d.area,'area')}</div><div class="provider-card"><h3>${list[0]?.name || 'Kurum Bulunamadı'}</h3><p class="provider-location">${list[0]?.area} Bölgesi</p>${list[0]?button('Bu Kurumu Seç','provider','primary full',`data-id="${list[0].id}"`):''}</div><div class="bottom-actions">${button('Geri','back','ghost')}${button('Devam Et →','next','primary')}</div></main>`}
 
-function requestScreen(){const d=draft(),p=C.providers.find(x=>x.id===d.providerId);return `<main><div class="eyebrow">Son Adım</div><h1>Talebiniz hazır.</h1><div class="steps"><li class="active"><span>1</span>Hizmet</li><li class="active"><span>2</span>Kurum</li><li class="active"><span>3</span>Talep</li></div><div class="two-col"><div class="panel"><h2>${esc(p.name)}</h2><p>Seçilen Hizmet: ${esc(module(d.moduleId).title)}</p></div><div class="panel soft"><h3>Size nasıl ulaşalım?</h3><div class="contact-fields"><label>Ad Soyad</label><input id="contact-name" data-contact="name" value="${esc(d.contact.name)}" placeholder="Adınız"><label>Telefon</label><input id="contact-phone" data-contact="phone" value="${esc(d.contact.phone)}" placeholder="05xx xxx xx xx"><p id="contact-error" style="color:red;font-size:12px;"></p></div></div></div><div class="bottom-actions">${button('Geri','back','ghost')}${button('Talebimi İlet →','submit','primary')}</div></main>`}
+function requestScreen(){const d=draft(),p=C.providers.find(x=>x.id===d.providerId);return `<main><div class="eyebrow">Son Adım</div><h1>Talebiniz hazır.</h1><div class="steps"><li class="active"><span>1</span>Hizmet</li><li class="active"><span>2</span>Kurum</li><li class="active"><span>3</span>Talep</li></div><div class="two-col"><div class="panel"><h2>${esc(p?.name || 'Kurum')}</h2><p>Seçilen Hizmet: ${esc(module(d.moduleId).title)}</p></div><div class="panel soft"><h3>Size nasıl ulaşalım?</h3><div class="contact-fields"><label>Ad Soyad</label><input id="contact-name" data-contact="name" value="${esc(d.contact.name)}" placeholder="Adınız"><label>Telefon</label><input id="contact-phone" data-contact="phone" value="${esc(d.contact.phone)}" placeholder="05xx xxx xx xx"><p id="contact-error" style="color:red;font-size:12px;"></p></div></div></div><div class="bottom-actions">${button('Geri','back','ghost')}${button('Talebimi İlet →','submit','primary')}</div></main>`}
 
 function booking(){return state.step===0?selection():state.step===1?locationScreen():requestScreen()}
 
@@ -42,15 +46,29 @@ document.addEventListener('click',e=>{
         else if(a==='choice'){state.draft=M.filter(C,draft(),{[el.dataset.key]:el.dataset.value});render()}
         else if(a==='provider'){state.draft={...draft(),providerId:el.dataset.id};render()}
         else if(a==='submit'){
-            M.contactInfo(draft().contact);
+            // Hata olmaması için kontrol ve kayıt
+            try {
+                M.contactInfo(draft().contact);
+            } catch (e) { alert(e.message); return; }
+
+            if (!draft().providerId) { alert('Lütfen bir kurum seçin.'); return; }
+
             el.disabled = true; el.textContent = 'Gönderiliyor...';
             const r=M.request(C,draft(),[]);
-            window._supabase.from('applications').insert([{
-                fullname: r.person.name, phone: r.person.phone, service_type: module(draft().moduleId).title,
-                test_notes: draft().selected.join(', '), status: 'pending', age: 30
+            
+            // SUPABASE KAYIT
+            _supabase.from('applications').insert([{
+                fullname: r.person.name, 
+                phone: r.person.phone, 
+                service_type: module(draft().moduleId).title,
+                test_notes: draft().selected.join(', '), 
+                status: 'pending', 
+                age: 30
             }]).then(({error})=>{
-                if(error){ alert('Hata: ' + error.message); el.disabled = false; el.textContent = 'Talebimi İlet →'; return; }
+                if(error){ alert('Veritabanı Hatası: ' + error.message); el.disabled = false; el.textContent = 'Talebimi İlet →'; return; }
                 alert('✅ Talebiniz Alındı! Hekimimiz sizi arayacak.'); go('home');
+            }).catch(err => {
+                alert('Bağlantı hatası: ' + err.message); el.disabled = false; el.textContent = 'Talebimi İlet →';
             });
         }
     }catch(err){ alert(err.message); }
