@@ -2,7 +2,7 @@
 'use strict';
 const C=window.HELUNEXA_CONTENT,M=window.AccessModel;
 
-// SUPABASE BAĞLANTISI (Hata veren kısım burasıydı, düzeltildi)
+// SUPABASE BAĞLANTISI (En üstte ve doğru)
 const _supabase = supabase.createClient('https://grbjmhknmlheoyknmyhd.supabase.co', 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p');
 
 const $=s=>document.querySelector(s),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
