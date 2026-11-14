@@ -17,7 +17,7 @@ function toast(text){$('#toast').textContent=text;$('#toast').classList.add('sho
 function go(view){state.view=view;render();window.scrollTo({top:0,behavior:'instant'})}
 
 // ✅ SOL ÜSTTEKİ LOGO (Tam köşeye yaslandı)
-function brand(){return '<img src="logo.png" alt="HELUNEXA" style="height: 70px; width: auto; margin-left: -15px;">'}
+function brand(){return '<img src="logo.png" alt="HELUNEXA" style="height: 70px; width: auto; margin-left: -30px;">'}
 
 function header(){return `<header><div class="header-inner"><a href="#" class="brand" data-action="home">${brand()}</a><nav aria-label="Ana menü">${button('Hizmetler','home',state.view==='home'?'nav active':'nav')}${button('Hekim Paneli','institution','nav secondary')}</nav></div></header>`}
 
