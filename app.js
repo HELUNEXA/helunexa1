@@ -2,7 +2,6 @@
 'use strict';
 const C=window.HELUNEXA_CONTENT,M=window.AccessModel;
 
-// SUPABASE BAĞLANTISI
 const _supabase = supabase.createClient('https://grbjmhknmlheoyknmyhd.supabase.co', 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p');
 
 const $=s=>document.querySelector(s),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -11,14 +10,38 @@ let state={view:'home',step:0,draft:M.draft(1),records:[],active:null,provider:'
 const module=id=>C.modules.find(x=>x.id===id),draft=()=>state.draft,active=()=>state.records.find(r=>r.id===state.active);
 
 function button(text,action,cls='',attrs=''){return `<button class="button ${cls}" data-action="${action}" ${attrs}>${text}</button>`}
-function chips(label,items,value,key){return `<div style="margin:15px 0;"><span style="display:block;font-weight:bold;margin-bottom:8px;">${label}</span><div style="display:flex;gap:10px;flex-wrap:wrap;">${items.map(x=>button(esc(x.name),'choice',x.id===value?'button chip selected':'button chip',`data-key="${key}" data-value="${esc(x.id)}"`)).join('')}</div></div>`}
-function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';setTimeout(()=>$('#toast').style.display='none',3000)}
+function chips(label,items,value,key){return `<div style="margin:15px 0;"><span style="display:block;font-weight:bold;margin-bottom:8px;color:var(--green-dark);">${label}</span><div style="display:flex;gap:10px;flex-wrap:wrap;">${items.map(x=>button(esc(x.name),'choice',x.id===value?'button chip selected':'button chip',`data-key="${key}" data-value="${esc(x.id)}"`)).join('')}</div></div>`}
 function go(v){state.view=v;render();window.scrollTo(0,0)}
 
-function brand(){return '<img src="logo.png" alt="HELUNEXA" style="height: 60px; width: auto; margin-left: -10px;">'}
-function header(){return `<header><div class="header-inner"><a href="#" class="brand" data-action="home">${brand()}</a><nav>${button('Hizmetler','home',state.view==='home'?'button nav active':'button nav')}${button('Hekim Paneli','institution','button nav secondary')}</nav></div></header>`}
+// HEADER: Sadece Sol Logo ve Sağ Buton
+function header(){
+    return `<header>
+        <div class="header-inner">
+            <a href="#" class="brand" data-action="home"><img src="logo.png" alt="HELUNEXA"></a>
+            <nav>${button('Hekim Girişi','institution','button nav secondary')}</nav>
+        </div>
+    </header>`;
+}
 
-function home(){return `<main><section class="home-intro"><div style="text-align:center;margin-bottom:20px;"><img src="logo.png" alt="HELUNEXA" style="height:110px;"></div><div class="eyebrow" style="text-align:center;">Sağlık hizmetine daha kolay erişin.</div><h1 style="text-align:center;">Hangi konuda destek arıyorsunuz?</h1><p style="text-align:center;margin-bottom:30px;">Hizmetinizi seçin, size uygun kurumu bulun, talebinizi iletin.</p><div class="service-grid">${C.modules.map(m=>`<button class="service-tile" data-action="start" data-id="${m.id}"><span class="service-icon">${icons[m.id-1]}</span><span>${esc(m.shortTitle)}</span><span class="arrow"></span></button>`).join('')}</div></section></main>`}
+// ANA SAYFA: Ortada Büyük Logo, Altında Başlık ve 8 Kutu
+function home(){
+    return `<main>
+        <section class="home-intro">
+            <img src="logo.png" alt="HELUNEXA" class="main-logo">
+            <h1>Hangi konuda destek arıyorsunuz?</h1>
+            <p>Hizmetinizi seçin, size uygun kurumu bulun, talebinizi iletin.</p>
+            
+            <div class="service-grid">
+                ${C.modules.map(m=>`
+                    <button class="service-tile" data-action="start" data-id="${m.id}">
+                        <span class="service-icon">${icons[m.id-1]}</span>
+                        <span class="service-title">${esc(m.shortTitle)}</span>
+                    </button>
+                `).join('')}
+            </div>
+        </section>
+    </main>`;
+}
 
 function options(items){return items.map(x=>`<div style="margin-bottom:10px;"><label class="check"><input type="checkbox" data-option="${esc(x.id)}" ${draft().selected.includes(x.id)?'checked':''}><span>${esc(x.name)}</span></label></div>`).join('')}
 
@@ -46,34 +69,23 @@ document.addEventListener('click',e=>{
         else if(a==='choice'){state.draft=M.filter(C,draft(),{[el.dataset.key]:el.dataset.value});render()}
         else if(a==='provider'){state.draft={...draft(),providerId:el.dataset.id};render()}
         else if(a==='submit'){
-            try {
-                M.contactInfo(draft().contact);
-            } catch (e) { alert(e.message); return; }
-
+            try { M.contactInfo(draft().contact); } catch (e) { alert(e.message); return; }
             if (!draft().providerId) { alert('Lütfen bir kurum seçin.'); return; }
 
             el.disabled = true; el.textContent = 'Gönderiliyor...';
             const r=M.request(C,draft(),[]);
             
-            // SUPABASE KAYIT (email eklendi)
             _supabase.from('applications').insert([{
-                fullname: r.person.name, 
-                phone: r.person.phone, 
+                fullname: r.person.name, phone: r.person.phone, 
                 service_type: module(draft().moduleId).title,
-                test_notes: draft().selected.join(', '), 
-                status: 'pending', 
-                age: 30,
-                email: 'anonim@helunexa.com' // Zorunlu e-posta alanı dolduruldu
+                test_notes: draft().selected.join(', '), status: 'pending', age: 30, email: 'anonim@helunexa.com'
             }]).then(({error})=>{
-                if(error){ alert('Veritabanı Hatası: ' + error.message); el.disabled = false; el.textContent = 'Talebimi İlet →'; return; }
+                if(error){ alert('Hata: ' + error.message); el.disabled = false; el.textContent = 'Talebimi İlet →'; return; }
                 alert('✅ Talebiniz Alındı! Hekimimiz sizi arayacak.'); go('home');
-            }).catch(err => {
-                alert('Bağlantı hatası: ' + err.message); el.disabled = false; el.textContent = 'Talebimi İlet →';
             });
         }
     }catch(err){ alert(err.message); }
 });
-
 document.addEventListener('input',e=>{const k=e.target.dataset.contact;if(k)state.draft.contact[k]=e.target.value;});
 document.addEventListener('change',e=>{if(e.target.dataset.option)state.draft=M.option(C,draft(),e.target.dataset.option);});
 render();
