@@ -10,7 +10,7 @@
         :root {
             --ink: #0f172a;
             --green: #10b981;
-            --green-dark: #059669;
+            --green-dark: #065f46;
             --muted: #64748b;
             --line: #e2e8f0;
             --paper: #f8fafc;
@@ -61,7 +61,7 @@
         .detail-row { margin-bottom: 15px; }
         .detail-row label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; font-weight: bold; }
         .detail-row .value { font-size: 16px; font-weight: 500; color: var(--ink); }
-        textarea, select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; margin-top:5px; background: var(--paper);}
+        textarea, select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; margin-top:5px; background: var(--paper); font-size:14px;}
         textarea:focus, select:focus { outline: none; border-color: var(--green); background: white; }
         .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px;}
         .btn-primary { background: var(--green); color: white; }
@@ -192,15 +192,23 @@
             document.getElementById('modalTitle').textContent = currentApp.fullname;
             document.getElementById('modalBody').innerHTML = `
                 <div class="detail-row"><label>Hizmet Türü</label><div class="value">${currentApp.service_type}</div></div>
-                <div class="detail-row"><label>Telefon</label><div class="value"><a href="tel:${currentApp.phone}" style="color:var(--green); font-weight:bold;">${currentApp.phone || 'Belirtilmedi'}</a></div></div>
+                <div class="detail-row"><label>Telefon</label><div class="value"><a href="tel:${currentApp.phone}" style="color:var(--green); font-weight:bold; font-size:18px;">📞 ${currentApp.phone || 'Belirtilmedi'}</a></div></div>
                 <div class="detail-row"><label>Hasta Notu / Seçtiği Tetkikler</label><div class="value" style="background:var(--paper); padding:15px; border-radius:8px; font-size:14px; border:1px solid var(--line);">${currentApp.test_notes || 'Not girilmemiş.'}</div></div>
+                
                 <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--line);">
+                
                 <div class="detail-row">
                     <label>İşlem Durumu</label>
                     <select id="editStatus">
                         <option value="pending" ${currentApp.status === 'pending' || !currentApp.status ? 'selected' : ''}>Bekliyor</option>
                         <option value="completed" ${currentApp.status === 'completed' ? 'selected' : ''}>Tamamlandı</option>
                     </select>
+                </div>
+                
+                <!-- HEKİM NOTU KISMI -->
+                <div class="detail-row">
+                    <label>Hekim Notu (Görüşme Özeti / Verilen Randevu)</label>
+                    <textarea id="editDoctorNote" style="min-height:90px;" placeholder="Örn: Hasta arandı, 18 Kasım Salı 10:00 için randevu verildi. Aç karnına gelmesi söylendi.">${currentApp.doctor_note || ''}</textarea>
                 </div>
             `;
             document.getElementById('modalOverlay').classList.add('active');
@@ -213,9 +221,16 @@
             const btn = document.getElementById('saveBtn'); 
             btn.disabled = true; btn.textContent = 'Kaydediliyor...';
             
-            const { error } = await _supabase.from('applications').update({
+            // Veritabanında doctor_note sütunu yoksa hata vermemesi için sadece status güncelliyoruz, 
+            // ama varsa diye doktor notunu da gönderiyoruz.
+            const updateData = {
                 status: document.getElementById('editStatus').value
-            }).eq('id', currentApp.id);
+            };
+            
+            const noteVal = document.getElementById('editDoctorNote').value;
+            if(noteVal) updateData.doctor_note = noteVal;
+
+            const { error } = await _supabase.from('applications').update(updateData).eq('id', currentApp.id);
             
             if (error) alert('Hata: ' + error.message);
             else { closeModal(); loadApps(); }
