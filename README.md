@@ -1,71 +1,50 @@
-# 🩺 HELUNEXA - Dijital Sağlık ve Check-up Platformu
+# 🩺 HELUNEXA - Dijital Sağlık Hizmeti Erişim ve Talep Yönetimi Platformu
 
-HELUNEXA, hastaların rutin sağlık kontrollerini, check-up süreçlerini ve kronik hastalık takiplerini dijital ortamda yönetmelerini sağlayan modern bir sağlık teknolojisi (HealthTech) platformudur. 
+**Sürüm:** 2.0 (Demo / Prototip)  
+**Teknoloji:** HTML5, CSS3, Vanilla JavaScript, Supabase (Bulut Veritabanı)
 
-Bu proje; hasta başvuru süreçlerini, akıllı tetkik seçimlerini (CDSS), anlaşmalı hastane yönlendirmelerini ve hekim değerlendirmelerini tek bir çatı altında toplar.
+## 📌 Proje Hakkında
+HELUNEXA, kullanıcıların sağlık hizmetlerine erişimini kolaylaştırmak ve hastanelerin gelen talepleri profesyonelce yönetmesini sağlamak amacıyla geliştirilmiş dijital bir platform prototipidir. 
 
-## 🚀 Özellikler
+Projenin temel vizyonu; **"Hasta için sürtünmesiz (frictionless) bir deneyim, hastane için tam kontrol"** dengesini kurmaktır. Karmaşık üyelik süreçleri, uzun formlar ve belge yükleme adımları ortadan kaldırılarak, hasta ile sağlık kuruluşu arasında hızlı bir köprü kurulmuştur.
 
-*   **Hasta Paneli:** Hastaların mevcut başvurularını, randevularını ve hekim notlarını görüntüleyebildiği kişisel dashboard.
-*   **Akıllı Check-up (CDSS):** Hastanın yaş, cinsiyet ve şikayetlerine göre kişiselleştirilmiş tetkik öneri sistemi.
-*   **Gelişmiş Başvuru Formu:** Hizmet seçimi, randevu takvimi ve tahlil durumu yönetimi.
-*   **Ödeme ve Yönlendirme Simülasyonu:** Demo amaçlı kredi kartı ödeme ekranı ve anlaşmalı hastane seçim modülü.
-*   **Rol Tabanlı Giriş (Auth):** Hasta, Hekim ve Admin rolleri için ayrı giriş ve yetkilendirme süreçleri.
-*   **Kurumsal Giriş:** Şirket kodu ve sicil numarası ile kurumsal hasta başvuruları.
-    ## 🚀 Canlı Demo (Prototip)
+## ✨ Temel Özellikler
 
-Platformun hasta ve hekim panelleri arasındaki akışını (başvuru, hekim onayı, sonuç takibi) test edebileceğiniz kurgusal bir demo bulunmaktadır.
+### 👤 Hasta Tarafı (Hızlı Başvuru)
+*   **Üyelik Gerektirmez:** Kullanıcı sisteme girer girmez 8 farklı sağlık modülü ile karşılaşır.
+*   **8 Sağlık Modülü:** Check-up, Kronik Hastalık Takibi, İlaç Raporu, Longevity, Kanser Taraması, Evde Bakım, Anne & Bebek Sağlığı, Kurumsal Sağlık.
+*   **Akıllı Seçim:** Hasta seçtiği modüle göre (örneğin Check-up) ilgili tahlilleri ve tetkikleri işaretleyebilir.
+*   **Tek Adımda Talep:** Sadece **Ad, Soyad ve Telefon Numarası** bırakarak talebini sisteme iletebilir.
 
-*   **Demo Dosyası:** `HELUNEXA_Platform.html`
-*   **Nasıl Çalıştırılır?** Projeyi bilgisayarınıza indirip `HELUNEXA_Platform.html` dosyasına çift tıklayarak tarayıcınızda açabilirsiniz. Veya ana sayfadaki **"🚀 Canlı Demoyu İncele"** butonunu kullanabilirsiniz.
-*   *(Not: Bu demo tamamen tarayıcı hafızasında çalışır, gerçek veritabanına veya sağlık verisine bağlanmaz.)*
+### 🩺 Hekim / Kurum Paneli (Talep Yönetimi)
+*   **Anlık Bildirim:** Hastanın formu göndermesiyle birlikte talep, anında hekim paneline düşer.
+*   **Detaylı Görünüm:** Hekim; hastanın iletişim bilgilerini, seçtiği hizmeti ve merak ettiği tıbbi tetkikleri tek ekranda görür.
+*   **Tıkla-Ara:** Hasta telefon numarasına tıklanarak doğrudan arama başlatılabilir.
+*   **Durum Yönetimi:** Hekim süreci "Bekliyor" veya "Tamamlandı" olarak güncelleyebilir.
 
-## 🛠️ Kullanılan Teknolojiler
+### ☁️ Arka Plan (Altyapı)
+*   **Bulut Veritabanı:** Hasta talepleri, yüksek güvenlikli bulut tabanlı bir veritabanına (Supabase) anında ve kayıpsız olarak kaydedilir.
+*   **Gerçek Zamanlı Senkronizasyon:** Hasta formu ile hekim paneli arasında kesintisiz veri akışı sağlanır.
 
-*   **Frontend:** HTML5, CSS3, JavaScript (Vanilla)
-*   **Backend & Veritabanı:** [Supabase](https://supabase.com/) (PostgreSQL, Auth, Row Level Security)
-*   **Versiyon Kontrol:** Git & GitHub
-*   **Tasarım:** Modern, Responsive (Mobil uyumlu) arayüz
+## 🚀 Kurulum ve Çalıştırma
+Projeyi çalıştırmak için herhangi bir sunucuya (backend) veya kuruluma ihtiyaç yoktur. 
+1. Projeyi bilgisayarınıza indirin.
+2. `index.html` dosyasını güncel bir web tarayıcısında (Chrome, Safari, Edge) açın.
+3. Hasta başvurusunu test ettikten sonra, üst menüdeki **"Hekim Girişi"** butonuna tıklayarak yönetim panelini test edebilirsiniz.
 
-## 📂 Proje Yapısı
+## 📂 Dosya Yapısı
+*   `index.html` : Uygulamanın başlangıç noktası (Hasta Vitrini).
+*   `admin.html` : Hekim / Yönetici Paneli.
+*   `app.js` : Hasta tarafındaki kullanıcı deneyimini ve form akışını yöneten motor.
+*   `model.js` : Sistemin iş kuralları, doğrulamalar ve randevu mantığı.
+*   `content.js` : Hizmet modülleri, tetkik katalogları ve kurum verileri.
+*   `style.css` : Kurumsal kimliğe uygun (Zümrüt Yeşili) responsive tasarım.
+*   `logo.png` : HELUNEXA marka logosu.
 
-Proje, statik HTML dosyaları ve istemci taraflı (client-side) JavaScript kullanılarak geliştirilmiştir. Supabase entegrasyonu doğrudan frontend üzerinden yapılmaktadır.
+## ⚠️ Demo Sınırları ve Gelecek Vizyonu
+*   Bu sürüm, projenin **konseptini kanıtlamak (Proof of Concept)** amacıyla hazırlanmış bir demo/prototip sürümüdür.
+*   Gerçek sağlık verisiyle kullanıma hazır değildir. Tıbbi onay, reçete yazımı ve yasal süreçler bu sürümün kapsamı dışındadır.
+*   Proje kabul gördüğü takdirde; **Pilot Proje** aşamasında gerçek hastane entegrasyonları (e-Nabız vb.), SMS doğrulama, e-imza ve detaylı hekim tıbbi notu (reçete/rapor) sistemleri eklenecektir.
 
-*   `index.html` - Ana sayfa (Landing page)
-*   `giris.html` - Rol tabanlı giriş ekranı (Hasta, Hekim, Admin)
-*   `hasta-kayit.html` - Yeni hasta kayıt formu
-*   `hasta-panel.html` - Hastaların başvurularını gördüğü panel
-*   `basvuru.html` - Detaylı sağlık başvuru formu
-*   `checkup-cdss.html` - Akıllı tetkik seçim ve değerlendirme ekranı
-*   `admin.html` - Hekim ve Admin yönetim paneli
-*   `kvkk.html` - KVKK Aydınlatma Metni
-
-## 💻 Kurulum ve Çalıştırma
-
-Proje herhangi bir sunucu (backend) gerektirmez, tamamen tarayıcı üzerinde çalışır. Ancak Supabase bağlantılarının doğru çalışması için:
-
-1.  Projeyi bilgisayarınıza klonlayın:
-
-    git clone https://github.com/KULLANICI_ADINIZ/helunexa1.git
-
-2. Klasörü VS Code veya herhangi bir editörde açın.
-
-3. Projeyi yerel tarayıcınızda test etmek için index.html dosyasına çift tıklayarak açabilirsiniz.
-
-4. (Not: Supabase Auth işlemlerinin bazı tarayıcılarda düzgün çalışması için projeyi bir yerel sunucuda (Live Server vb.) çalıştırmanız önerilir.)
-
-🔐 Çevre Değişkenleri ve Güvenlik
-Projede Supabase bağlantısı için gerekli olan SUPABASE_URL ve SUPABASE_ANON_KEY bilgileri JavaScript dosyaları içerisinde tanımlıdır.
-Önemli: Supabase ANON_KEY herkese açık olacak şekilde tasarlanmıştır. Ancak veri güvenliği için Supabase üzerindeki RLS (Row Level Security) politikalarının düzgün yapılandırıldığından emin olunmalıdır. service_role anahtarı asla istemci tarafına (frontend) eklenmemelidir.
-
-🤝 Katkıda Bulunma
-Bu proje ortak bir çalışmadır. Geliştirme yaparken lütfen şu adımları izleyin:
-
-1. Değişiklik yapmadan önce mutlaka git pull yaparak güncel kodları çekin.
-
-2. Yeni bir özellik eklerken veya hata düzeltirken anlaşılır commit mesajları yazın (örn: fix: hasta giriş yönlendirmesi düzeltildi).
-
-3. Değişiklikleri GitHub'a göndermeden önce yerelde test edin.
-
-
-© 2026 HELUNEXA. Tüm hakları saklıdır. Bu sistem bir demo (prototip) ortamıdır, gerçek teşhis ve tedavi amacıyla kullanılamaz.
+---
+© 2026 HELUNEXA. Tüm hakları saklıdır.
