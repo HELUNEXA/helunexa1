@@ -5,13 +5,288 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>HELUNEXA · Sağlık Hizmetine Kolay Erişim</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --ink: #0f172a;
+            --green: #10b981;
+            --green-dark: #065f46;
+            --muted: #64748b;
+            --line: #e2e8f0;
+            --paper: #f8fafc;
+            --mint: #ecfdf5;
+            --white: #fff;
+            --shadow: 0 8px 24px rgba(0,0,0,0.03);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.6 system-ui, -apple-system, sans-serif; }
+        button, select, input { font: inherit; }
+        button { cursor: pointer; }
+        a { color: var(--green); text-decoration: none; }
+        h1, h2, h3 { letter-spacing: -0.035em; line-height: 1.2; margin: 0 0 14px; font-weight: 600; }
+        h1 { font-size: 34px; } h2 { font-size: 26px; } h3 { font-size: 19px; }
+        p { margin: 0 0 16px; color: #475569; }
+        
+        .small { font-size: 12px; }
+        .muted { color: var(--muted); }
+        .eyebrow { text-transform: uppercase; letter-spacing: 0.16em; font-size: 10px; font-weight: 700; color: var(--green); margin-bottom: 12px; }
+        .mt { margin-top: 20px !important; }
+        
+        /* HEADER */
+        header { border-bottom: 1px solid var(--line); background: #fff; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        header .header-inner { max-width: 1220px; display: flex; justify-content: space-between; align-items: center; margin: auto; padding: 15px 30px; }
+        .brand { display: flex; align-items: center; text-decoration: none; }
+        .brand img { height: 55px; }
+        nav { display: flex; gap: 10px; align-items: center; }
+        
+        /* BUTONLAR */
+        .button { display: inline-flex; justify-content: center; align-items: center; border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 8px; padding: 10px 18px; font-size: 14px; font-weight: 600; transition: 0.2s; text-decoration: none; }
+        .button:hover { border-color: var(--green); background: var(--mint); color: var(--green); }
+        .button.primary { background: var(--green); color: white; border-color: var(--green); }
+        .button.primary:hover { background: var(--green-dark); color: white; }
+        .button.nav { border: 0; background: transparent; color: #475569; }
+        .button.nav.active { color: var(--green); font-weight: 700; }
+        .button.nav.secondary { border: 1px solid var(--green); background: #fff; color: var(--green); }
+        
+        /* ANA SAYFA */
+        main { max-width: 1220px; padding: 40px 30px 60px; margin: auto; min-height: 70vh; }
+        .home-intro { text-align: center; margin-bottom: 40px; }
+        .home-intro img { height: 90px; margin-bottom: 15px; }
+        .home-intro h1 { color: var(--green-dark); }
+        .service-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; max-width: 1000px; margin: 0 auto; }
+        .service-tile { background: #fff; border: 2px solid var(--green); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; font-weight: 700; font-size: 15px; color: var(--green-dark); cursor: pointer; transition: 0.2s; box-shadow: var(--shadow); }
+        .service-tile:hover { background: var(--mint); border-color: var(--green-dark); transform: translateY(-2px); }
+        .service-icon { font-size: 26px; color: var(--green); }
+        
+        /* ADIMLAR VE PANELLER */
+        .page-title { margin-bottom: 24px; }
+        .steps { display: flex; list-style: none; padding: 0; margin: 22px 0; gap: 15px; max-width: 600px; }
+        .steps li { display: flex; align-items: center; gap: 8px; flex: 1; padding-bottom: 10px; border-bottom: 2px solid var(--line); font-size: 13px; color: var(--muted); font-weight: 600; }
+        .steps li.active { border-color: var(--green); color: var(--green); }
+        .steps li span { border: 1px solid var(--line); border-radius: 50%; width: 24px; height: 24px; display: grid; place-items: center; font-size: 12px; background: white; flex-shrink: 0; }
+        .steps li.active span { border-color: var(--green); background: var(--green); color: white; }
+        
+        .panel { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 25px; box-shadow: var(--shadow); margin-bottom: 20px; }
+        .panel.soft { background: var(--mint); border-color: #a7f3d0; }
+        .panel h2, .panel h3 { color: var(--green-dark); }
+        
+        .choice { margin: 20px 0; }
+        .label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 10px; color: var(--green-dark); }
+        .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+        .button.chip { font-weight: 500; font-size: 13px; padding: 8px 14px; }
+        .button.chip.selected { background: var(--mint); border-color: var(--green); color: var(--green); font-weight: bold; }
+        
+        details > summary { cursor: pointer; color: var(--green); font-size: 14px; font-weight: 600; outline: none; }
+        .option-group { border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin: 10px 0; background: var(--paper); }
+        .option { padding: 12px 0; border-top: 1px solid var(--line); }
+        .option:first-child { border-top: 0; }
+        .check { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .check input { width: 18px; height: 18px; accent-color: var(--green); cursor: pointer; margin-top: 2px; }
+        
+        .provider-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
+        .provider-card { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; }
+        .provider-card.chosen { border: 2px solid var(--green); background: var(--mint); }
+        .provider-card h3 { font-size: 18px; margin-bottom: 5px; }
+        .provider-location { font-size: 13px; color: var(--green); font-weight: 600; margin-bottom: 15px; }
+        .provider-facts { margin-bottom: 15px; flex: 1; }
+        .provider-facts > div { border-top: 1px solid var(--line); padding: 8px 0; display: flex; justify-content: space-between; font-size: 12px; }
+        
+        .contact-fields { display: grid; gap: 10px; margin: 15px 0; }
+        .contact-fields label { font-size: 13px; font-weight: bold; color: var(--green-dark); }
+        .contact-fields input { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 12px; font-size: 15px; outline: none; }
+        .contact-fields input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(16,185,129,0.1); }
+        
+        .two-col { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; }
+        .bottom-actions { display: flex; justify-content: space-between; margin-top: 20px; gap: 15px; }
+        footer { text-align: center; padding: 25px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+        
+        @media(max-width: 900px) { .service-grid { grid-template-columns: repeat(2, 1fr); } .two-col { grid-template-columns: 1fr; } .provider-grid { grid-template-columns: 1fr; } }
+        @media(max-width: 600px) { .service-grid { grid-template-columns: 1fr; } header .header-inner { flex-direction: column; gap: 15px; } .bottom-actions { flex-direction: column; } .button.primary { width: 100%; } }
+    </style>
 </head>
 <body>
     <div id="app"></div>
-    <div id="toast" role="status" aria-live="polite"></div>
-    <script src="content.js"></script>
-    <script src="model.js"></script>
-    <script src="app.js"></script>
+    <div id="toast" style="position:fixed; bottom:25px; left:50%; transform:translateX(-50%); background:#065f46; color:white; padding:12px 20px; border-radius:8px; font-size:14px; opacity:0; transition:0.3s; pointer-events:none; z-index:999;"></div>
+
+<script>
+// SUPABASE BAĞLANTISI
+const _supabase = supabase.createClient('https://grbjmhknmlheoyknmyhd.supabase.co', 'sb_publishable_lA5YB8KySIyhrLseQV56Kw_cWLCWq7p');
+
+window.HELUNEXA_CONTENT = {
+  "catalog": [
+    {"id":"hbv","group":"Hepatit taraması","name":"Hepatit B · HBsAg / anti-HBs / total anti-HBc","education":"Hepatit B virüsüyle mevcut veya geçmiş karşılaşmayı ve bağışıklık durumunu değerlendirmeye yardımcı olur."},
+    {"id":"hcv","group":"Hepatit taraması","name":"Anti-HCV","education":"Hepatit C virüsüne karşı oluşan antikorları araştırarak virüsle karşılaşma hakkında bilgi verir."},
+    {"id":"cbc","group":"Kan ve demir","name":"Hemogram","education":"Alyuvarları, akyuvarları ve trombositleri inceler."},
+    {"id":"ferritin","group":"Kan ve demir","name":"Ferritin","education":"Vücudun demir depoları hakkında bilgi verir."},
+    {"id":"iron","group":"Kan ve demir","name":"Transferrin satürasyonu","education":"Demirin kanda taşınmasını değerlendirir."},
+    {"id":"glycemia","group":"Metabolik sağlık","name":"Açlık glukozu ve HbA1c","education":"Kan şekeri düzeyini yansıtır."},
+    {"id":"uric","group":"Metabolik sağlık","name":"Ürik asit","education":"Gut ve böbrek taşı değerlendirmesine yardımcı olur."},
+    {"id":"ogtt","group":"Metabolik sağlık","name":"75 g OGTT","education":"Vücudun glukozu işleme kapasitesini değerlendirir."},
+    {"id":"insulin","group":"Metabolik sağlık","name":"Açlık insülini / HOMA-IR","education":"İnsülin direncini değerlendirir."},
+    {"id":"lipid","group":"Kalp ve damar","name":"Lipid profili","education":"Kolesterol ve trigliserid düzeylerini değerlendirir."},
+    {"id":"apob","group":"Kalp ve damar","name":"ApoB","education":"Lipoprotein parçacıklarını ölçer."},
+    {"id":"lpa","group":"Kalp ve damar","name":"Lipoprotein(a)","education":"Kalp hastalığı riskine ek bilgi sağlar."},
+    {"id":"hscrp","group":"Kalp ve damar","name":"hs-CRP","education":"İltihabi etkinlik hakkında bilgi verir."},
+    {"id":"homocysteine","group":"Kalp ve damar","name":"Homosistein","education":"B12 ve folat metabolizmasını değerlendirir."},
+    {"id":"renal","group":"Böbrek ve karaciğer","name":"Kreatinin / eGFR","education":"Böbrek süzme kapasitesini gösterir."},
+    {"id":"acr","group":"Böbrek ve karaciğer","name":"İdrar albümin/kreatinin","education":"Böbrek hasarı bulgularını araştırır."},
+    {"id":"alt","group":"Böbrek ve karaciğer","name":"ALT","education":"Karaciğer hasarını değerlendirir."},
+    {"id":"ast","group":"Böbrek ve karaciğer","name":"AST","education":"Karaciğer ve kas dokusu hakkında bilgi verir."},
+    {"id":"alp","group":"Böbrek ve karaciğer","name":"ALP","education":"Safra akımını değerlendirir."},
+    {"id":"ggt","group":"Böbrek ve karaciğer","name":"GGT","education":"Karaciğer testlerinin yorumlanmasına yardımcı olur."},
+    {"id":"bilirubin","group":"Böbrek ve karaciğer","name":"Total / direkt bilirubin","education":"Sarılık ve karaciğer işlevini gösterir."},
+    {"id":"albumin","group":"Böbrek ve karaciğer","name":"Albümin","education":"Karaciğer protein üretimini gösterir."},
+    {"id":"protein","group":"Böbrek ve karaciğer","name":"Total protein","education":"Kandaki protein miktarını ölçer."},
+    {"id":"urea","group":"Böbrek ve karaciğer","name":"Üre","education":"Böbreklerin atık uzaklaştırmasını gösterir."},
+    {"id":"tsh","group":"Tiroid","name":"TSH","education":"Tiroid bezinin çalışmasını gösterir."},
+    {"id":"ft4","group":"Tiroid","name":"Serbest T4","education":"Tiroid hormon düzeyini gösterir."},
+    {"id":"ft3","group":"Tiroid","name":"Serbest T3","education":"Tiroid hormon düzeyini gösterir."},
+    {"id":"antitpo","group":"Tiroid","name":"Anti-TPO","education":"Otoimmün tiroid hastalıklarını araştırır."},
+    {"id":"antitg","group":"Tiroid","name":"Anti-Tg","education":"Tiroid otoimmünitesini gösterir."},
+    {"id":"trab","group":"Tiroid","name":"TRAb","education":"Graves hastalığını değerlendirir."},
+    {"id":"vitd","group":"Vitaminler","name":"D vitamini","education":"Kemik sağlığı ve bağışıklık için önemlidir."},
+    {"id":"b12","group":"Vitaminler","name":"Vitamin B12","education":"Sinir sistemi ve kan yapımı için gereklidir."},
+    {"id":"folate","group":"Vitaminler","name":"Folat","education":"Hücre bölünmesi için gereklidir."},
+    {"id":"magnesium","group":"Mineraller","name":"Magnezyum","education":"Kas ve sinir sistemi için önemlidir."},
+    {"id":"zinc","group":"Mineraller","name":"Çinko","education":"Bağışıklık sistemini destekler."},
+    {"id":"na","group":"Mineraller","name":"Sodyum","education":"Su dengesini gösterir."},
+    {"id":"k","group":"Mineraller","name":"Potasyum","education":"Kalp ve kas çalışması için önemlidir."},
+    {"id":"calcium","group":"Mineraller","name":"Total kalsiyum","education":"Kemik ve kas sağlığını gösterir."},
+    {"id":"phosphate","group":"Mineraller","name":"Fosfor","education":"Kemik metabolizmasını gösterir."},
+    {"id":"selenium","group":"Mineraller","name":"Selenyum","education":"Antioksidan enzimlerde görev alır."},
+    {"id":"iodine","group":"Mineraller","name":"İyot değerlendirmesi","education":"Tiroid hormonları için gereklidir."},
+    {"id":"pth","group":"Kemik ve hormonlar","name":"Parathormon (PTH)","education":"Kalsiyum dengesini düzenler."},
+    {"id":"testosterone","group":"Kemik ve hormonlar","name":"Total testosteron","education":"Kas ve kemik sağlığını gösterir."},
+    {"id":"fsh","group":"Kemik ve hormonlar","name":"FSH / LH","education":"Üreme hormonlarını gösterir."},
+    {"id":"estradiol","group":"Kemik ve hormonlar","name":"Estradiol","education":"Östrojen hormon düzeyini gösterir."},
+    {"id":"prolactin","group":"Kemik ve hormonlar","name":"Prolaktin","education":"Hipofiz işlevini gösterir."},
+    {"id":"crp","group":"Diğer seçilmiş değerlendirmeler","name":"CRP","education":"İltihabi süreçleri gösterir."},
+    {"id":"esr","group":"Diğer seçilmiş değerlendirmeler","name":"Sedimentasyon (ESR)","education":"İltihabi süreçleri gösterir."},
+    {"id":"urinalysis","group":"Diğer seçilmiş değerlendirmeler","name":"Tam idrar tahlili","education":"İdrar yolları enfeksiyonlarını gösterir."},
+    {"id":"coeliac","group":"Diğer seçilmiş değerlendirmeler","name":"Çölyak serolojisi","education":"Gluten alerjisini araştırır."}
+  ],
+  "catalogGroups": ["Hepatit taraması","Kan ve demir","Metabolik salık","Kalp ve damar","Böbrek ve karaciğer","Tiroid","Vitaminler","Mineraller","Kemik ve hormonlar","Diğer seçilmiş değerlendirmeler"],
+  "cancerOptions": [
+    {"id":"cancer:mammography","name":"Mamografi","education":"Meme dokusundaki değişiklikleri görüntüler."},
+    {"id":"cancer:hpv","name":"HPV-DNA testi","education":"Rahim ağzı kanseri riskini araştırır."},
+    {"id":"cancer:fit","name":"Gaitada gizli kan / FIT","education":"Bağırsak hastalıklarını araştırır."},
+    {"id":"cancer:colonoscopy","name":"Kolonoskopi","education":"Kalın bağırsağı görüntüler."},
+    {"id":"cancer:ldct","name":"Düşük doz akciğer BT","education":"Akciğer nodüllerini görüntüler."},
+    {"id":"cancer:psa","name":"PSA ile tarama görüşmesi","education":"Prostat sağlığını gösterir."},
+    {"id":"cancer:genetics","name":"Kalıtsal kanser riski danışmanlığı","education":"Kalıtsal riskleri değerlendirir."}
+  ],
+  "longevityOptions": [
+    {"id":"longevity:cardio","name":"Kardiyometabolik sağlık değerlendirmesi","education":"Kalp ve metabolizma sağlığını değerlendirir."},
+    {"id":"longevity:strength","name":"Kas gücü, denge ve hareket planı","education":"Fiziksel işlevi değerlendirir."},
+    {"id":"longevity:nutrition","name":"Beslenme ve takviye değerlendirmesi","education":"Beslenme düzenini ele alır."},
+    {"id":"longevity:sleep","name":"Uyku ve gündüz dinçliği","education":"Uyku kalitesini değerlendirir."},
+    {"id":"longevity:cognition","name":"Bilişsel sağlık ve ruhsal iyilik hali","education":"Bellek ve ruh halini değerlendirir."},
+    {"id":"longevity:bone","name":"Kırık riski ve kemik yoğunluğu görüşmesi","education":"Kırık riskini değerlendirir."},
+    {"id":"longevity:prevention","name":"Aşılar ve kişisel tarama takvimi","education":"Aşı ve tarama takvimini belirler."}
+  ],
+  "modules": [
+    {"id":1,"title":"Rutin Kontrol / Check-up","shortTitle":"Check-up","description":"Tetkikleri keşfedin, sağlık kontrolünüz için kurum seçin."},
+    {"id":2,"title":"Kronik Hastalık Takibi","shortTitle":"Kronik takip","description":"Düzenli kontrolleriniz için size uygun bir kurum bulun."},
+    {"id":3,"title":"İlaç Raporu Değerlendirmesi","shortTitle":"İlaç raporu değerlendirmesi","description":"Mevcut ilaç raporunuzun değerlendirilmesi için başvurun."},
+    {"id":4,"title":"Longevity / Sağlıklı Yaş Alma","shortTitle":"Longevity · Sağlıklı yaş alma","description":"İlgilendiğiniz değerlendirmeleri keşfedin, sağlığınıza zaman ayırın."},
+    {"id":5,"title":"Kişiselleştirilmiş Kanser Taraması","shortTitle":"Kişiselleştirilmiş kanser taraması","description":"Tarama seçeneklerini tanıyın, size uygun planı kurumunuzla görüşün."},
+    {"id":6,"title":"Evde Bakım Hizmetleri","shortTitle":"Evde bakım","description":"Evde bakım ihtiyacınız için hizmet veren kurumları görün."},
+    {"id":7,"title":"Anne, Çocuk Sağlığı ve Gebelik Takibi","shortTitle":"Anne ve çocuk sağlığı","description":"Gebelikten çocukluk dönemine ihtiyaç duyduğunuz desteğe ulaşın."},
+    {"id":8,"title":"Kurumsal Check-up","shortTitle":"Kurumsal check-up","description":"Çalışanlar için kolay başvuru ve yerinde numune alma."}
+  ],
+  "providers": [
+    {"id":"merkez","name":"Merkez Özel Hastanesi","tag":"Örnek hastane","area":"Merkez","modules":[1,2,3,4,5,6,7,8],"modes":["clinic","home","work"],"areas":["Merkez","Kuzey","Güney"],"distances":{"Merkez":1.2,"Kuzey":7.5,"Güney":6.0},"fee":"Ücret bilgisi kurumdan alınır","response":"Bir iş günü içinde","access":"Erişilebilir giriş · Evde numune ekibi","minGroup":10},
+    {"id":"kuzey","name":"Kuzey Sağlık Kliniği","tag":"Örnek klinik","area":"Kuzey","modules":[1,2,3,4,5,7,8],"modes":["clinic","home"],"areas":["Merkez","Kuzey"],"distances":{"Merkez":6.5,"Kuzey":1.0,"Güney":12.0},"fee":"Ücret bilgisi kurumdan alınır","response":"Bir iş günü içinde","access":"Erişilebilir giriş · Evde numune ekibi","minGroup":0},
+    {"id":"guney","name":"Güney Sağlık ve Bakım Merkezi","tag":"Örnek merkez","area":"Güney","modules":[1,2,3,6,7,8],"modes":["clinic","home","work"],"areas":["Merkez","Güney"],"distances":{"Merkez":5.5,"Kuzey":12.0,"Güney":1.5},"fee":"Ücret bilgisi kurumdan alınır","response":"Bir iş günü içinde","access":"Evde bakım · Yerinde numune ekibi","minGroup":20}
+  ],
+  "quickOptions": {
+    "2": [{"id":"chronic:dm","name":"Diyabet takibi"},{"id":"chronic:bp","name":"Tansiyon takibi"},{"id":"chronic:lipid","name":"Kolesterol takibi"},{"id":"chronic:thyroid","name":"Tiroid takibi"}],
+    "3": [{"id":"report:review","name":"Mevcut ilaç raporum için değerlendirme"}],
+    "6": [{"id":"home:nurse","name":"Evde hemşirelik"},{"id":"home:doctor","name":"Evde hekim görüşmesi"},{"id":"home:care","name":"Bakım ihtiyacının değerlendirilmesi"}],
+    "7": [{"id":"maternal:pregnancy","name":"Gebelik takibi"},{"id":"maternal:postpartum","name":"Doğum sonrası destek"},{"id":"maternal:baby","name":"Bebek takibi"},{"id":"maternal:child","name":"Çocuk sağlığı"}]
+  },
+  "profile": {"name": "Deniz Örnek", "phone": "0500 000 00 00", "address": "Örnek Mahalle · Demo adresi"},
+  "company": {"name": "Örnek Teknoloji A.Ş.", "contact": "Örnek kurum yetkilisi", "phone": "0500 000 00 08"}
+};
+
+(function(root,factory){const api=factory();if(typeof module==='object'&&module.exports)module.exports=api;if(root)root.AccessModel=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
+'use strict';
+const clone=x=>JSON.parse(JSON.stringify(x));
+const labels={new:'Talep alındı'};
+const modeLabels={clinic:'Klinikte',home:'Evde numune alma',work:'İş yerinde numune alma',visit:'Evde bakım ziyareti'};
+function assert(ok,message){if(!ok)throw new Error(message)}
+function today(){return new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Istanbul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())}
+function modes(moduleId,audience){if(moduleId===6)return ['visit'];if([1,2,4,8].includes(moduleId))return audience==='corporate'?['clinic','work']:audience==='employee'?['clinic','home','work']:['clinic','home'];return ['clinic']}
+function providers(content,d){return content.providers.filter(p=>p.modules.includes(d.moduleId)&&p.modes.includes(d.mode==='visit'?'home':d.mode)&&(d.mode==='clinic'||p.areas.includes(d.area))&&(d.audience!=='corporate'||d.mode!=='work'||groupMinimum(d.groupSize)>=p.minGroup)).sort((a,b)=>a.distances[d.area]-b.distances[d.area])}
+function groupMinimum(size){return ({25:10,50:26,100:51})[size]||0}
+function contactInfo(value){const name=String(value?.name||'').trim().replace(/\s+/g,' ');let digits=String(value?.phone||'').replace(/[\s()+.-]/g,'');if(digits.startsWith('90')&&digits.length===12)digits=digits.slice(2);if(digits.startsWith('0')&&digits.length===11)digits=digits.slice(1);assert(name.length>=2&&name.length<=80&&/\p{L}/u.test(name),'Ad ve soyadınızı yazın.');assert(/^[2-5]\d{9}$/.test(digits),'Telefonu 05xx xxx xx xx veya +90 biçiminde yazın.');return {name,phone:'0'+digits}}
+function allOptions(c,moduleId){if(moduleId===5)return c.cancerOptions;if(moduleId===4)return [...c.longevityOptions,...c.catalog];if(moduleId===2)return c.quickOptions[2];if([1,8].includes(moduleId))return c.catalog;return c.quickOptions[moduleId]||[]}
+function draft(moduleId,audience='individual'){assert(Number.isInteger(moduleId)&&moduleId>=1&&moduleId<=8,'Hizmet seçin.');if(moduleId!==8)audience='individual';return {moduleId,audience,selected:[],area:'Merkez',mode:moduleId===6?'visit':'clinic',providerId:null,groupSize:25,contact:{name:'',phone:''}}}
+function option(c,d,id){assert(allOptions(c,d.moduleId).some(x=>x.id===id),'Bu seçenek seçili hizmete ait değil.');const n=clone(d);n.selected=n.selected.includes(id)?n.selected.filter(x=>x!==id):[...n.selected,id];return n}
+function filter(c,d,patch){const n={...clone(d),...patch};if(!modes(n.moduleId,n.audience).includes(n.mode))n.mode=modes(n.moduleId,n.audience)[0];if(!providers(c,n).some(p=>p.id===n.providerId))n.providerId=null;return n}
+function request(c,d,records){assert(d.moduleId===8?['employee','corporate'].includes(d.audience):d.audience==='individual','Başvuru türü hizmete uygun değil.');assert(modes(d.moduleId,d.audience).includes(d.mode),'Hizmet yeri uygun değil.');assert(['Merkez','Kuzey','Güney'].includes(d.area),'Bölge seçin.');const p=providers(c,d).find(p=>p.id===d.providerId);assert(p,'Hizmeti sunan bir kurum seçin.');assert(d.selected.every(id=>allOptions(c,d.moduleId).some(x=>x.id===id)),'Seçenekler bu hizmete ait olmalı.');assert(d.audience!=='corporate'||[25,50,100].includes(d.groupSize),'Katılım aralığı seçin.');const contact=contactInfo(d.contact);return {id:'HX-'+String(records.length+1).padStart(3,'0'),moduleId:d.moduleId,audience:d.audience,selected:[...d.selected],area:d.area,mode:d.mode,providerId:p.id,providerName:p.name,...(d.audience==='corporate'?{groupSize:d.groupSize}:{}),person:{name:d.audience==='corporate'?c.company.name:contact.name,contactName:contact.name,phone:contact.phone},status:'new',createdAt:new Date().toISOString()}}
+return {contactInfo,groupMinimum,labels,modeLabels,today,modes,providers,allOptions,draft,option,filter,request};
+});
+
+const C=window.HELUNEXA_CONTENT,M=window.AccessModel;
+const $=s=>document.querySelector(s),esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const icons=['＋','↻','▤','◌','⌕','⌂','♡','▦'];
+let state={view:'home',step:0,draft:M.draft(1),records:[]};
+const module=id=>C.modules.find(x=>x.id===id),draft=()=>state.draft;
+
+function button(text,action,cls='',attrs=''){return `<button class="button ${cls}" data-action="${action}" ${attrs}>${text}</button>`}
+function chips(label,items,value,key){return `<div class="choice"><span class="label">${label}</span><div class="chips" role="group" aria-label="${label}">${items.map(x=>button(esc(x.name),'choice',x.id===value?'button chip selected':'button chip',`data-key="${key}" data-value="${esc(x.id)}"`)).join('')}</div></div>`}
+function go(view){state.view=view;render();window.scrollTo({top:0,behavior:'instant'})}
+function header(){return `<header><div class="header-inner"><a href="#" class="brand" data-action="home"><img src="logo.png" alt="HELUNEXA"></a><nav aria-label="Ana menü">${button('Hizmetler','home',state.view==='home'?'button nav active':'button nav')}${button('Hekim Girişi','institution','button nav secondary')}</nav></div></header>`}
+
+function home(){return `<main><section class="home-intro"><img src="logo.png" alt="HELUNEXA"><h1>Hangi konuda destek arıyorsunuz?</h1><p>Hizmetinizi seçin, size uygun kurumu bulun, talebinizi iletin.</p></section><div class="service-grid">${C.modules.map(m=>`<button class="service-tile" data-action="start" data-id="${m.id}"><span class="service-icon">${icons[m.id-1]}</span><span>${esc(m.shortTitle)}</span></button>`).join('')}</div></main>`}
+function info(x){return x.education?`<details style="margin-top:5px;"><summary>Neyi değerlendirir?</summary><p class="small muted" style="margin-top:5px;">${esc(x.education)}</p></details>`:''}
+function options(items){return items.map(x=>`<div class="option"><label class="check"><input type="checkbox" data-option="${esc(x.id)}" ${draft().selected.includes(x.id)?'checked':''}><span>${esc(x.name)}</span></label>${info(x)}</div>`).join('')}
+function laboratory(){return `<details class="catalog" style="margin-top:20px; border-top:1px solid var(--line); padding-top:15px;"><summary>Tetkik seçeneklerini inceleyin · İsteğe bağlı</summary><div style="margin-top:15px;">${C.catalogGroups.map(g=>`<details class="option-group"><summary>${esc(g)}</summary>${options(C.catalog.filter(x=>x.group===g))}</details>`).join('')}</div></details>`}
+
+function selection(){const d=draft(),m=module(d.moduleId);return `<main><div class="page-title"><div class="eyebrow">Hizmet seçimi</div><h1>${esc(m.title)}</h1><p>${esc(m.description)}</p></div>${steps()}<section class="panel">${d.moduleId===8?`<h2>Sağlığınıza zaman ayırın.</h2>${chips('Nasıl katılmak istersiniz?',[{id:'employee',name:'Çalışanım'},{id:'corporate',name:'Kurumum için planlıyorum'}],d.audience,'audience')}`:''}${d.moduleId===4?`<h2>Hangi alanlar ilginizi çekiyor?</h2><div class="option-list">${options(C.longevityOptions)}</div>`:d.moduleId===5?`<h2>Tarama seçeneklerini keşfedin.</h2>${options(C.cancerOptions)}`:C.quickOptions[d.moduleId]?`<h2>İlgilendiğiniz hizmet</h2>${options(C.quickOptions[d.moduleId])}`:''}${[1,4,8].includes(d.moduleId)?laboratory():''}${d.moduleId===2?'<p class="small muted">Gerekli tahlilleri hekiminiz takip görüşmesinde planlar.</p>':''}<p class="small muted" style="margin-top:20px;">Tetkik seçimleri kesinleşmiş tıbbi istem değildir.</p></section>${bottom('Kurumları gör','next')}</main>`}
+function steps(){return `<ol class="steps">${['Hizmet','Kurum ve yer','İletişim'].map((x,i)=>`<li class="${i<=state.step?'active':''}"><span>${i+1}</span>${x}</li>`).join('')}</ol>`}
+function bottom(label,action){return `<div class="bottom-actions">${button('Geri','back','ghost')}${button(label+' →',action,'primary')}</div>`}
+
+function locationScreen(){const d=draft(),list=M.providers(C,d);return `<main><div class="page-title"><div class="eyebrow">${esc(module(d.moduleId).shortTitle)}</div><h1>Size uygun kurum ve yer.</h1></div>${steps()}<section class="panel soft">${chips('Bulunduğunuz bölge',[{id:'Merkez',name:'Merkez'},{id:'Kuzey',name:'Kuzey'},{id:'Güney',name:'Güney'}],d.area,'area')}${chips(d.moduleId===6?'Hizmet yeri':'Hizmet tercihi',M.modes(d.moduleId,d.audience).map(id=>({id,name:M.modeLabels[id]})),d.mode,'mode')}</section><div class="provider-grid">${list.length?list.map(p=>`<article class="provider-card ${d.providerId===p.id?'chosen':''}"><h3>${esc(p.name)}</h3><p class="provider-location">${esc(p.area)} · ${p.distances[d.area]} km</p><div class="provider-facts"><div><span>Dönüş</span><strong>${esc(p.response)}</strong></div><div><span>Ücret</span><strong>${esc(p.fee)}</strong></div></div>${button(d.providerId===p.id?'Seçildi ✓':'Bu kurumu seç','provider',d.providerId===p.id?'primary full':'full',`data-id="${p.id}"`)}</article>`).join(''):`<section class="panel"><h3>Kurum bulunamadı.</h3><p>Bölgeyi değiştirebilirsiniz.</p></section>`}</div>${bottom('Devam et','next')}</main>`}
+function selectionTags(record){const names=M.allOptions(C,record.moduleId);return record.selected.length?`<div style="display:flex; gap:5px; flex-wrap:wrap; margin:15px 0;">${record.selected.map(id=>`<span style="font-size:12px; padding:5px 10px; background:#ecfdf5; border:1px solid #a7f3d0; border-radius:6px; color:#065f46;">${esc(names.find(x=>x.id===id)?.name||id)}</span>`).join('')}</div>`:'<p class="small muted">Genel hizmet başvurusu · Ayrıntılar kurumla netleştirilecek.</p>'}
+
+function requestScreen(){const d=draft(),p=C.providers.find(x=>x.id===d.providerId);return `<main><div class="page-title"><div class="eyebrow">Son adım</div><h1>Talebiniz hazır.</h1><p>Adınızı ve telefonunuzu paylaşın; seçtiğiniz hastane sizi arasın.</p></div>${steps()}<div class="two-col"><section class="panel"><div class="eyebrow">${esc(module(d.moduleId).shortTitle)}</div><h2>${esc(p.name)}</h2><p>${esc(M.modeLabels[d.mode])} · ${esc(d.area)}</p>${selectionTags(d)}</section><aside class="panel soft"><h3>Size nasıl ulaşalım?</h3><div class="contact-fields"><label for="contact-name">Ad soyad</label><input id="contact-name" data-contact="name" type="text" value="${esc(d.contact.name)}" placeholder="Örn. Deniz Örnek"><label for="contact-phone">Telefon numarası</label><input id="contact-phone" data-contact="phone" type="tel" value="${esc(d.contact.phone)}" placeholder="05xx xxx xx xx"><p id="contact-error" style="color:#ef4444; font-size:12px; margin-top:5px;"></p></div></aside></div>${bottom('Talebimi ilet','submit')}</main>`}
+function booking(){return state.step===0?selection():state.step===1?locationScreen():requestScreen()}
+function render(){const body=state.view==='home'?home():state.view==='booking'?booking():home();$('#app').innerHTML=header()+body+`<footer>© 2026 HELUNEXA · Tüm Hakları Saklıdır.</footer>`}
+
+document.addEventListener('click',e=>{
+    const el=e.target.closest('[data-action]'); if(!el) return; e.preventDefault(); const a=el.dataset.action;
+    try{
+        if(a==='home') go('home');
+        else if(a==='institution') window.location.href = 'admin.html';
+        else if(a==='start'){state.draft=M.draft(Number(el.dataset.id));state.step=0;go('booking');}
+        else if(a==='back'){if(state.step===0)go('home');else{state.step--;go('booking')}}
+        else if(a==='next'){if(state.step===1&&!M.providers(C,draft()).some(p=>p.id===draft().providerId))throw Error('Lütfen bir kurum seçin.');state.step=Math.min(2,state.step+1);go('booking')}
+        else if(a==='choice'){state.draft=M.filter(C,draft(),{[el.dataset.key]:el.dataset.value});render()}
+        else if(a==='provider'){state.draft={...draft(),providerId:el.dataset.id};render()}
+        else if(a==='submit'){
+            const error=document.getElementById('contact-error');if(error)error.textContent='';
+            try { M.contactInfo(draft().contact); } catch (e) { error.textContent=e.message; return; }
+            if (!draft().providerId) { alert('Lütfen bir kurum seçin.'); return; }
+            el.disabled = true; el.textContent = 'Gönderiliyor...';
+            
+            let finalDraft = {...draft()};
+            if(finalDraft.moduleId === 8) { finalDraft.audience = 'employee'; }
+            const r=M.request(C,finalDraft,[]);
+            
+            _supabase.from('applications').insert([{
+                fullname: r.person.name, phone: r.person.phone, service_type: module(draft().moduleId).title,
+                test_notes: draft().selected.join(', '), status: 'pending', age: 30, email: 'anonim@helunexa.com' 
+            }]).then(({error})=>{
+                if(error){ alert('Veritabanı Hatası: ' + error.message); el.disabled = false; el.textContent = 'Talebimi ilet →'; return; }
+                alert('✅ Talebiniz Alındı! Hastane sizinle iletişime geçecek.'); go('home');
+            }).catch(err => { alert('Bağlantı hatası: ' + err.message); el.disabled = false; });
+        }
+    }catch(err){ alert(err.message); }
+});
+document.addEventListener('input',e=>{const k=e.target.dataset.contact;if(k)state.draft.contact[k]=e.target.value;});
+document.addEventListener('change',e=>{if(e.target.dataset.option)state.draft=M.option(C,draft(),e.target.dataset.option);});
+render();
+</script>
 </body>
 </html>
